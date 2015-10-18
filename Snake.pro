@@ -12,9 +12,54 @@ TARGET = Snake
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += \
+    GameWindow.cpp \
+    Game.cpp \
+    Map.cpp \
+    AI.cpp \
+    Snake.cpp \
+    Score.cpp \
+    RandomAI.cpp \
+    SimpleAI.cpp \
+    Object.cpp \
+    EditorWindow.cpp \
+    Item.cpp \
+    RandomAI.cpp \
+    SimpleAI.cpp \
+    Entity.cpp \
+    Snake.cpp \
+    Object.cpp \
+    WallObjectallobject.cpp \
+    HoleObject.cpp \
+    Item.cpp \
+    BombItem.cpp \
+    FoodItem.cpp \
+    main.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    GameWindow.h \
+    Game.h \
+    Map.h \
+    AI.h \
+    Snake.h \
+    Score.h \
+    RandomAI.h \
+    SimpleAI.h \
+    Object.h \
+    EditorWindow.h \
+    Item.h \
+    FoodItem.h \
+    RandomAI.h \
+    SimpleAI.h \
+    Entity.h \
+    Snake.h \
+    Object.h \
+    WallObject.h \
+    HoleObject.h \
+    Item.h \
+    BombItem.h \
+    FoodItem.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    GameWindow.ui \
+    EditorWindow.ui
