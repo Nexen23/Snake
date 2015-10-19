@@ -2,7 +2,7 @@
 
 SimpleAI::SimpleAI()
 {
-
+//sgad
 }
 
 SimpleAI::~SimpleAI()
