@@ -6,8 +6,8 @@
 class Score
 {
 public:
-	explicit Score();
-	~Score();
+    explicit Score();
+    ~Score();
 
 	int amount = 0;
 };

@@ -11,10 +11,10 @@ class Map;
 class Entity
 {
 public:
-	virtual const QString getName() = 0;
-	virtual const Id getId() = 0;
-	virtual const QBitmap getBitmap() = 0;
-	virtual void collide(Snake *snake, Map *map) = 0;
+    virtual const QString getName() = 0 {};
+    virtual const Id getId() = 0 {};
+    virtual const QBitmap getBitmap() = 0 {};
+    virtual void collide(Snake *snake, Map *map) = 0 {};
 
 	QPoint *position;
 	bool isDead = false;

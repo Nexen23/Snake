@@ -11,7 +11,3 @@ enum Id
 	SNAKE
 };
 
-const Id Entity::getId()
-{
-    return NULL;
-}

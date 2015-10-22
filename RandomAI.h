@@ -6,8 +6,8 @@
 class RandomAI : public AI
 {
 public:
-	RandomAI();
-	~RandomAI();
+    RandomAI();
+    ~RandomAI();
 };
 
 #endif // RANDOMAI_H

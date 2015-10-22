@@ -6,8 +6,8 @@
 class HoleObject : public Object
 {
 public:
-	HoleObject();
-	~HoleObject();
+    HoleObject();
+    ~HoleObject();
 };
 
 #endif // HOLEOBJECT_H

@@ -10,8 +10,8 @@
 class Snake : public Entity
 {
 public:
-	Snake();
-	~Snake();
+    Snake();
+    ~Snake();
 
 	QVector<QPoint> tail;
 	Score *currentScores;

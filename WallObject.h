@@ -6,8 +6,8 @@
 class WallObject : public Object
 {
 public:
-	WallObject();
-	~WallObject();
+    WallObject();
+    ~WallObject();
 };
 
 #endif // WALLOBJECT_H

@@ -6,8 +6,8 @@
 class SimpleAI : public AI
 {
 public:
-	SimpleAI();
-	~SimpleAI();
+    SimpleAI();
+    ~SimpleAI();
 };
 
 #endif // SIMPLEAI_H

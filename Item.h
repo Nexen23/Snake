@@ -7,7 +7,7 @@
 class Item : public Entity
 {
 public:
-	virtual float getSpawnChance() = 0;
+    virtual float getSpawnChance() = 0 {};
 
 	Score *scoresForPicker;
 };

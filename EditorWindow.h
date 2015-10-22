@@ -25,27 +25,27 @@ private:
 	Map *map;
 
 public slots:
-	void onItemSelected();
-	void onAddItemClick();
-	void onDelItemClick();
+    void onItemSelected() {};
+    void onAddItemClick() {};
+    void onDelItemClick() {};
 
-	void onObjectSelected();
-	void onAddObjectClick();
-	void onDelObjectClick();
+    void onObjectSelected() {};
+    void onAddObjectClick() {};
+    void onDelObjectClick() {};
 
-	void onSnakeSelected();
-	void onAddSnakeClick();
-	void onDelSnakeClick();
+    void onSnakeSelected() {};
+    void onAddSnakeClick() {};
+    void onDelSnakeClick() {};
 
-	void onOpenMapClicked();
-	void onCreateMapClicked();
-	void onSaveMapClicked();
-	void onSetSizeClicked();
+    void onOpenMapClicked() {};
+    void onCreateMapClicked() {}
+    void onSaveMapClicked() {};
+    void onSetSizeClicked() {};
 
-	void onLMBMapCellPressed();
-	void onLMBMapCellReleased();
-	void onRMBMapCellPressed();
-	void onRMBMapCellReleased();
+    void onLMBMapCellPressed() {};
+    void onLMBMapCellReleased() {};
+    void onRMBMapCellPressed() {};
+    void onRMBMapCellReleased() {};
 };
 
 #endif // EDITORWINDOW_H

@@ -17,12 +17,12 @@ class GameWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit GameWindow(Game *game, QWidget *parent = 0);
-	~GameWindow();
+    explicit GameWindow(Game *game, QWidget *parent = 0);
+    ~GameWindow();
 
-	void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
-	void update();
-	void setWinner(QVector<Snake> snakes);
+    void animateCollision(Snake *snake, Entity *entity, float durationSeconds) {};
+    void update() {};
+    void setWinner(QVector<Snake> snakes) {};
 
 private:
 	Ui::GameWindow *ui;
@@ -33,13 +33,13 @@ private:
 signals:
 
 public slots:
-	void onStartClicked();
-	void onStopClicked();
-	void onResetClicked();
-
-	void onOpenMapChoserDialog();
-	void onMainSnakeSelected(QString name);
-	void onOpenSnakeAIChoserDialog();
+    void onStartClicked() {};
+    void onStopClicked() {};
+    void onResetClicked() {};
+    void onOpenMapChoserDialog() {};
+	
+    void onMainSnakeSelected(QString name) {};
+    void onOpenSnakeAIChoserDialog() {};
 };
 
 #endif // GAMEWINDOW_H

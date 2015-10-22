@@ -9,7 +9,8 @@ public:
 	BombItem();
 	~BombItem();
 
-	const int damageRadius = 3;
+	// 2 cells to left + central + 2 cells to right = field 5x5
+	const int damageRadius = 3; 
 };
 
 #endif // BOMBITEM_H

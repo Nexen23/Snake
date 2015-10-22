@@ -6,8 +6,8 @@
 class FoodItem : public Item
 {
 public:
-	FoodItem();
-	~FoodItem();
+    FoodItem();
+    ~FoodItem();
 };
 
 #endif // FOODITEM_H
