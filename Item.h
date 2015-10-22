@@ -10,6 +10,7 @@ public:
     virtual float getSpawnChance() = 0 {};
 
 	Score *scoresForPicker;
+
 };
 
 #endif // ITEM_H

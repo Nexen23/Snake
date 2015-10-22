@@ -8,6 +8,9 @@ class WallObject : public Object
 public:
     WallObject();
     ~WallObject();
+
+    const QString getName();
+    const Id getId();
 };
 
 #endif // WALLOBJECT_H

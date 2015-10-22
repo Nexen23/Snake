@@ -21,6 +21,9 @@ public:
 	QVector<Snake*> snakes;
 
 	QVector<Item*> itemsTypesForGeneration;
+
+    const QString getName();
+    const QString getId();
 };
 
 #endif // MAP_H

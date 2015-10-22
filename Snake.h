@@ -15,6 +15,9 @@ public:
 
 	QVector<QPoint> tail;
 	Score *currentScores;
+
+    const QString getName();
+    const Id getId();
 };
 
 #endif // SNAKE_H

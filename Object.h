@@ -5,6 +5,9 @@
 
 class Object : public virtual Entity
 {
+
+    const QString getName();
+    const Id getId();
 };
 
 #endif // OBJECT_H
