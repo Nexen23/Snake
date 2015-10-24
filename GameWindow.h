@@ -33,11 +33,11 @@ private:
 signals:
 
 public slots:
-	void onStartClicked();
-	void onStopClicked();
-	void onResetClicked();
-
+    void on_start_button_clicked();
+    void on_stop_button_clicked();
+    void on_reset_button_clicked();
 	void onOpenMapChoserDialog();
+	
 	void onMainSnakeSelected(QString name);
 	void onOpenSnakeAIChoserDialog();
 };
