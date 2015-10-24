@@ -36,8 +36,8 @@ public slots:
 	void onStartClicked();
 	void onStopClicked();
 	void onResetClicked();
-
 	void onOpenMapChoserDialog();
+	
 	void onMainSnakeSelected(QString name);
 	void onOpenSnakeAIChoserDialog();
 };
