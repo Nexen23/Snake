@@ -10,7 +10,10 @@
 class Snake : public Entity
 {
 public:
-    Snake();
+    bool mustDie;
+    bool snakeInTheHole;
+
+    Snake(QString name, int length);
     ~Snake();
 
 	QVector<QPoint> tail;

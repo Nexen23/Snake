@@ -1,10 +1,18 @@
 #include "WallObject.h"
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 WallObject::WallObject()
 {
 
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 WallObject::~WallObject()
 {
 

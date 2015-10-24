@@ -26,6 +26,9 @@ class Map;
 class Entity
 {
 public:
+    Entity();
+    ~Entity();
+
     virtual const QString getName() = 0 {};
     virtual const Id getId() = 0 {};
     virtual const QBitmap getBitmap() = 0 {};

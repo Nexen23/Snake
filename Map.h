@@ -10,7 +10,7 @@
 class Map
 {
 public:
-	explicit Map();
+    explicit Map(int sizeX, int sizeY);
 	~Map();
 
 	int sizeX, sizeY;

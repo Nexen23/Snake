@@ -1,11 +1,19 @@
 #include "FoodItem.h"
 #include "Entity.h"
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 FoodItem::FoodItem()
 {
 
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 FoodItem::~FoodItem()
 {
 

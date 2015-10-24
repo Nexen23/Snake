@@ -1,13 +1,27 @@
 #include "Snake.h"
 
-Snake::Snake()
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
+Snake::Snake(QString name, int length)
 {
+   mustDie = false;
+   snakeInTheHole = false;
 
+   currentScores = new Score(0);
+   tail.resize(length);
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 Snake::~Snake()
 {
-
+    delete currentScores;
+    tail.clear();
+    return;
 }
 
 /**

@@ -9,6 +9,8 @@ enum MoveDirection;
 class AI
 {
 public:
+    AI();
+    ~AI();
     virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map) = 0 {};
     virtual QString getName() = 0 {};
 };

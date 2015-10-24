@@ -1,10 +1,18 @@
 #include "HoleObject.h"
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 HoleObject::HoleObject()
 {
 
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 HoleObject::~HoleObject()
 {
 

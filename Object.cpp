@@ -4,6 +4,24 @@
  * @author MGerasimchuk
  * 22.10
  */
+Object::Object()
+{
+
+}
+
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
+Object::~Object()
+{
+
+}
+
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 const QString Object::getName()
 {
     return "Object";

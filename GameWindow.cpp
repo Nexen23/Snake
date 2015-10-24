@@ -1,6 +1,10 @@
 #include "GameWindow.h"
 #include "ui_GameWindow.h"
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 GameWindow::GameWindow(Game *game, QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::GameWindow)
@@ -9,6 +13,10 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 	this->game = game;
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 GameWindow::~GameWindow()
 {
 	delete ui;

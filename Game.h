@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QObject>
 #include <QVector>
+#include <QTimer>
+#include <Map.h>
 
 class GameWindow;
 class Snake;
@@ -14,11 +16,20 @@ class Game : public QObject
 {
 	Q_OBJECT
 
+    float ItemSpawnCoef;
+    float FoodSpawnCoef;
+    float SnakeMovesPerSecond;
+
+    QTimer *timer;
+
 	GameWindow *gameWindow;
 	Map *map;
 	QMap<Snake*, AI*> snakesAIs;
 
 	const float movesPerSecondDefault = 0.5f;
+
+    int SnakeMovesBeforeTailCellDeath;
+    int CurrentMove;
 
 public:
     Game(QObject *parent = 0);
