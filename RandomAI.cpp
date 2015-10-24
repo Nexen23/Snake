@@ -25,19 +25,19 @@ RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     if(buf.x()!=buf.y())
         if(buf.x()==0)
             if(buf.y()>0){
-                kof[DOWN]=-1;
+                kof[DOWN]=-2;
                 kof[UP]=2;
             }   else    {
-                kof[UP]=-1;
+                kof[UP]=-2;
                 kof[DOWN]=2;
             }
         else
             if(buf.x()>0){
                 kof[RIGHT]=2;
-                kof[LEFT]=-1;
+                kof[LEFT]=-2;
             }   else    {
                 kof[LEFT]=2;
-                kof[RIGHT]=-1;
+                kof[RIGHT]=-2;
             }
    //учет стен, дырок, остального хвоста
     if(map->field[head.x()-1][head.y()]->getId()>=WALL_OBJECT && map->field[head.x()-1][head.y()]<=SNAKE)
@@ -59,7 +59,12 @@ RandomAI::getNextMove(Snake *controllerSnake, Map *map){
             ForRand+=kof[i];
 
     if(ForRand==0) //выхода нет :)
-        return rand()%4;
+    {
+        Rand=rand()%4;
+        if(Rand==-2)
+            return (Rand+1)%4;
+        else return Rand;
+    }
 
     Rand=rand()%ForRand+1;
 
@@ -71,6 +76,6 @@ RandomAI::getNextMove(Snake *controllerSnake, Map *map){
             t+=kof[i];
         }
 
-    return;
+    return 1;
 
 }
