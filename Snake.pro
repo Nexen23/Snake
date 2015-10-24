@@ -19,13 +19,8 @@ SOURCES += \
     AI.cpp \
     Snake.cpp \
     Score.cpp \
-    RandomAI.cpp \
-    SimpleAI.cpp \
     Object.cpp \
-    EditorWindow.cpp \
     Item.cpp \
-    RandomAI.cpp \
-    SimpleAI.cpp \
     Entity.cpp \
     Snake.cpp \
     Object.cpp \
@@ -43,14 +38,9 @@ HEADERS  += \
     AI.h \
     Snake.h \
     Score.h \
-    RandomAI.h \
-    SimpleAI.h \
     Object.h \
-    EditorWindow.h \
     Item.h \
     FoodItem.h \
-    RandomAI.h \
-    SimpleAI.h \
     Entity.h \
     Snake.h \
     Object.h \

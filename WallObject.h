@@ -7,7 +7,8 @@ class WallObject : public Object
 {
 public:
 	WallObject();
-	~WallObject();
+    ~WallObject();
+    virtual void collide(Snake *snake, Map *map);
 };
 
 #endif // WALLOBJECT_H

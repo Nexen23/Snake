@@ -10,11 +10,28 @@
 class Snake : public Entity
 {
 public:
-	Snake();
-	~Snake();
 
+    explicit Snake()
+    {
+        currentScores = new Score();
+        mustDie = false;
+        snakeInTheHole = false;
+    }
+
+    ~Snake()
+    {
+        delete currentScores;
+    }
+
+    bool mustDie;
+    bool snakeInTheHole;
 	QVector<QPoint> tail;
 	Score *currentScores;
+    virtual void collide(Snake *snake, Map *map)
+    {
+        snake->mustDie = true;
+    }
+
 };
 
 #endif // SNAKE_H

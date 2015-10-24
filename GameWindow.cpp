@@ -13,3 +13,8 @@ GameWindow::~GameWindow()
 {
 	delete ui;
 }
+
+void GameWindow::update()
+{
+
+}
