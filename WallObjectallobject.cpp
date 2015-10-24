@@ -28,3 +28,13 @@ const Id WallObject::getId()
     return WALL_OBJECT;
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
+const QBitmap WallObject::getBitmap()
+{
+    QBitmap item("./img/WallObject.png");
+
+    return item;
+}

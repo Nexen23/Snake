@@ -7,9 +7,12 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 {
 	ui->setupUi(this);
 	this->game = game;
+    /*map = new Map();*/
 }
 
 EditorWindow::~EditorWindow()
 {
+    delete game;
+    delete map;
 	delete ui;
 }

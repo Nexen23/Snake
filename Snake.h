@@ -18,6 +18,8 @@ public:
 
     const QString getName();
     const Id getId();
+
+    const QBitmap getBitmap();
 };
 
 #endif // SNAKE_H

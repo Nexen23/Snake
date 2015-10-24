@@ -8,6 +8,8 @@ class Object : public virtual Entity
 
     const QString getName();
     const Id getId();
+
+    const QBitmap getBitmap();
 };
 
 #endif // OBJECT_H

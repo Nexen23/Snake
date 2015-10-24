@@ -14,6 +14,8 @@ public:
 
     const QString getName();
     const Id getId();
+
+    const QBitmap getBitmap();
 };
 
 #endif // BOMBITEM_H
