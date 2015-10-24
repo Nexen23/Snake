@@ -2,7 +2,7 @@
 #define EDITORWINDOW_H
 
 #include "Game.h"
-
+#include <QMenuBar>
 #include <QWidget>
 
 namespace Ui {
@@ -18,6 +18,18 @@ public:
 	~EditorWindow();
 
 	Map* getDefaultMap();
+
+    //SnakeList - ListView с Snake
+    //SnakeAddButton - кнопка добавления
+    //SnakeDelButton - кнопка удаления(выделенного)
+
+    //ObjectList - ListView с Object
+    //ObjectAddButton - кнопка добавления
+    //ObjectDelButton - кнопка удаления(выделенного)
+
+    //ItemList - ListView с Item
+    //ItemAddButton - кнопка добавления
+    //ItemDelButton - кнопка удаления(выделенного)
 
 private:
 	Ui::EditorWindow *ui;

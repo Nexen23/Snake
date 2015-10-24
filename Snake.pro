@@ -40,17 +40,11 @@ HEADERS  += \
     GameWindow.h \
     Game.h \
     Map.h \
-    AI.h \
     Snake.h \
-    Score.h \
-    RandomAI.h \
-    SimpleAI.h \
     Object.h \
     EditorWindow.h \
     Item.h \
     FoodItem.h \
-    RandomAI.h \
-    SimpleAI.h \
     Entity.h \
     Snake.h \
     Object.h \
@@ -58,7 +52,11 @@ HEADERS  += \
     HoleObject.h \
     Item.h \
     BombItem.h \
-    FoodItem.h
+    FoodItem.h \
+    AI.h \
+    RandomAI.h \
+    Score.h \
+    SimpleAI.h
 
 FORMS    += \
     GameWindow.ui \
