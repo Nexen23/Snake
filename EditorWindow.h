@@ -14,7 +14,7 @@ class EditorWindow : public QWidget
 	Q_OBJECT
 
 public:
-	explicit EditorWindow(Game *game, QWidget *parent = 0);
+    explicit EditorWindow(Game *game, QWidget *parent = 0);
 	~EditorWindow();
 
 	Map* getDefaultMap();

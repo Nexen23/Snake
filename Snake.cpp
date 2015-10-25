@@ -9,6 +9,8 @@ Snake::Snake(QString name, int length)
    mustDie = false;
    snakeInTheHole = false;
 
+   this->name = name;
+
    currentScores = new Score(0);
    tail.resize(length);
 }
@@ -30,7 +32,7 @@ Snake::~Snake()
  */
 const QString Snake::getName()
 {
-    return "Snake";
+    return name;
 }
 
 /**

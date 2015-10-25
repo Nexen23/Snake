@@ -36,6 +36,7 @@ public:
 
 	QPoint *position;
     bool isDead = false;
+
 };
 
 #endif // ENTITY_H

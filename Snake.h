@@ -12,6 +12,7 @@ class Snake : public Entity
 public:
     bool mustDie;
     bool snakeInTheHole;
+    QString name;
 
     Snake(QString name, int length);
     ~Snake();
