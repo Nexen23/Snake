@@ -55,8 +55,8 @@ public:
     void setMap(Map *map);
     Map* loadMapFromFile(QString mapName);
     void saveMapToFile(Map *map, QString mapName);
-    QVector<QString> getMapList() {};
-    QVector<AI> getAIList() {};
+    QVector<QString> getMapList();
+    QVector<AI> getAIList();
 
 signals:
 

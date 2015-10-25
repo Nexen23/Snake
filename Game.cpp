@@ -2,6 +2,8 @@
 #include "GameWindow.h"
 #include "EditorWindow.h"
 #include "Snake.h"
+#include "RandomAI.h"
+#include "SimpleAI.h"
 
 /**
  * @author MGerasimchuk
@@ -35,11 +37,19 @@ Game::~Game()
     snakesAIs.clear();
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 void Game::showWindow()
 {
     gameWindow->show();
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 void Game::createMap()
 {
     EditorWindow *editorWindow = new EditorWindow(this);
@@ -50,6 +60,10 @@ void Game::createMap()
     editorWindow->show();
 }
 
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
 void Game::setMap(Map *map)
 {
     this->map = map;
@@ -134,6 +148,41 @@ void Game::saveMapToFile(Map *map, QString mapName)
 /**
  * @author MGerasimchuk
  * 25.10
+ */
+QVector<QString> Game::getMapList()
+{
+    QTextStream in;
+    QFile *inFile = new QFile("maps.txt");
+    inFile->open(QIODevice::ReadOnly);
+    in.setDevice(inFile);
+
+    QVector<QString> names;
+
+    while(!in.atEnd()) {
+        names.push_back(in.readLine(255));
+    }
+
+    inFile->close();
+    return names;
+}
+
+/**
+ * @author MGerasimchuk
+ * 25.10
+ */
+QVector<AI> Game::getAIList()
+{
+    QVector<AI> list;
+
+    list.push_back(new RandomAI());
+    list.push_back(new SimpleAI());
+
+    return list;
+}
+
+/**
+ * @author MGerasimchuk
+ * 25.10
  * Так как наговнил с лхранением, наговнил и с загрузкой
  *
  * @brief Game::saveMapToFile
@@ -196,13 +245,6 @@ Map *Game::loadMapFromFile(QString mapName)
     for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
         m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
     }
-
-
-
-
-
-
-
 
     inFile->close();
     return m;
