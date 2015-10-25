@@ -8,6 +8,8 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 	ui->setupUi(this);
 	this->game = game;
 
+    
+	//создание меню
     QMenuBar *menu = new QMenuBar(this);
     QMenu *File = new QMenu("File");
     QAction *File_Create = File->addAction("Create");
@@ -36,6 +38,11 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     connect(ui->ObjectDelButton,SIGNAL(clicked()),this,SLOT(onDelObjectClick()));
     connect(ui->ItemAddButton,SIGNAL(clicked()),this,SLOT(onAddItemClick()));
     connect(ui->ItemDelButton,SIGNAL(clicked()),this,SLOT(onDelItemClick()));
+
+    //нажатие на элемент листа
+    connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onSnakeSelected()));
+    connect(ui->ObjectList,SIGNAL(clicked(QModelIndex)),this,SLOT(onObjectSelected()));
+    connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onItemSelected()));
 }
 
 EditorWindow::~EditorWindow()
@@ -50,12 +57,41 @@ void EditorWindow::onItemSelected()
 
 void EditorWindow::onAddItemClick()
 {
+    window = new QDialog();
+    line = new QLineEdit(window);
 
+    window->resize(200,100);
+    btn = new QPushButton("Add", window );
+        btn->setMinimumWidth(10);
+        btn->setMinimumHeight(15);
+
+        QVBoxLayout *layout = new QVBoxLayout( window );
+        layout->addWidget(line);
+        layout->addWidget(btn);
+
+        window->setWindowTitle("New Item");
+        window->setLayout(layout);
+        window->setModal(true);
+        window->show();
+
+  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
+		//функ-я обновления листа
 }
 
 void EditorWindow::onDelItemClick()
 {
+    int row=0;
+    row = ui->ItemList->currentRow();
+    if( row == -1 )
+        return;
+    QString str = ui->ItemList->currentItem()->text();
 
+
+    //сделать проверки и если нужно, то удалить
+    //ui->ItemList->takeItem(row);
+
+
+   //функ-я обновления листа
 }
 
 void EditorWindow::onObjectSelected()
@@ -65,12 +101,41 @@ void EditorWindow::onObjectSelected()
 
 void EditorWindow::onAddObjectClick()
 {
+    window = new QDialog();
+    line = new QLineEdit(window);
 
+    window->resize(200,100);
+    btn = new QPushButton("Add", window );
+        btn->setMinimumWidth(10);
+        btn->setMinimumHeight(15);
+
+        QVBoxLayout *layout = new QVBoxLayout( window );
+        layout->addWidget(line);
+        layout->addWidget(btn);
+
+        window->setWindowTitle("New Object");
+        window->setLayout(layout);
+        window->setModal(true);
+        window->show();
+
+  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
+		//функ-я обновления листа
 }
 
 void EditorWindow::onDelObjectClick()
 {
+    int row=0;
+    row = ui->ObjectList->currentRow();
+    if( row == -1 )
+        return;
+    QString str = ui->ObjectList->currentItem()->text();
 
+
+    //сделать проверки и если нужно, то удалить
+    //ui->ObjectList->takeItem(row);
+
+
+	//функ-я обновления листа
 }
 
 void EditorWindow::onSnakeSelected()
@@ -80,12 +145,41 @@ void EditorWindow::onSnakeSelected()
 
 void EditorWindow::onAddSnakeClick()
 {
+    //создание окна добавления змейки
+    window = new QDialog();
+    line = new QLineEdit(window);
 
+    window->resize(200,100);
+    btn = new QPushButton("Add", window );
+        btn->setMinimumWidth(10);
+        btn->setMinimumHeight(15);
+
+        QVBoxLayout *layout = new QVBoxLayout( window );
+        layout->addWidget(line);
+        layout->addWidget(btn);
+
+        window->setWindowTitle("New Snake");
+        window->setLayout(layout);
+        window->setModal(true);
+        window->show();
+
+  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
+		//функ-я обновления листа
 }
 
 void EditorWindow::onDelSnakeClick()
 {
+    int row=0;
+    row = ui->SnakeList->currentRow();
+    if( row == -1 )
+        return;
+    QString str = ui->SnakeList->currentItem()->text();
 
+
+    //сделать проверки и если нужно, то удалить
+    //ui->SnakeList->takeItem(row);
+
+	//функ-я обновления листа
 }
 
 void EditorWindow::onOpenMapClicked()

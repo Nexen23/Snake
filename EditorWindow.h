@@ -3,7 +3,11 @@
 
 #include "Game.h"
 #include <QMenuBar>
-#include <QWidget>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QObject>
+#include <QVBoxLayout>
+#include <QMessageBox>
 
 namespace Ui {
 	class EditorWindow;
@@ -31,6 +35,12 @@ public:
     //ItemAddButton - кнопка добавления
     //ItemDelButton - кнопка удаления(выделенного)
 
+    //gameField - игровое поле(QTableWidget)
+
+    QDialog *window;
+    QLineEdit *line;
+    QPushButton *btn;
+
 private:
 	Ui::EditorWindow *ui;
 	Game *game;
@@ -54,6 +64,7 @@ public slots:
 	void onSaveMapClicked();
 	void onSetSizeClicked();
 
+    //нет привязки так как поле не реализовано(((
 	void onLMBMapCellPressed();
 	void onLMBMapCellReleased();
 	void onRMBMapCellPressed();
