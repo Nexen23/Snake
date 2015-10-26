@@ -4,14 +4,18 @@
 #include <QMap>
 #include <QObject>
 #include <QTimer>
+//#include <QThread>
 
 #include "Snake.h"
 #include "AI.h"
+#include "EditorWindow.h"
 #include "GameWindow.h"
 #include "Map.h"
 #include "FoodItem.h"
 
-//class GameWindow;
+
+class GameWindow;
+class EditorWindow;
 //class Snake;
 //class Map;
 //class AI;
@@ -21,9 +25,11 @@ class Game : public QObject
 	Q_OBJECT
 
 	GameWindow *gameWindow;
+    EditorWindow *editorWindow;
 	Map *map;
 	QMap<Snake*, AI*> snakesAIs;
     QTimer *timer;
+    //QThread GameThread;
     float ItemSpawnCoef;
     float FoodSpawnCoef;
     float SnakeMovesPerSecond;

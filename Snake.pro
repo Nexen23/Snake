@@ -29,7 +29,8 @@ SOURCES += \
     Item.cpp \
     BombItem.cpp \
     FoodItem.cpp \
-    main.cpp
+    main.cpp \
+    editorwindow.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -48,8 +49,12 @@ HEADERS  += \
     HoleObject.h \
     Item.h \
     BombItem.h \
-    FoodItem.h
+    FoodItem.h \
+    editorwindow.h
 
 FORMS    += \
     GameWindow.ui \
     EditorWindow.ui
+
+DISTFILES += \
+    61.gif

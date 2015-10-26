@@ -1,24 +1,32 @@
 #include "Game.h"
-#include "GameWindow.h"
+//#include "GameWindow.h"
+//#include "EditorWindow.h"
 
 Game::Game(QObject *parent) : QObject(parent)
 {
     gameWindow = new GameWindow(this, 0);
+    editorWindow = new EditorWindow(this, 0);
     timer = new QTimer(parent);
     timer->setInterval(1000);
     timer->setSingleShot(false);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
     SnakeMovesPerSecond = 0.5f;
+    //this->moveToThread(&workerThread);
+    //connect(&workerThread, &QThread::finished, this, &QObject::deleteLater);
+    //connect(this, &Game::sendToWindow, gameWindow, &GameWindow::handleResults);
+    //workerThread.start();
 }
 
 Game::~Game()
 {
-
+    //workerThread.quit();
+    //workerThread.wait();
 }
 
 void Game::showWindow()
 {
-	gameWindow->show();
+    editorWindow->show();
+    gameWindow->show();
 }
 
 void Game::setItemSpawnCoef(float coef)
@@ -62,6 +70,7 @@ void Game::loop()
     //7. Отрисовка происходящего на карте
     /////////////////////
     //Головы змеек ходят.
+
     QMapIterator<Snake*, AI*> i(snakesAIs);
     QMap <Snake*, QPoint*> oldHead;
     while (i.hasNext())
@@ -117,6 +126,7 @@ void Game::loop()
             }
         }
     }
+
     //Встречи со стенками
     i.toFront();
     x = -1, y = -1;
@@ -177,6 +187,7 @@ void Game::loop()
         }
     }
     //BodySlam змеек и чужих голов, отличается от предыдущего тем, что змея, в которую врезались - не умирает.
+
     i.toFront();
     x = -1, y = -1;
     while (i.hasNext())
@@ -275,6 +286,7 @@ void Game::loop()
         }
     }
     //Реализуем все mustDie
+
     i.toFront();
     while (i.hasNext())
     {
@@ -297,7 +309,9 @@ void Game::loop()
     //rand() для числа
     //float randomNum = ((float)(qrand()%100))/100;
     //Набираем вектор пустых ячеек на карте с NULL
+
     QVector<QPoint> empty;
+
     for (int imap = 0; imap < map->sizeX; imap++)
     {
         for (int jmap = 0; jmap < map->sizeX; jmap++)
@@ -306,39 +320,33 @@ void Game::loop()
                 empty << QPoint(imap,jmap);
         }
     }
+    //Генерируем еду
+    //!FoodItem *for_generation = new FoodItem(); //! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+    if (map->itemsTypesForGeneration[0]->getSpawnChance() <= FoodSpawnCoef && empty.size() > 0) //!for_generation <=> map->itemsTypesForGeneration[0]
+    {
+        //Генерируем в пустое место
+        int num = qrand()%empty.size();
+        //!map->field[empty[num].x()][empty[num].y()] = new FoodItem();//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+
+        //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
+        empty.removeAt(num);
+    }
     //Выбираем каждый элемент из map->itemsTypesForGeneration
     for (int loop = 0; loop < map->itemsTypesForGeneration.size(); loop++)
     {
-        //Для еды один коэффициент, для всего остального - другой
-        if (map->itemsTypesForGeneration[loop]->getId()==FOOD_ITEM)
+        if (map->itemsTypesForGeneration[loop]->getSpawnChance() <= ItemSpawnCoef && empty.size() > 0)
         {
-            if (map->itemsTypesForGeneration[loop]->getSpawnChance() <= FoodSpawnCoef && empty.size() > 0)
-            {
-                //Генерируем в пустое место
-                int num = qrand()%empty.size();
-                //!map->field[empty[num].x()][empty[num].y()] = new FoodItem();//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
-
-                //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
-                empty.removeAt(num);
-            }
-        }
-        else
-        {
-            if (map->itemsTypesForGeneration[loop]->getSpawnChance() <= ItemSpawnCoef && empty.size() > 0)
-            {
-                //Генерируем в пустое место
-                int num = qrand()%empty.size();
-                map->field[empty[num].x()][empty[num].y()] = (Item*)(new __typeof__ map->itemsTypesForGeneration[loop]);
-                //! Я не знать, как это делать!
-                //! Использовать экземаляр класса как
-                //! тип экземпляра класса для создания нового экземпляра класса этого же типа класса как и
-                //! экземпляр класса в map->itemsTypesForGeneration[loop]
-                //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
-                empty.removeAt(num);
-            }
+            //Генерируем в пустое место
+            int num = qrand()%empty.size();
+            map->field[empty[num].x()][empty[num].y()] = (Item*)(new __typeof__ map->itemsTypesForGeneration[loop]);
+            //! Я не знать, как это делать!
+            //! Использовать экземаляр класса как
+            //! тип экземпляра класса для создания нового экземпляра класса этого же типа класса как и
+            //! экземпляр класса в map->itemsTypesForGeneration[loop]
+            //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
+            empty.removeAt(num);
         }
     }
-
     //Если пустого места нет - вектор сайз равен нулю, то скипаем генерацию объекта
 
     //Генерим до конца все объекты на карту
@@ -348,6 +356,8 @@ void Game::start()
 {
     timer->setInterval(1000/SnakeMovesPerSecond/movesPerSecondDefault);
     timer->start();
+    //this->moveToThread(&GameThread);
+    //GameThread.start();
 }
 
 void Game::stop()

@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 
+#include "Game.h"
+
 class Game;
-class Map;
-class Snake;
-class Entity;
+//class Game;
+//class Map;
+//class Snake;
+//class Entity;
 
 namespace Ui {
 	class GameWindow;
@@ -33,6 +36,13 @@ private:
 signals:
 
 public slots:
+    void handleResults(const QString &);
+
+    void on_start_button_clicked();
+    void on_stop_button_clicked();
+    void on_reset_button_clicked();
+    void on_map_button_clicked();
+
     //void onStartClicked();
     //void onStopClicked();
     //void onResetClicked();
