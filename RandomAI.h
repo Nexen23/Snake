@@ -5,9 +5,14 @@
 
 class RandomAI : public AI
 {
+private:
+    int isBuzy();
+
 public:
 	RandomAI();
 	~RandomAI();
+
+    MoveDirection getNextMove(Snake *controllerSnake, Map *map);
 };
 
 #endif // RANDOMAI_H
