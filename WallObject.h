@@ -6,6 +6,7 @@
 class WallObject : public Object
 {
 public:
+<<<<<<< HEAD
     WallObject();
     ~WallObject();
 
@@ -13,6 +14,11 @@ public:
     const Id getId();
 
     const QBitmap getBitmap();
+=======
+	WallObject();
+    ~WallObject();
+    virtual void collide(Snake *snake, Map *map);
+>>>>>>> Master
 };
 
 #endif // WALLOBJECT_H

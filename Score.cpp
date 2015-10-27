@@ -6,7 +6,11 @@
  */
 Score::Score(int amount)
 {
+<<<<<<< HEAD
     this->amount = amount;
+=======
+    amount = 0;
+>>>>>>> Master
 }
 
 /**

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "Snake.h"
 
 /**
@@ -34,6 +35,12 @@ const QString Snake::getName()
 {
     return name;
 }
+=======
+#include <QPoint>
+
+#include "Snake.h"
+#include "Map.h"
+>>>>>>> Master
 
 /**
  * @author MGerasimchuk

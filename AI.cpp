@@ -1,8 +1,9 @@
 #include "AI.h"
 
-enum MoveDirection
+/*enum MoveDirection
 {
 	LEFT, RIGHT, UP, DOWN
+<<<<<<< HEAD
 };
 
 /**
@@ -22,3 +23,6 @@ AI::~AI()
 {
 
 }
+=======
+};*/
+>>>>>>> Master

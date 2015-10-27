@@ -2,8 +2,12 @@
 #define EDITORWINDOW_H
 
 #include "Game.h"
-
-#include <QWidget>
+#include <QMenuBar>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QObject>
+#include <QVBoxLayout>
+#include <QMessageBox>
 
 namespace Ui {
 	class EditorWindow;
@@ -19,12 +23,31 @@ public:
 
 	Map* getDefaultMap();
 
+    //SnakeList - ListView с Snake
+    //SnakeAddButton - кнопка добавления
+    //SnakeDelButton - кнопка удаления(выделенного)
+
+    //ObjectList - ListView с Object
+    //ObjectAddButton - кнопка добавления
+    //ObjectDelButton - кнопка удаления(выделенного)
+
+    //ItemList - ListView с Item
+    //ItemAddButton - кнопка добавления
+    //ItemDelButton - кнопка удаления(выделенного)
+
+    //gameField - игровое поле(QTableWidget)
+
+    QDialog *window;
+    QLineEdit *line;
+    QPushButton *btn;
+
 private:
 	Ui::EditorWindow *ui;
 	Game *game;
 	Map *map;
 
 public slots:
+<<<<<<< HEAD
     void onItemSelected() {};
     void onAddItemClick() {};
     void onDelItemClick() {};
@@ -46,6 +69,30 @@ public slots:
     void onLMBMapCellReleased() {};
     void onRMBMapCellPressed() {};
     void onRMBMapCellReleased() {};
+=======
+	void onItemSelected();
+	void onAddItemClick();
+	void onDelItemClick();
+
+	void onObjectSelected();
+	void onAddObjectClick();
+	void onDelObjectClick();
+
+	void onSnakeSelected();
+	void onAddSnakeClick();
+	void onDelSnakeClick();
+
+	void onOpenMapClicked();
+	void onCreateMapClicked();
+	void onSaveMapClicked();
+	void onSetSizeClicked();
+
+    //нет привязки так как поле не реализовано(((
+	void onLMBMapCellPressed();
+	void onLMBMapCellReleased();
+	void onRMBMapCellPressed();
+	void onRMBMapCellReleased();
+>>>>>>> Master
 };
 
 #endif // EDITORWINDOW_H

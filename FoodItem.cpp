@@ -1,10 +1,14 @@
 #include "FoodItem.h"
+<<<<<<< HEAD
 #include "Entity.h"
 
 /**
  * @author MGerasimchuk
  * 25.10
  */
+=======
+#include "Snake.h"
+>>>>>>> Master
 FoodItem::FoodItem()
 {
 
@@ -19,6 +23,7 @@ FoodItem::~FoodItem()
 
 }
 
+<<<<<<< HEAD
 /**
  * @author MGerasimchuk
  * 22.10
@@ -47,4 +52,10 @@ const QBitmap FoodItem::getBitmap()
     QBitmap item(fileName);
 
     return item;
+=======
+void FoodItem::collide(Snake *snake, Map *map)
+{
+    QPoint cell = snake->tail.last();
+    snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
+>>>>>>> Master
 }

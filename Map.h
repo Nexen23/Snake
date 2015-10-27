@@ -14,7 +14,7 @@ public:
 	~Map();
 
 	int sizeX, sizeY;
-	QVector<QVector<Entity*>> field;
+    QVector<QVector<Entity*> > field;
 
 	QVector<Item*> items;
 	QVector<Object*> objects;

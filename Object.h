@@ -5,6 +5,7 @@
 
 class Object : public virtual Entity
 {
+<<<<<<< HEAD
 public:
     Object();
     ~Object();
@@ -13,6 +14,9 @@ public:
     const Id getId();
 
     const QBitmap getBitmap();
+=======
+
+>>>>>>> Master
 };
 
 #endif // OBJECT_H

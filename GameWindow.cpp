@@ -19,5 +19,35 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
  */
 GameWindow::~GameWindow()
 {
-	delete ui;
+    delete ui;
+}
+
+void GameWindow::onStartClicked()
+{
+
+}
+
+void GameWindow::onStopClicked()
+{
+
+}
+
+void GameWindow::onResetClicked()
+{
+
+}
+
+void GameWindow::onOpenMapChoserDialog()
+{
+
+}
+
+void GameWindow::onMainSnakeSelected(QString name)
+{
+
+}
+
+void GameWindow::onOpenSnakeAIChoserDialog()
+{
+
 }

@@ -1,21 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>EditorWindow</class>
  <widget class="QWidget" name="EditorWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
+    <width>824</width>
+    <height>606</height>
+   </rect>
+<<<<<<< HEAD
+=======
+  </property>
+  <property name="minimumSize">
+   <size>
     <width>400</width>
     <height>300</height>
-   </rect>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>824</width>
+    <height>606</height>
+   </size>
+>>>>>>> Master
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>824</width>
+    <height>606</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>824</width>
+    <height>606</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QPushButton" name="SnakeAddButton">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>170</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="SnakeDelButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>170</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Del</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ObjectAddButton">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>346</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ObjectDelButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>346</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Del</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ItemAddButton">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>532</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ItemDelButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>532</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Del</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>396</y>
+     <width>41</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Items</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>705</x>
+     <y>214</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Objects</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>705</x>
+     <y>36</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Snakes</string>
+   </property>
+  </widget>
+<<<<<<< HEAD
+  <widget class="QTableWidget" name="gameField">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>531</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::InternalMove</enum>
+   </property>
+  </widget>
+=======
+>>>>>>> Master
+  <widget class="QListWidget" name="SnakeList">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>60</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="ObjectList">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>237</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="ItemList">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>422</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>200</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>380</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+<<<<<<< HEAD
+=======
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>611</width>
+     <height>551</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="mapField"/>
+  </widget>
+>>>>>>> Master
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

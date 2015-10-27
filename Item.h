@@ -7,6 +7,7 @@
 class Item : public Entity
 {
 public:
+<<<<<<< HEAD
     Item();
     ~Item();
 
@@ -14,6 +15,15 @@ public:
 
 	Score *scoresForPicker;
 
+=======
+    virtual float getSpawnChance()
+    {
+        return (qrand()%10)/10;
+    }
+
+
+    Score *scoresForPicker;
+>>>>>>> Master
 };
 
 #endif // ITEM_H
