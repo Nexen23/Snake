@@ -4,6 +4,7 @@
 #include "Snake.h"
 #include "RandomAI.h"
 #include "SimpleAI.h"
+#include "BombItem.h"
 
 /**
  * @author MGerasimchuk
@@ -328,6 +329,13 @@ void Game::loop()
                     *i.key()->position += QPoint(0,1);
             }
         }
+        //Если змейка ушла за карту, позицию головы возвращаем назад, а змейку убиваем
+        if (i.key()->position->rx() >= map->sizeX || i.key()->position->rx() < 0 ||
+            i.key()->position->ry() >= map->sizeY || i.key()->position->ry() < 0)
+        {
+            i.key()->mustDie = true;
+            i.key()->position = oldHead[i.key()];
+        }
     }
     //Обрабатываем коллайды на еду
     i.toFront();
@@ -555,12 +563,12 @@ void Game::loop()
         }
     }
     //Генерируем еду
-    //!FoodItem *for_generation = new FoodItem(); //! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
-    if (map->itemsTypesForGeneration[0]->getSpawnChance() <= FoodSpawnCoef && empty.size() > 0) //!for_generation <=> map->itemsTypesForGeneration[0]
+    FoodItem *for_generation = new FoodItem(); //! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+    if (for_generation->getSpawnChance()*FoodSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0) //!for_generation <=> map->itemsTypesForGeneration[0]
     {
         //Генерируем в пустое место
         int num = qrand()%empty.size();
-        //!map->field[empty[num].x()][empty[num].y()] = new FoodItem();//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+        map->field[empty[num].x()][empty[num].y()] = new FoodItem();//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
 
         //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
         empty.removeAt(num);
@@ -568,15 +576,13 @@ void Game::loop()
     //Выбираем каждый элемент из map->itemsTypesForGeneration
     for (int loop = 0; loop < map->itemsTypesForGeneration.size(); loop++)
     {
-        if (map->itemsTypesForGeneration[loop]->getSpawnChance() <= ItemSpawnCoef && empty.size() > 0)
+        if (map->itemsTypesForGeneration[loop]->getSpawnChance()*ItemSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0)
         {
             //Генерируем в пустое место
             int num = qrand()%empty.size();
-						// !!!!!!!!!! // map->field[empty[num].x()][empty[num].y()] = (Item*)(new __typeof__ map->itemsTypesForGeneration[loop]);
-            //! Я не знать, как это делать!
-            //! Использовать экземаляр класса как
-            //! тип экземпляра класса для создания нового экземпляра класса этого же типа класса как и
-            //! экземпляр класса в map->itemsTypesForGeneration[loop]
+            if (map->itemsTypesForGeneration[loop]->getId() == BOMB_ITEM) //Проверка ID
+                map->field[empty[num].x()][empty[num].y()] = new BombItem();
+            //else if (map->itemsTypesForGeneration[loop]->getId() == OTHER_ITEM) //Если появятся другие предметы, нужно будет добавить сюда код
             //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
             empty.removeAt(num);
         }

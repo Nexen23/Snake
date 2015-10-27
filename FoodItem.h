@@ -15,6 +15,8 @@ public:
     const QBitmap getBitmap();
 
     virtual void collide(Snake *snake, Map *map);
+
+    virtual float getSpawnChance();
 };
 
 #endif // FOODITEM_H

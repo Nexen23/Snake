@@ -176,3 +176,8 @@ void BombItem::collide(Snake *snake, Map *map)
     }
 
 }
+
+float BombItem::getSpawnChance()
+{
+    return 0.15f;
+}
