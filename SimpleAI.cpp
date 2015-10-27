@@ -1,5 +1,5 @@
 #include "SimpleAI.h"
-
+#include "Snake.h"
 /**
  * @author MGerasimchuk
  * 25.10
@@ -32,8 +32,9 @@ SNAKE*/
 
 int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*kof, Map* map) //moveDirection направление движения в текущий момент
 {
-	/*
-    QVector<QVector<Entity*>> buf_field;
+
+    QVector<QVector<Entity*> > buf_field;
+    int sizeX,sizeY, tmp;
     int x=0,y=0, buf_sizeX = sizeX = map->sizeX-1, buf_sizeY = sizeY = map->sizeY-1;
     int byf_head_x=head.x(),byf_head_y=head.y();
 
@@ -184,7 +185,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
                         buf_field[k][j] = temp;
                     }
                 }
-        int tmp=sizeX;
+        tmp=sizeX;
         buf_sizeX=buf_sizeY;
         buf_sizeY=tmp;
 
@@ -346,7 +347,7 @@ case UP:
 
     break;
 case DOWN:
-    int tmp = kof[UP];
+    tmp = kof[UP];
     kof[UP]=kof[DOWN];
     kof[DOWN]=tmp;
     tmp=kof[RIGHT];
@@ -354,6 +355,7 @@ case DOWN:
     kof[LEFT]=tmp;
 
     break;
+
 case RIGHT:
     kof[DOWN]=kof[RIGHT];
     kof[RIGHT]=kof[UP];
@@ -371,34 +373,36 @@ case LEFT:
 
 
 }
-*/
-	return -1;
+
+    return 1;
 } //не забыть про поворот коэффициентов
 
-MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
-		/*
-    QPoint head = controllerSnake->position , second = controllerSnake->tail.first();
+MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
+{
+
+    QPoint* head = controllerSnake->position;
+    QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
-        second=head;
-    QPoint buf = head - second;
+        second=*head;
+    QPoint buf = *head - second;
 
     int *kof = new int [4];
-    for(int i=0;i<n;i++){   kof[i] =100;  }
+    for(int i=0;i<4;i++){   kof[i] =1000;  }
 
     //учет положения первого за головой хвоста
     if(buf.x()==0)
         if(buf.y()>0){
-            kof[UP]=getCostsOfDirection(head,UP,kof,map);
+            kof[UP]=getCostsOfDirection(*head,UP,kof,map);
         }   else    {
 
-            kof[DOWN]=getCostsOfDirection(head,DOWN,kof,map);;
+            kof[DOWN]=getCostsOfDirection(*head,DOWN,kof,map);;
         }
     else
         if(buf.x()>0){
-            kof[RIGHT]=getCostsOfDirection(head,RIGHT,kof,map);;
+            kof[RIGHT]=getCostsOfDirection(*head,RIGHT,kof,map);;
         }   else    {
-            kof[LEFT]=getCostsOfDirection(head,LEFT,kof,map);;
+            kof[LEFT]=getCostsOfDirection(*head,LEFT,kof,map);;
         }
 
     int ForRand=0, Rand;
@@ -410,8 +414,8 @@ MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
     {
         Rand=rand()%4;
         if(Rand==-2)
-            return (Rand+1)%4;
-        else return Rand;
+            return (MoveDirection)((Rand+1)%4);
+        else return (MoveDirection)Rand;
     }
 
     Rand=rand()%ForRand+1;
@@ -420,13 +424,13 @@ MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
     for(int i=0;i<4;i++)
         if(kof[i]>0){
             if(Rand>=t && Rand <=t+kof[i])
-                return i;
+                return (MoveDirection)i;
             t+=kof[i];
         }
 
-    return 2;
-		*/
-	return UP;
+    return UP;
+
+
 }
 
 QString SimpleAI::getName()
