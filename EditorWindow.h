@@ -9,6 +9,7 @@
 #include <QMessageBox>
 
 class Game;
+class Map;
 
 namespace Ui {
 	class EditorWindow;

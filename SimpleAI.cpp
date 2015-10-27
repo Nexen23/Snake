@@ -32,7 +32,7 @@ SNAKE*/
 
 int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*kof, Map* map) //moveDirection направление движения в текущий момент
 {
-
+	/*
     QVector<QVector<Entity*>> buf_field;
     int x=0,y=0, buf_sizeX = sizeX = map->sizeX-1, buf_sizeY = sizeY = map->sizeY-1;
     int byf_head_x=head.x(),byf_head_y=head.y();
@@ -369,12 +369,14 @@ case LEFT:
 
     break;
 
-}
 
+}
+*/
+	return -1;
 } //не забыть про поворот коэффициентов
 
-SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
-
+MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
+		/*
     QPoint head = controllerSnake->position , second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
@@ -423,5 +425,11 @@ SimpleAI::getNextMove(Snake *controllerSnake, Map *map){
         }
 
     return 2;
+		*/
+	return UP;
+}
 
+QString SimpleAI::getName()
+{
+	return "SimpleAI";
 }

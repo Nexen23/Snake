@@ -17,21 +17,16 @@ SOURCES += \
     Game.cpp \
     Map.cpp \
     AI.cpp \
-    Snake.cpp \
     Score.cpp \
     RandomAI.cpp \
     SimpleAI.cpp \
     Object.cpp \
     EditorWindow.cpp \
     Item.cpp \
-    RandomAI.cpp \
-    SimpleAI.cpp \
     Entity.cpp \
     Snake.cpp \
-    Object.cpp \
     WallObject.cpp \
     HoleObject.cpp \
-    Item.cpp \
     BombItem.cpp \
     FoodItem.cpp \
     main.cpp
@@ -40,20 +35,17 @@ HEADERS  += \
     GameWindow.h \
     Game.h \
     Map.h \
+    AI.h \
     Snake.h \
     Object.h \
     EditorWindow.h \
     Item.h \
-    FoodItem.h \
     Entity.h \
-    Snake.h \
     Object.h \
     WallObject.h \
     HoleObject.h \
-    Item.h \
     BombItem.h \
     FoodItem.h \
-    AI.h \
     RandomAI.h \
     Score.h \
     SimpleAI.h

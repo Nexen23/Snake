@@ -1,6 +1,9 @@
 #include "EditorWindow.h"
 #include "ui_EditorWindow.h"
 
+#include "Map.h"
+#include "Snake.h"
+
 /**
  * @author MGerasimchuk
  * 25.10
@@ -56,7 +59,6 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
  */
 EditorWindow::~EditorWindow()
 {
-    delete game;
 		delete map;
     delete ui;
 }
@@ -234,7 +236,7 @@ void EditorWindow::onRMBMapCellReleased()
 }
 
 Map* EditorWindow::getDefaultMap(){
-
+/*
     Map* ret = new Map(12,9);
 
     Snake* s1= new Snake("Левая", 3);
@@ -271,4 +273,6 @@ Map* EditorWindow::getDefaultMap(){
 
 
 		return ret;
+		*/
+	return new Map(0,0);
 }

@@ -21,7 +21,7 @@ RandomAI::~RandomAI()
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
-
+/*
     QPoint head = controllerSnake->position , second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
@@ -86,5 +86,11 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
         }
 
     return 1;
+*/
+	return UP;
+}
 
+QString RandomAI::getName()
+{
+	return "RandomAI";
 }
