@@ -14,9 +14,15 @@
    <string>Snake</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+<<<<<<< HEAD
    <layout class="QGridLayout" name="gridLayout_7">
     <item row="0" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+=======
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+>>>>>>> Erofes
       <property name="spacing">
        <number>6</number>
       </property>
@@ -24,14 +30,22 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
+<<<<<<< HEAD
        <widget class="QPushButton" name="map_button_3">
+=======
+       <widget class="QPushButton" name="map_button">
+>>>>>>> Erofes
         <property name="text">
          <string>Map</string>
         </property>
        </widget>
       </item>
       <item>
+<<<<<<< HEAD
        <widget class="QPushButton" name="start_button_3">
+=======
+       <widget class="QPushButton" name="start_button">
+>>>>>>> Erofes
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -41,14 +55,22 @@
        </widget>
       </item>
       <item>
+<<<<<<< HEAD
        <widget class="QPushButton" name="stop_button_3">
+=======
+       <widget class="QPushButton" name="stop_button">
+>>>>>>> Erofes
         <property name="text">
          <string>Stop</string>
         </property>
        </widget>
       </item>
       <item>
+<<<<<<< HEAD
        <widget class="QPushButton" name="reset_button_3">
+=======
+       <widget class="QPushButton" name="reset_button">
+>>>>>>> Erofes
         <property name="text">
          <string>Reset</string>
         </property>
@@ -57,9 +79,15 @@
      </layout>
     </item>
     <item row="1" column="0">
+<<<<<<< HEAD
      <layout class="QGridLayout" name="gridLayout_6">
       <item row="0" column="0">
        <spacer name="horizontalSpacer_2">
+=======
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer">
+>>>>>>> Erofes
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -74,9 +102,15 @@
      </layout>
     </item>
     <item row="1" column="1">
+<<<<<<< HEAD
      <layout class="QGridLayout" name="gridLayout_5">
       <item row="13" column="0" colspan="2">
        <spacer name="verticalSpacer_3">
+=======
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="13" column="0" colspan="2">
+       <spacer name="verticalSpacer">
+>>>>>>> Erofes
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -89,14 +123,22 @@
        </spacer>
       </item>
       <item row="5" column="0">
+<<<<<<< HEAD
        <widget class="QLabel" name="label_13">
+=======
+       <widget class="QLabel" name="label_2">
+>>>>>>> Erofes
         <property name="text">
          <string>Objects index</string>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
+<<<<<<< HEAD
        <widget class="QDoubleSpinBox" name="eat_index_3">
+=======
+       <widget class="QDoubleSpinBox" name="eat_index">
+>>>>>>> Erofes
         <property name="decimals">
          <number>0</number>
         </property>
@@ -109,7 +151,11 @@
        </widget>
       </item>
       <item row="2" column="0" colspan="2">
+<<<<<<< HEAD
        <widget class="QComboBox" name="select_snake_3">
+=======
+       <widget class="QComboBox" name="select_snake">
+>>>>>>> Erofes
         <item>
          <property name="text">
           <string>Snake 1</string>
@@ -128,7 +174,11 @@
        </widget>
       </item>
       <item row="7" column="1">
+<<<<<<< HEAD
        <widget class="QDoubleSpinBox" name="snake_speed_3">
+=======
+       <widget class="QDoubleSpinBox" name="snake_speed">
+>>>>>>> Erofes
         <property name="decimals">
          <number>0</number>
         </property>
@@ -141,28 +191,44 @@
        </widget>
       </item>
       <item row="10" column="0" colspan="2">
+<<<<<<< HEAD
        <widget class="Line" name="line_7">
+=======
+       <widget class="Line" name="line_4">
+>>>>>>> Erofes
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2" alignment="Qt::AlignHCenter">
+<<<<<<< HEAD
        <widget class="QLabel" name="label_14">
+=======
+       <widget class="QLabel" name="label">
+>>>>>>> Erofes
         <property name="text">
          <string>Your snake</string>
         </property>
        </widget>
       </item>
       <item row="6" column="0">
+<<<<<<< HEAD
        <widget class="QLabel" name="label_15">
+=======
+       <widget class="QLabel" name="label_3">
+>>>>>>> Erofes
         <property name="text">
          <string>Eat index</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
+<<<<<<< HEAD
        <widget class="QDoubleSpinBox" name="object_index_3">
+=======
+       <widget class="QDoubleSpinBox" name="object_index">
+>>>>>>> Erofes
         <property name="decimals">
          <number>0</number>
         </property>
@@ -175,14 +241,22 @@
        </widget>
       </item>
       <item row="7" column="0">
+<<<<<<< HEAD
        <widget class="QLabel" name="label_16">
+=======
+       <widget class="QLabel" name="label_4">
+>>>>>>> Erofes
         <property name="text">
          <string>Snake speed</string>
         </property>
        </widget>
       </item>
       <item row="8" column="1">
+<<<<<<< HEAD
        <widget class="QDoubleSpinBox" name="death_speed_3">
+=======
+       <widget class="QDoubleSpinBox" name="death_speed">
+>>>>>>> Erofes
         <property name="decimals">
          <number>0</number>
         </property>
@@ -195,24 +269,39 @@
        </widget>
       </item>
       <item row="8" column="0">
+<<<<<<< HEAD
        <widget class="QLabel" name="label_17">
+=======
+       <widget class="QLabel" name="label_5">
+>>>>>>> Erofes
         <property name="text">
          <string>Death speed</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="2">
+<<<<<<< HEAD
        <widget class="Line" name="line_8">
+=======
+       <widget class="Line" name="line_3">
+>>>>>>> Erofes
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="12" column="0" colspan="2">
+<<<<<<< HEAD
        <widget class="QComboBox" name="snake_intelligence_3"/>
       </item>
       <item row="11" column="0" colspan="2" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="label_18">
+=======
+       <widget class="QComboBox" name="snake_intelligence"/>
+      </item>
+      <item row="11" column="0" colspan="2" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="label_6">
+>>>>>>> Erofes
         <property name="text">
          <string>Snake intelligence</string>
         </property>

@@ -4,12 +4,12 @@
 #include "Entity.h"
 #include "Map.h"
 
-enum MoveDirection;
+enum MoveDirection { LEFT, RIGHT, UP, DOWN };
 
 class AI
 {
 public:
-	virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map) = 0;
+    virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map) = 0;
 	virtual QString getName() = 0;
 };
 

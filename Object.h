@@ -5,6 +5,7 @@
 
 class Object : public virtual Entity
 {
+
 };
 
 #endif // OBJECT_H

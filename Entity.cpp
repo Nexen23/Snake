@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-enum Id
+/*enum Id
 {
 	FOOD_ITEM,
 	BOMB_ITEM,
@@ -9,4 +9,4 @@ enum Id
 	HOLE_OBJECT,
 
 	SNAKE
-};
+};*/

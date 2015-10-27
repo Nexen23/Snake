@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 
+#include "Game.h"
+
 class Game;
-class Map;
-class Snake;
-class Entity;
+//class Game;
+//class Map;
+//class Snake;
+//class Entity;
 
 namespace Ui {
 	class GameWindow;
@@ -20,9 +23,9 @@ public:
 	explicit GameWindow(Game *game, QWidget *parent = 0);
 	~GameWindow();
 
-	void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
-	void update();
-	void setWinner(QVector<Snake> snakes);
+    //void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
+    void update();
+    //void setWinner(QVector<Snake> snakes);
 
 private:
 	Ui::GameWindow *ui;
@@ -33,6 +36,7 @@ private:
 signals:
 
 public slots:
+<<<<<<< HEAD
     void on_start_button_clicked();
     void on_stop_button_clicked();
     void on_reset_button_clicked();
@@ -40,6 +44,22 @@ public slots:
 	
 	void onMainSnakeSelected(QString name);
 	void onOpenSnakeAIChoserDialog();
+=======
+    void handleResults(const QString &);
+
+    void on_start_button_clicked();
+    void on_stop_button_clicked();
+    void on_reset_button_clicked();
+    void on_map_button_clicked();
+
+    //void onStartClicked();
+    //void onStopClicked();
+    //void onResetClicked();
+
+    //void onOpenMapChoserDialog();
+    //void onMainSnakeSelected(QString name);
+    //void onOpenSnakeAIChoserDialog();
+>>>>>>> Erofes
 };
 
 #endif // GAMEWINDOW_H

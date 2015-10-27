@@ -19,13 +19,8 @@ SOURCES += \
     AI.cpp \
     Snake.cpp \
     Score.cpp \
-    RandomAI.cpp \
-    SimpleAI.cpp \
     Object.cpp \
-    EditorWindow.cpp \
     Item.cpp \
-    RandomAI.cpp \
-    SimpleAI.cpp \
     Entity.cpp \
     Snake.cpp \
     Object.cpp \
@@ -34,7 +29,8 @@ SOURCES += \
     Item.cpp \
     BombItem.cpp \
     FoodItem.cpp \
-    main.cpp
+    main.cpp \
+    editorwindow.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -43,14 +39,9 @@ HEADERS  += \
     AI.h \
     Snake.h \
     Score.h \
-    RandomAI.h \
-    SimpleAI.h \
     Object.h \
-    EditorWindow.h \
     Item.h \
     FoodItem.h \
-    RandomAI.h \
-    SimpleAI.h \
     Entity.h \
     Snake.h \
     Object.h \
@@ -58,8 +49,12 @@ HEADERS  += \
     HoleObject.h \
     Item.h \
     BombItem.h \
-    FoodItem.h
+    FoodItem.h \
+    editorwindow.h
 
 FORMS    += \
     GameWindow.ui \
     EditorWindow.ui
+
+DISTFILES += \
+    61.gif

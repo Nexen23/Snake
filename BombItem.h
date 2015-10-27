@@ -10,6 +10,7 @@ public:
 	~BombItem();
 
 	const int damageRadius = 3;
+    virtual void collide(Snake *snake, Map *map);
 };
 
 #endif // BOMBITEM_H
