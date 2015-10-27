@@ -21,13 +21,14 @@ RandomAI::~RandomAI()
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
-/*
-    QPoint head = controllerSnake->position , second = controllerSnake->tail.first();
+
+    QPoint* head = controllerSnake->position;
+    QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
-        second=head;
+        second=*head;
 
-    QPoint buf = head - second;
+    QPoint buf = *head - second;
 
     int kof[4] = {1,1,1,1};
     //учет положения первого за головой хвоста
@@ -49,16 +50,16 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
                 kof[RIGHT]=-2;
             }
    //учет стен, дырок, остального хвоста
-    if(map->field[head.x()-1][head.y()]->getId()>=WALL_OBJECT && map->field[head.x()-1][head.y()]<=SNAKE)
+    if((map->field[head->x()-1][head->y()]->getId()>=WALL_OBJECT && map->field[head->x()-1][head->y()]->getId()<=SNAKE) || (head->x()-1)<0 )
         kof[LEFT]=-1;
 
-    if(map->field[head.x()+1][head.y()]->getId()>=WALL_OBJECT && map->field[head.x()+1][head.y()]<=SNAKE)
+    if((map->field[head->x()+1][head->y()]->getId()>=WALL_OBJECT && map->field[head->x()+1][head->y()]->getId()<=SNAKE) || (head->x()+1)>=map->sizeX)
         kof[RIGHT]=-1;
 
-    if(map->field[head.x()][head.y()+1]->getId()>=WALL_OBJECT && map->field[head.x()][head.y()+1]<=SNAKE)
+    if((map->field[head->x()][head->y()+1]->getId()>=WALL_OBJECT && map->field[head->x()][head->y()+1]->getId()<=SNAKE) || (head->y()+1) >= map->sizeY)
         kof[UP]=-1;
 
-    if(map->field[head.x()][head.y()-1]->getId()>=WALL_OBJECT && map->field[head.x()][head.y()-1]<=SNAKE)
+    if((map->field[head->x()][head->y()-1]->getId()>=WALL_OBJECT && map->field[head->x()][head->y()-1]->getId()<=SNAKE) || (head->y()-1) <0)
         kof[DOWN]=-1;
 
 
@@ -70,9 +71,9 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     if(ForRand==0) //выхода нет :)
     {
         Rand=rand()%4;
-        if(Rand==-2)
-            return (Rand+1)%4;
-        else return Rand;
+        if(kof[Rand]==-2)
+            return (MoveDirection)((Rand+1)%4);
+        else return (MoveDirection)Rand;
     }
 
     Rand=rand()%ForRand+1;
@@ -81,13 +82,12 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     for(int i=0;i<4;i++)
         if(kof[i]>0){
             if(Rand>=t && Rand <=t+kof[i])
-                return i;
+                return (MoveDirection)i;
             t+=kof[i];
         }
 
-    return 1;
-*/
-	return UP;
+    return UP;
+
 }
 
 QString RandomAI::getName()
