@@ -48,6 +48,7 @@ const QBitmap FoodItem::getBitmap()
     QBitmap item(fileName);
 
     return item;
+}
 
 void FoodItem::collide(Snake *snake, Map *map)
 {

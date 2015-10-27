@@ -48,7 +48,6 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onSnakeSelected()));
     connect(ui->ObjectList,SIGNAL(clicked(QModelIndex)),this,SLOT(onObjectSelected()));
     connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onItemSelected()));
->>>>>>> Master
 }
 
 /**
