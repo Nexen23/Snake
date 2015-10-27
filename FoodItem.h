@@ -8,6 +8,7 @@ class FoodItem : public Item
 public:
 	FoodItem();
 	~FoodItem();
+    virtual void collide(Snake *snake, Map *map);
 };
 
 #endif // FOODITEM_H

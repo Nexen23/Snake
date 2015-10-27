@@ -7,7 +7,8 @@ class HoleObject : public Object
 {
 public:
 	HoleObject();
-	~HoleObject();
+    ~HoleObject();
+    virtual void collide(Snake *snake, Map *map);
 };
 
 #endif // HOLEOBJECT_H

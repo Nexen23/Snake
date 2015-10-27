@@ -12,6 +12,21 @@
     <width>824</width>
     <height>606</height>
    </rect>
+<<<<<<< HEAD
+=======
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>824</width>
+    <height>606</height>
+   </size>
+>>>>>>> Master
   </property>
   <property name="minimumSize">
    <size>
@@ -181,6 +196,7 @@
     <string>Snakes</string>
    </property>
   </widget>
+<<<<<<< HEAD
   <widget class="QTableWidget" name="gameField">
    <property name="geometry">
     <rect>
@@ -194,6 +210,8 @@
     <enum>QAbstractItemView::InternalMove</enum>
    </property>
   </widget>
+=======
+>>>>>>> Master
   <widget class="QListWidget" name="SnakeList">
    <property name="geometry">
     <rect>
@@ -250,6 +268,20 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
+<<<<<<< HEAD
+=======
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>611</width>
+     <height>551</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="mapField"/>
+  </widget>
+>>>>>>> Master
  </widget>
  <resources/>
  <connections/>

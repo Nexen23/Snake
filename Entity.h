@@ -4,7 +4,19 @@
 #include <QBitmap>
 #include <QObject>
 
-enum Id;
+//#include "Snake.h"
+//#include "Map.h"
+
+enum Id
+{
+    FOOD_ITEM,
+    BOMB_ITEM,
+
+    WALL_OBJECT,
+    HOLE_OBJECT,
+
+    SNAKE
+};
 class Snake;
 class Map;
 
@@ -12,11 +24,11 @@ class Entity
 {
 public:
 	virtual const QString getName() = 0;
-	virtual const Id getId() = 0;
+    virtual const Id getId() = 0;
 	virtual const QBitmap getBitmap() = 0;
 	virtual void collide(Snake *snake, Map *map) = 0;
 
-	QPoint *position;
+    QPoint *position;
 	bool isDead = false;
 };
 

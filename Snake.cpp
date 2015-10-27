@@ -1,12 +1,5 @@
+#include <QPoint>
+
 #include "Snake.h"
-
-Snake::Snake()
-{
-
-}
-
-Snake::~Snake()
-{
-
-}
+#include "Map.h"
 
