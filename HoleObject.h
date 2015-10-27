@@ -6,7 +6,6 @@
 class HoleObject : public Object
 {
 public:
-<<<<<<< HEAD
     HoleObject();
     ~HoleObject();
 
@@ -14,11 +13,8 @@ public:
     const Id getId();
 
     const QBitmap getBitmap();
-=======
-	HoleObject();
-    ~HoleObject();
+
     virtual void collide(Snake *snake, Map *map);
->>>>>>> Master
 };
 
 #endif // HOLEOBJECT_H

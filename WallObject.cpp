@@ -19,7 +19,6 @@ WallObject::~WallObject()
 
 }
 
-<<<<<<< HEAD
 /**
  * @author MGerasimchuk
  * 22.10
@@ -48,10 +47,8 @@ const QBitmap WallObject::getBitmap()
 
     return item;
 }
-=======
+
 void WallObject::collide(Snake *snake, Map *map)
 {
     snake->mustDie = true;
 }
-
->>>>>>> Master

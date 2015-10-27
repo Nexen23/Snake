@@ -9,15 +9,11 @@ private:
     int isBuzy();
 
 public:
-<<<<<<< HEAD
-    RandomAI();
-    ~RandomAI();
-=======
 	RandomAI();
 	~RandomAI();
 
     MoveDirection getNextMove(Snake *controllerSnake, Map *map);
->>>>>>> Master
+		QString getName();
 };
 
 #endif // RANDOMAI_H

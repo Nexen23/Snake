@@ -1,5 +1,7 @@
-<<<<<<< HEAD
+#include <QPoint>
+
 #include "Snake.h"
+#include "Map.h"
 
 /**
  * @author MGerasimchuk
@@ -7,12 +9,7 @@
  */
 Snake::Snake(QString name, int length)
 {
-   mustDie = false;
-   snakeInTheHole = false;
-
    this->name = name;
-
-   currentScores = new Score(0);
    tail.resize(length);
 }
 
@@ -35,12 +32,6 @@ const QString Snake::getName()
 {
     return name;
 }
-=======
-#include <QPoint>
-
-#include "Snake.h"
-#include "Map.h"
->>>>>>> Master
 
 /**
  * @author MGerasimchuk

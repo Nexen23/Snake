@@ -11,9 +11,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 {
 	ui->setupUi(this);
 	this->game = game;
-<<<<<<< HEAD
-    map = new Map(0,0);
-=======
+		map = new Map(0,0);
 
     
 	//создание меню
@@ -59,11 +57,8 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
  */
 EditorWindow::~EditorWindow()
 {
-<<<<<<< HEAD
     delete game;
-    delete map;
-	delete ui;
-=======
+		delete map;
     delete ui;
 }
 
@@ -276,6 +271,5 @@ Map* EditorWindow::getDefaultMap(){
     ret->snakes->append(s2);
 
 
-    return ret;
->>>>>>> Master
+		return ret;
 }

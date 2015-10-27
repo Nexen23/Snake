@@ -1,4 +1,5 @@
 #include "RandomAI.h"
+#include "Snake.h"
 
 /**
  * @author MGerasimchuk
@@ -19,7 +20,7 @@ RandomAI::~RandomAI()
 }
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
-RandomAI::getNextMove(Snake *controllerSnake, Map *map){
+MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
 
     QPoint head = controllerSnake->position , second = controllerSnake->tail.first();
 

@@ -20,7 +20,6 @@ HoleObject::~HoleObject()
 
 }
 
-<<<<<<< HEAD
 /**
  * @author MGerasimchuk
  * 22.10
@@ -50,9 +49,7 @@ const QBitmap HoleObject::getBitmap()
     return item;
 }
 
-=======
 void HoleObject::collide(Snake *snake, Map *map)
 {
     snake->snakeInTheHole = true;
 }
->>>>>>> Master

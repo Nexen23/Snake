@@ -30,7 +30,7 @@ HOLE_OBJECT,
 
 SNAKE*/
 
-MoveDirection SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*kof, Map* map) //moveDirection направление движения в текущий момент
+int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*kof, Map* map) //moveDirection направление движения в текущий момент
 {
 
     QVector<QVector<Entity*>> buf_field;

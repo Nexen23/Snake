@@ -4,13 +4,9 @@
  * @author MGerasimchuk
  * 25.10
  */
-Score::Score(int amount)
+Score::Score()
 {
-<<<<<<< HEAD
-    this->amount = amount;
-=======
-    amount = 0;
->>>>>>> Master
+		amount = 0;
 }
 
 /**

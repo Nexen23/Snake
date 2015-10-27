@@ -6,7 +6,7 @@
  */
 Item::Item()
 {
-    scoresForPicker = new Score(0);
+		scoresForPicker = new Score();
 }
 
 /**

@@ -1,14 +1,9 @@
 #include "Game.h"
-<<<<<<< HEAD
 #include "GameWindow.h"
 #include "EditorWindow.h"
 #include "Snake.h"
 #include "RandomAI.h"
 #include "SimpleAI.h"
-=======
-//#include "GameWindow.h"
-//#include "EditorWindow.h"
->>>>>>> Master
 
 /**
  * @author MGerasimchuk
@@ -16,32 +11,26 @@
  */
 Game::Game(QObject *parent) : QObject(parent)
 {
-<<<<<<< HEAD
     gameWindow = new GameWindow(this);
+		editorWindow = new EditorWindow(this);
     map = new Map(0, 0);
     snakesAIs.clear();
     SnakeMovesBeforeTailCellDeath = 0;
     CurrentMove = 0;
     ItemSpawnCoef = 0.5;
     FoodSpawnCoef = 0.5;
-    SnakeMovesPerSecond = 1;
+		SnakeMovesPerSecond = 1;
 
-=======
-    gameWindow = new GameWindow(this, 0);
-    editorWindow = new EditorWindow(this, 0);
->>>>>>> Master
     timer = new QTimer(parent);
     timer->setInterval(1000);
     timer->setSingleShot(false);
     connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
-<<<<<<< HEAD
-=======
+
     SnakeMovesPerSecond = 0.5f;
     //this->moveToThread(&workerThread);
     //connect(&workerThread, &QThread::finished, this, &QObject::deleteLater);
     //connect(this, &Game::sendToWindow, gameWindow, &GameWindow::handleResults);
     //workerThread.start();
->>>>>>> Master
 }
 
 /**
@@ -50,14 +39,12 @@ Game::Game(QObject *parent) : QObject(parent)
  */
 Game::~Game()
 {
-<<<<<<< HEAD
     delete gameWindow;
     delete map;
     snakesAIs.clear();
-=======
+
     //workerThread.quit();
     //workerThread.wait();
->>>>>>> Master
 }
 
 /**
@@ -66,7 +53,6 @@ Game::~Game()
  */
 void Game::showWindow()
 {
-<<<<<<< HEAD
     gameWindow->show();
 }
 
@@ -194,9 +180,9 @@ QVector<QString> Game::getMapList()
  * @author MGerasimchuk
  * 25.10
  */
-QVector<AI> Game::getAIList()
+QVector<AI*> Game::getAIList()
 {
-    QVector<AI> list;
+		QVector<AI*> list;
 
     list.push_back(new RandomAI());
     list.push_back(new SimpleAI());
@@ -272,9 +258,9 @@ Map *Game::loadMapFromFile(QString mapName)
 
     inFile->close();
     return m;
-=======
-    editorWindow->show();
-    gameWindow->show();
+
+		//editorWindow->show();
+		//gameWindow->show();
 }
 
 void Game::setItemSpawnCoef(float coef)
@@ -586,7 +572,7 @@ void Game::loop()
         {
             //Генерируем в пустое место
             int num = qrand()%empty.size();
-            map->field[empty[num].x()][empty[num].y()] = (Item*)(new __typeof__ map->itemsTypesForGeneration[loop]);
+						// !!!!!!!!!! // map->field[empty[num].x()][empty[num].y()] = (Item*)(new __typeof__ map->itemsTypesForGeneration[loop]);
             //! Я не знать, как это делать!
             //! Использовать экземаляр класса как
             //! тип экземпляра класса для создания нового экземпляра класса этого же типа класса как и
@@ -617,5 +603,4 @@ void Game::reset()
 {
     timer->stop();
     //! loadMapFromFile("Here's our file"); //!Добавить тут ссылку на карту итп.
->>>>>>> Master
 }

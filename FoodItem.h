@@ -6,7 +6,6 @@
 class FoodItem : public Item
 {
 public:
-<<<<<<< HEAD
     FoodItem();
     ~FoodItem();
 
@@ -14,11 +13,8 @@ public:
     const Id getId();
 
     const QBitmap getBitmap();
-=======
-	FoodItem();
-	~FoodItem();
+
     virtual void collide(Snake *snake, Map *map);
->>>>>>> Master
 };
 
 #endif // FOODITEM_H

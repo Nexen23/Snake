@@ -29,7 +29,7 @@ SOURCES += \
     Entity.cpp \
     Snake.cpp \
     Object.cpp \
-    WallObjectallobject.cpp \
+    WallObject.cpp \
     HoleObject.cpp \
     Item.cpp \
     BombItem.cpp \
