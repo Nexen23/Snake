@@ -212,7 +212,46 @@ void EditorWindow::onSaveMapClicked()
 
 void EditorWindow::onSetSizeClicked()
 {
+    //Минимальный возможный размер создаваемой карты - 6х6, максимальный - 100х90
+    QDialog *dialog = new QDialog();
+    QLabel *label_1 = new QLabel(dialog);
+    QLabel *label_2 = new QLabel(dialog);
 
+    label_1->setText("Size X");
+    label_2->setText("Size Y");
+
+    QLineEdit *line_edit_1 = new QLineEdit(dialog);
+    QLineEdit *line_edit_2 = new QLineEdit(dialog);
+
+    line_edit_1->setText(QString::number(map->sizeX));
+    line_edit_2->setText(QString::number(map->sizeY));
+
+    QPushButton *button_1 = new QPushButton("Set", dialog );
+    QPushButton *button_2 = new QPushButton("Cancel", dialog );
+
+    //Нажатие на кнопку "Set"
+    //connect(button_1, SIGNAL(clicked()), "reciver", SLOT("slot"));
+    connect(button_2, SIGNAL(clicked()), dialog, SLOT(close()));
+
+    QVBoxLayout *layout = new QVBoxLayout( dialog );
+    QHBoxLayout *horizontal_layout_1 = new QHBoxLayout( );
+    QHBoxLayout *horizontal_layout_2 = new QHBoxLayout( );
+    QHBoxLayout *horizontal_layout_3 = new QHBoxLayout( );
+    horizontal_layout_1->addWidget(label_1);
+    horizontal_layout_1->addWidget(line_edit_1);
+    layout->insertLayout(layout->count(),horizontal_layout_1);
+    horizontal_layout_2->addWidget(label_2);
+    horizontal_layout_2->addWidget(line_edit_2);
+    layout->insertLayout(layout->count(),horizontal_layout_2);
+    horizontal_layout_3->addWidget(button_1);
+    horizontal_layout_3->addWidget(button_2);
+    layout->insertLayout(layout->count(),horizontal_layout_3);
+
+    dialog->resize(200,100);
+    dialog->setWindowTitle("Set size of map");
+    dialog->setLayout(layout);
+    dialog->setModal(true);
+    dialog->show();
 }
 
 void EditorWindow::onLMBMapCellPressed()
