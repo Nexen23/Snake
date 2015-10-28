@@ -8,11 +8,11 @@ Map::Map(int sizeX, int sizeY)
 {
     field.clear();
 
-    for(int i=0; i<sizeY;i++){
+    for(int i=0; i<sizeX;i++){
         QVector<Entity*> tmp;
 
         field.append(tmp);
-        for(int j=0;j<sizeX;j++)
+        for(int j=0;j<sizeY;j++)
             field[i].append(NULL);
     }
 
