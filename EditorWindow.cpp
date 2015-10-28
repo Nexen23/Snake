@@ -14,7 +14,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 {
 	ui->setupUi(this);
 	this->game = game;
-		map = new Map(0,0);
+    map = new Map(0,0);
 
     
 	//создание меню
@@ -59,7 +59,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
  */
 EditorWindow::~EditorWindow()
 {
-		delete map;
+    delete map;
     delete ui;
 }
 
@@ -119,17 +119,17 @@ void EditorWindow::onAddObjectClick()
 
     window->resize(200,100);
     btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    btn->setMinimumWidth(10);
+    btn->setMinimumHeight(15);
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
+    QVBoxLayout *layout = new QVBoxLayout( window );
+    layout->addWidget(line);
+    layout->addWidget(btn);
 
-        window->setWindowTitle("New Object");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    window->setWindowTitle("New Object");
+    window->setLayout(layout);
+    window->setModal(true);
+    window->show();
 
   //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
 		//функ-я обновления листа
@@ -164,17 +164,17 @@ void EditorWindow::onAddSnakeClick()
 
     window->resize(200,100);
     btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    btn->setMinimumWidth(10);
+    btn->setMinimumHeight(15);
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
+    QVBoxLayout *layout = new QVBoxLayout( window );
+    layout->addWidget(line);
+    layout->addWidget(btn);
 
-        window->setWindowTitle("New Snake");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    window->setWindowTitle("New Snake");
+    window->setLayout(layout);
+    window->setModal(true);
+    window->show();
 
   //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
 		//функ-я обновления листа
@@ -202,7 +202,15 @@ void EditorWindow::onOpenMapClicked()
 
 void EditorWindow::onCreateMapClicked()
 {
-
+    map = getDefaultMap();
+    for (int i = 0; i < map->sizeX; i++)
+    {
+        for (int j = 0; j < map->sizeY; j++)
+        {
+            //Создание карты на сетке grid, в качестве клеток должен быть element
+            //ui->mapField->addWidget(element,i,j,5,5,Qt::AlignCenter);
+        }
+    }
 }
 
 void EditorWindow::onSaveMapClicked()
@@ -278,9 +286,8 @@ Map* EditorWindow::getDefaultMap(){
 
     Map* ret = new Map(12,9);
 
-    Snake* s1= new Snake("Левая", 3);
-    s1->position->setX(2);
-    s1->position->setY(5);
+    Snake* s1= new Snake("Левая", 2);
+    s1->position = new QPoint(2,5);
 
     s1->tail << QPoint(1,5);
     s1->tail << QPoint(0,5);
@@ -292,9 +299,8 @@ Map* EditorWindow::getDefaultMap(){
     ret->snakes.append(s1);
 
 
-    Snake* s2= new Snake("Правая", 3);
-    s2->position->setX(9);
-    s2->position->setY(5);
+    Snake* s2= new Snake("Правая", 2);
+    s2->position = new QPoint(9,5);
 
     s2->tail << QPoint(10,5);
     s2->tail << QPoint(11,5);
