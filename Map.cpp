@@ -20,6 +20,9 @@ Map::Map(int sizeX, int sizeY)
     objects.clear();
     itemsTypesForGeneration.clear();
     snakes.clear();
+
+    this->sizeX = sizeX;
+    this->sizeY = sizeY;
 }
 
 /**
