@@ -12,7 +12,7 @@ public:
     const QString getName();
     const Id getId();
 
-    const QBitmap getBitmap();
+    const QPixmap getBitmap();
 
     virtual void collide(Snake *snake, Map *map);
 

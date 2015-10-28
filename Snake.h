@@ -10,19 +10,19 @@
 class Snake : public Entity
 {
 public:
-		bool mustDie = false;
-		bool snakeInTheHole = false;
+    bool mustDie = false;
+    bool snakeInTheHole = false;
     QString name;
-		QVector<QPoint> tail;
-		Score *currentScores = new Score();
+    QVector<QPoint> tail;
+    Score *currentScores = new Score();
 
-		explicit Snake(QString name, int length);
+    explicit Snake(QString name, int length);
     ~Snake();
 
     const QString getName();
     const Id getId();
 
-    const QBitmap getBitmap();
+    const QPixmap getBitmap();
 
     virtual void collide(Snake *snake, Map *map)
     {

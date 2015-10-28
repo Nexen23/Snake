@@ -3,6 +3,7 @@
 
 #include "Map.h"
 #include "Snake.h"
+#include "CellLabel.h"
 
 /**
  * @author MGerasimchuk
@@ -203,12 +204,34 @@ void EditorWindow::onOpenMapClicked()
 void EditorWindow::onCreateMapClicked()
 {
     map = getDefaultMap();
+    QSize picSize(35,35);
     for (int i = 0; i < map->sizeX; i++)
     {
         for (int j = 0; j < map->sizeY; j++)
         {
-            //Создание карты на сетке grid, в качестве клеток должен быть element
-            //ui->mapField->addWidget(element,i,j,5,5,Qt::AlignCenter);
+            if (map->field[i][j] != NULL)
+            {
+                CellLabel *myLabel = new CellLabel();
+                myLabel->setParent(this);
+                QPixmap pic;
+                if (map->field[i][j]->getId()==SNAKE && *map->field[i][j]->position == QPoint(i,j))
+                    pic = QPixmap(":/img/SnakeHead.png");
+                else
+                    pic = map->field[i][j]->getBitmap();
+                myLabel->setPixmap(pic.scaled(picSize,Qt::KeepAspectRatio));
+                myLabel->setMinimumSize(50,50);
+                ui->mapField->addWidget(myLabel,j,i,5,5,Qt::AlignCenter);
+                //Создание карты на сетке grid, в качестве клеток должен быть element
+                //ui->mapField->addWidget(element,j,i,5,5,Qt::AlignCenter);
+            }
+            else
+            {
+                CellLabel *myLabel = new CellLabel();
+                myLabel->setParent(this);
+                myLabel->setPixmap(QPixmap(":/img/Floor.png").scaled(picSize,Qt::KeepAspectRatio));
+                myLabel->setMinimumSize(50,50);
+                ui->mapField->addWidget(myLabel,j,i,5,5,Qt::AlignCenter);
+            }
         }
     }
 }

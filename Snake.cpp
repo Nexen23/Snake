@@ -46,9 +46,9 @@ const Id Snake::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QBitmap Snake::getBitmap()
+const QPixmap Snake::getBitmap()
 {
-    QBitmap item("./img/Snake.png");
+    QPixmap item(":/img/Snake.png");
 
     return item;
 }

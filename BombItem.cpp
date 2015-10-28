@@ -42,9 +42,9 @@ const Id BombItem::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QBitmap BombItem::getBitmap()
+const QPixmap BombItem::getBitmap()
 {
-    QBitmap item("./img/BombItem.png");
+    QPixmap item(":/img/BombItem.png");
 
     return item;
 }

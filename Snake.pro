@@ -29,7 +29,8 @@ SOURCES += \
     HoleObject.cpp \
     BombItem.cpp \
     FoodItem.cpp \
-    main.cpp
+    main.cpp \
+    CellLabel.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -48,8 +49,14 @@ HEADERS  += \
     FoodItem.h \
     RandomAI.h \
     Score.h \
-    SimpleAI.h
+    SimpleAI.h \
+    CellLabel.h
 
 FORMS    += \
     GameWindow.ui \
     EditorWindow.ui
+
+RESOURCES += \
+    res.qrc
+
+DISTFILES +=

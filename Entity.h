@@ -32,7 +32,7 @@ public:
 
 	virtual const QString getName() = 0;
     virtual const Id getId() = 0;
-	virtual const QBitmap getBitmap() = 0;
+    virtual const QPixmap getBitmap() = 0;
 	virtual void collide(Snake *snake, Map *map) = 0;
 };
 

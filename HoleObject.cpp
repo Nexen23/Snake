@@ -42,9 +42,9 @@ const Id HoleObject::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QBitmap HoleObject::getBitmap()
+const QPixmap HoleObject::getBitmap()
 {
-    QBitmap item("./img/HoleObject.png");
+    QPixmap item(":/img/HoleObject.png");
 
     return item;
 }
