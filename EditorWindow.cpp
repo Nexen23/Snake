@@ -243,8 +243,8 @@ Map* EditorWindow::getDefaultMap(){
     s1->position->setX(2);
     s1->position->setY(5);
 
-    s1->tail << new QPoint(1,5);
-    s1->tail << new QPoint(0,5);
+    s1->tail << QPoint(1,5);
+    s1->tail << QPoint(0,5);
 
     ret->field[2][5] = s1;
     ret->field[1][5] = s1;
@@ -257,15 +257,14 @@ Map* EditorWindow::getDefaultMap(){
     s2->position->setX(9);
     s2->position->setY(5);
 
-    s2->tail << new QPoint(10,5);
-    s2->tail << new QPoint(11,5);
+    s2->tail << QPoint(10,5);
+    s2->tail << QPoint(11,5);
 
     ret->field[9][5] = s2;
     ret->field[10][5] = s2;
     ret->field[11][5] = s2;
 
     ret->snakes.append(s2);
-
 
     return ret;
 }
