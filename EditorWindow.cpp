@@ -30,7 +30,6 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     menu->addMenu(Size);
     menu->show();
 
-
     //привязка нажатия на пункты меню к функциям
     connect(File_Create,SIGNAL(triggered()),this, SLOT(onCreateMapClicked()));
     connect(File_Open,SIGNAL(triggered()),this, SLOT(onOpenMapClicked()));
@@ -210,9 +209,20 @@ void EditorWindow::onSaveMapClicked()
 
 }
 
+/**
+ * @author MGerasimchuk
+ * 05.11
+ */
 void EditorWindow::onSetSizeClicked()
 {
-
+    int width, height;
+    width = QInputDialog::getInt(this, "Set size",
+                                              "Enter width:", QLineEdit::Normal,
+                                              30, 1, 100);
+    height = QInputDialog::getInt(this, "Set size",
+                                           "Enter height:", QLineEdit::Normal,
+                                           20, 1, 100);
+    this->map = new Map(width, height);
 }
 
 void EditorWindow::onLMBMapCellPressed()
