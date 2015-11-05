@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
+#include "MapWidget.h"
+
 class Game;
 class Map;
 
@@ -23,6 +25,8 @@ class EditorWindow : public QWidget
 public:
     explicit EditorWindow(Game *game, QWidget *parent = 0);
 	~EditorWindow();
+
+    //MapWidget *view;
 
 	Map* getDefaultMap();
 

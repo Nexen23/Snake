@@ -58,7 +58,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
  */
 EditorWindow::~EditorWindow()
 {
-		delete map;
+    delete map;
     delete ui;
 }
 
@@ -74,17 +74,17 @@ void EditorWindow::onAddItemClick()
 
     window->resize(200,100);
     btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    btn->setMinimumWidth(10);
+    btn->setMinimumHeight(15);
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
+    QVBoxLayout *layout = new QVBoxLayout( window );
+    layout->addWidget(line);
+    layout->addWidget(btn);
 
-        window->setWindowTitle("New Item");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    window->setWindowTitle("New Item");
+    window->setLayout(layout);
+    window->setModal(true);
+    window->show();
 
   //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
 		//функ-я обновления листа
@@ -217,12 +217,21 @@ void EditorWindow::onSetSizeClicked()
 {
     int width, height;
     width = QInputDialog::getInt(this, "Set size",
-                                              "Enter width:", QLineEdit::Normal,
+                                              "Enter width:",
                                               30, 1, 100);
     height = QInputDialog::getInt(this, "Set size",
-                                           "Enter height:", QLineEdit::Normal,
+                                           "Enter height:",
                                            20, 1, 100);
     this->map = new Map(width, height);
+
+    MapWidget *view = new MapWidget(width, height, SCENARIO_EDIT);
+
+
+
+    ui->mapField->addWidget(view);
+    view->show();
+
+
 }
 
 void EditorWindow::onLMBMapCellPressed()

@@ -29,7 +29,8 @@ SOURCES += \
     HoleObject.cpp \
     BombItem.cpp \
     FoodItem.cpp \
-    main.cpp
+    main.cpp \
+    MapWidget.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -48,7 +49,8 @@ HEADERS  += \
     FoodItem.h \
     RandomAI.h \
     Score.h \
-    SimpleAI.h
+    SimpleAI.h \
+    MapWidget.h
 
 FORMS    += \
     GameWindow.ui \
