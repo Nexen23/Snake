@@ -127,17 +127,20 @@ void Game::saveMapToFile(Map *map, QString mapName)
 
     out << map->items.size() << endl;
     for(int i=0; i<map->items.size(); i++) {
+        out << map->items[i]->getId() << endl;
         out << map->items[i]->scoresForPicker->amount << endl;
+        out << map->items[i]->position->x() << endl;
+        out << map->items[i]->position->y() << endl;
     }
 
-    /**
-    ХЗ че тут сохранять у Objects полазил по веткам, ниукого не увидел
-    там полей в Object
+
     out << map->objects.size() << endl;
+
     for(int i=0; i<map->objects.size(); i++) {
-        out << map->items[i]->scoresForPicker->amount << endl;
+        out << map->objects[i]->getId() << endl;
+        out << map->objects[i]->position->x() << endl;
+        out << map->objects[i]->position->y() << endl;
     }
-    */
 
     out << map->snakes.size() << endl;
 
@@ -162,10 +165,19 @@ void Game::saveMapToFile(Map *map, QString mapName)
         }
     }
 
+
     out << map->itemsTypesForGeneration.size() << endl;
     for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
+        out << map->itemsTypesForGeneration[i]->getId() << endl;
         out << map->itemsTypesForGeneration[i]->scoresForPicker->amount << endl;
+        out << map->itemsTypesForGeneration[i]->position->x() << endl;
+        out << map->itemsTypesForGeneration[i]->position->y() << endl;
     }
+
+    /*out << map->itemsTypesForGeneration.size() << endl;
+    for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
+        out << map->itemsTypesForGeneration[i]->scoresForPicker->amount << endl;
+    }*/
 
     outFile->close();
 
@@ -322,20 +334,58 @@ Map *Game::loadMapFromFile(QString mapName)
 
 
     m->items.resize(in.readLine(maxLen).toInt());
-
-
     for(int i=0; i<m->items.size(); i++) {
-        m->items[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case FOOD_ITEM:
+            m->items[i] = new FoodItem();
+            break;
+        case BOMB_ITEM:
+            m->items[i] = new BombItem();
+            break;
+        default:
+            m->items[i] = NULL;
+        }
+
+
+        if(m->items[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->items[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+            m->items[i]->position->setX(in.readLine(maxLen).toInt());
+            m->items[i]->position->setY(in.readLine(maxLen).toInt());
+        }
     }
 
-    /**
-    ХЗ че тут сохранять у Objects полазил по веткам, ниукого не увидел
-    там полей в Object
-    out << map->objects.size() << endl;
-    for(int i=0; i<map->objects.size(); i++) {
-        out << map->items[i]->scoresForPicker->amount << endl;
+
+    m->objects.resize(in.readLine(maxLen).toInt());
+
+    for(int i=0; i<m->objects.size(); i++) {
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case WALL_OBJECT:
+            m->objects[i] = new WallObject();
+            break;
+        case HOLE_OBJECT:
+            m->objects[i] = new HoleObject();
+            break;
+        default:
+            m->objects[i] = NULL;
+        }
+
+
+        if(m->objects[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->objects[i]->position->setX(in.readLine(maxLen).toInt());
+            m->objects[i]->position->setY(in.readLine(maxLen).toInt());
+            qDebug() << "STEP 3";
+        }
+
     }
-    */
 
     m->snakes.resize(in.readLine(maxLen).toInt());
 
@@ -377,10 +427,41 @@ Map *Game::loadMapFromFile(QString mapName)
         m->snakes[i] = snake;
     }
 
+    qDebug() << m->snakes.size();
+    qDebug() << "NORM";
+
     m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
     for(int i=0; i<m->itemsTypesForGeneration.size(); i++) {
-        m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case FOOD_ITEM:
+            m->itemsTypesForGeneration[i] = new FoodItem();
+            break;
+        case BOMB_ITEM:
+            m->itemsTypesForGeneration[i] = new BombItem();
+            break;
+        default:
+            m->itemsTypesForGeneration[i] = NULL;
+        }
+
+
+        if(m->itemsTypesForGeneration[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+            m->itemsTypesForGeneration[i]->position->setX(in.readLine(maxLen).toInt());
+            m->itemsTypesForGeneration[i]->position->setY(in.readLine(maxLen).toInt());
+        }
     }
+
+
+    /*m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
+    for(int i=0; i<m->itemsTypesForGeneration.size(); i++) {
+        m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+    }*/
+
 
     inFile->close();
     return m;

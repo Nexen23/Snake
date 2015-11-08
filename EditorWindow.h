@@ -99,7 +99,7 @@ public slots:
 
     void refreshLists();
 
-    //нет привязки так как поле не реализовано(((
+
     void onLMBMapCellPressed(QPoint point);
     void onLMBMapCellMove(QPoint point);
     void onLMBMapCellReleased(QPoint point);

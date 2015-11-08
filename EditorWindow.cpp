@@ -80,100 +80,154 @@ EditorWindow::~EditorWindow()
     delete ui;
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onItemSelected()
 {
     checkListId = ITEM_LIST;
+
+
+
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onAddItemClick()
 {
-    window = new QDialog();
-    line = new QLineEdit(window);
+    bool ok;
 
-    window->resize(200,100);
-    btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    if(!ok) {
+        return;
+    }
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
 
-        window->setWindowTitle("New Item");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    if(ui->radioBombItem->isChecked()) {
+        BombItem *bomb = new BombItem();
 
-  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
-		//функ-я обновления листа
+        map->items.append(bomb);
+        map->itemsTypesForGeneration.append(bomb);
+    }
+    if(ui->radioFoodItem->isChecked()) {
+        FoodItem *food = new FoodItem();
+
+        map->items.append(food);
+        map->itemsTypesForGeneration.append(food);
+    }
+
+    refreshLists();
+    ui->ItemList->setCurrentRow(ui->ItemList->count()-1);
+    checkListId = ITEM_LIST;
 }
 
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onDelItemClick()
 {
     int row=0;
     row = ui->ItemList->currentRow();
     if( row == -1 )
         return;
-    QString str = ui->ItemList->currentItem()->text();
 
+    map->field[map->items[row]->position->x()][map->items[row]->position->y()] = NULL;
+    map->items.remove(row);
 
-    //сделать проверки и если нужно, то удалить
-    //ui->ItemList->takeItem(row);
-
-
-   //функ-я обновления листа
+    mapView->showMap(map);
+    refreshLists();
+    if(row>0) {
+        ui->ItemList->setCurrentRow(--row);
+    } else if(row<map->items.size()-1) {
+        ui->ItemList->setCurrentRow(row);
+    }
+    if(map->items.size() == 1) {
+        ui->ItemList->setCurrentRow(0);
+    }
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onObjectSelected()
 {
     checkListId = OBJECT_LIST;
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onAddObjectClick()
 {
-    window = new QDialog();
-    line = new QLineEdit(window);
+    bool ok;
 
-    window->resize(200,100);
-    btn = new QPushButton("Add", window );
-    btn->setMinimumWidth(10);
-    btn->setMinimumHeight(15);
+    if(!ok) {
+        return;
+    }
 
-    QVBoxLayout *layout = new QVBoxLayout( window );
-    layout->addWidget(line);
-    layout->addWidget(btn);
 
-    window->setWindowTitle("New Object");
-    window->setLayout(layout);
-    window->setModal(true);
-    window->show();
+    if(ui->radioHoleObject->isChecked()) {
+        HoleObject *hole = new HoleObject();
 
-  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
-		//функ-я обновления листа
+        map->objects.append(hole);
+    }
+    if(ui->radioWallObject->isChecked()) {
+        WallObject *wall = new WallObject();
+
+        map->objects.append(wall);
+    }
+
+    refreshLists();
+    ui->ObjectList->setCurrentRow(ui->ObjectList->count()-1);
+    checkListId = OBJECT_LIST;
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onDelObjectClick()
 {
     int row=0;
     row = ui->ObjectList->currentRow();
     if( row == -1 )
         return;
-    QString str = ui->ObjectList->currentItem()->text();
 
+    map->field[map->objects[row]->position->x()][map->objects[row]->position->y()] = NULL;
+    map->objects.remove(row);
 
-    //сделать проверки и если нужно, то удалить
-    //ui->ObjectList->takeItem(row);
-
-
-	//функ-я обновления листа
+    mapView->showMap(map);
+    refreshLists();
+    if(row>0) {
+        ui->ObjectList->setCurrentRow(--row);
+    } else if(row<map->objects.size()-1) {
+        ui->ObjectList->setCurrentRow(row);
+    }
+    if(map->objects.size() == 1) {
+        ui->ObjectList->setCurrentRow(0);
+    }
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onSnakeSelected()
 {
     checkListId = SNAKE_LIST;
     qDebug() << "SNAKE_LIST SELECTED";
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onAddSnakeClick()
 {
     bool ok;
@@ -199,8 +253,14 @@ void EditorWindow::onAddSnakeClick()
     map->snakes.append(snake);
 
     refreshLists();
+    ui->SnakeList->setCurrentRow(ui->SnakeList->count()-1);
+    checkListId = SNAKE_LIST;
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onDelSnakeClick()
 {
     int row=0;
@@ -479,7 +539,7 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
 
     QString snakeName;
     int snakeId;
-
+    int row;
     int x = point.x()/minCellSize, y  = point.y()/minCellSize;
 
     switch(checkListId) {
@@ -530,6 +590,20 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
     case OBJECT_LIST:
         qDebug() << "OBJECT_LIST PRESSED";
 
+        if(map->field[x][y]!=NULL) {
+            QMessageBox::warning(this, "Create error", "Area already busy!");
+
+            mapView->showMap(map);
+            return;
+        }
+
+        row = ui->ObjectList->currentRow();
+
+        map->field[map->objects[row]->position->x()][map->objects[row]->position->y()] = NULL;
+        map->objects[row]->position->setX(x);
+        map->objects[row]->position->setY(y);
+        map->field[x][y] = map->objects[row];
+        mapView->showMap(map);
 
 
         isCreate = false;
@@ -537,6 +611,20 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
     case ITEM_LIST:
         qDebug() << "ITEM_LIST PRESSED";
 
+        if(map->field[x][y]!=NULL) {
+            QMessageBox::warning(this, "Create error", "Area already busy!");
+
+            mapView->showMap(map);
+            return;
+        }
+
+        row = ui->ItemList->currentRow();
+
+        map->field[map->items[row]->position->x()][map->items[row]->position->y()] = NULL;
+        map->items[row]->position->setX(x);
+        map->items[row]->position->setY(y);
+        map->field[x][y] = map->items[row];
+        mapView->showMap(map);
 
 
         isCreate = false;

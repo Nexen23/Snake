@@ -145,6 +145,9 @@ void MapWidget::drawMap(Map *map)
     }
 
     for(int i=0; i<map->objects.size(); i++) {
+        if(map->field[map->objects[i]->position->x()][map->objects[i]->position->y()] == NULL) {
+            continue;
+        }
         QPixmap pic(map->objects[i]->getBitmap().copy(map->objects[i]->position->x()*minCellSize,
                                                      map->objects[i]->position->y()*minCellSize,
                                                      minCellSize, minCellSize));
@@ -155,7 +158,9 @@ void MapWidget::drawMap(Map *map)
     }
 
     for(int i=0; i<map->items.size(); i++) {
-
+        if(map->field[map->items[i]->position->x()][map->items[i]->position->y()] == NULL) {
+            continue;
+        }
         QPixmap pic(map->items[i]->getBitmap().copy(map->items[i]->position->x()*minCellSize,
                                                      map->items[i]->position->y()*minCellSize,
                                                      minCellSize, minCellSize));
@@ -165,7 +170,7 @@ void MapWidget::drawMap(Map *map)
         scene->addItem(graphicsItem);
     }
 
-    /** dont touch - this for debug
+    /** dont touch - this for debug*/
     for(int i=0;i<map->field.size();i++) {
         for(int j=0;j<map->field[i].size();j++) {
             QColor color = (map->field[i][j] != NULL) ? QColor(255, 0, 0, 100) : QColor(0, 255, 0, 100);
@@ -174,6 +179,6 @@ void MapWidget::drawMap(Map *map)
                               minCellSize/4, minCellSize/4,QPen(color), QBrush(color));
         }
     }
-    */
+
 
 }
