@@ -30,6 +30,7 @@ enum {
     SCENARIO_EDIT
 };
 
+
 class MapWidget : public QGraphicsView
 {
     Q_OBJECT
