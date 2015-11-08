@@ -170,7 +170,7 @@ void MapWidget::drawMap(Map *map)
         scene->addItem(graphicsItem);
     }
 
-    /** dont touch - this for debug*/
+    /** dont touch - this for debug
     for(int i=0;i<map->field.size();i++) {
         for(int j=0;j<map->field[i].size();j++) {
             QColor color = (map->field[i][j] != NULL) ? QColor(255, 0, 0, 100) : QColor(0, 255, 0, 100);
@@ -178,7 +178,7 @@ void MapWidget::drawMap(Map *map)
             scene->addEllipse(i*minCellSize + minCellSize/3, j*minCellSize + minCellSize/3,
                               minCellSize/4, minCellSize/4,QPen(color), QBrush(color));
         }
-    }
+    }*/
 
 
 }
