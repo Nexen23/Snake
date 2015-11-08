@@ -95,8 +95,6 @@ public slots:
 	void onSaveMapClicked();
 	void onSetSizeClicked();
 
-    void refreshField();
-
     void refreshLists();
 
 

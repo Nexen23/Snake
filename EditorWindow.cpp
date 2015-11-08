@@ -317,7 +317,10 @@ void EditorWindow::onOpenMapClicked()
     refreshLists();
 
 }
-
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onCreateMapClicked()
 {
     /** трэш какой то ниче не понял:D - MGerasimchuk */
@@ -485,23 +488,6 @@ void EditorWindow::onSetSizeClicked()
     ui->mapField->addWidget(mapView);
     mapView->show();
     mapView->showMap(map);
-}
-
-void EditorWindow::refreshField()
-{
-    for(int i=0;i<map->field.size();i++) {
-        for(int j=0;j<map->field[i].size();j++){
-            map->field[i][j] = NULL;
-        }
-    }
-
-
-    for(int i=0;i<map->snakes.size();i++) {
-        map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] = map->snakes[i];
-        for(int j=0;j<map->snakes[i]->tail.size();j++) {
-            map->field[map->snakes[i]->tail[j].x()][map->snakes[i]->tail[j].y()] = map->snakes[i];
-        }
-    }
 }
 
 /**
