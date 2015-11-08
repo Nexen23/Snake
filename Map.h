@@ -6,6 +6,7 @@
 #include "Object.h"
 
 #include <QObject>
+#include <QTextCodec>
 
 class Map
 {
@@ -24,6 +25,8 @@ public:
 
     const QString getName();
     const QString getId();
+
+    void resize(int newSizeX, int newSizeY);
 };
 
 #endif // MAP_H

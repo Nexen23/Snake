@@ -10,7 +10,7 @@
 Snake::Snake(QString name, int length)
 {
    this->name = name;
-   tail.resize(length);
+   tail.clear();
 }
 
 /**
@@ -46,9 +46,9 @@ const Id Snake::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QBitmap Snake::getBitmap()
+const QPixmap Snake::getBitmap()
 {
-    QBitmap item("./img/Snake.png");
+    QPixmap item(":/img/Snake.png");
 
     return item;
 }

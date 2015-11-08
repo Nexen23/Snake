@@ -3,6 +3,8 @@
 
 #include "Map.h"
 #include "Snake.h"
+#include "CellLabel.h"
+#include "Game.h"
 
 /**
  * @author MGerasimchuk
@@ -14,7 +16,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 {
 	ui->setupUi(this);
 	this->game = game;
-		map = new Map(0,0);
+    map = new Map(0,0);
 
     
 	//создание меню
@@ -29,6 +31,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     QAction *Size_Set = Size->addAction("Set");
     menu->addMenu(Size);
     menu->show();
+
 
     //привязка нажатия на пункты меню к функциям
     connect(File_Create,SIGNAL(triggered()),this, SLOT(onCreateMapClicked()));
@@ -49,7 +52,22 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     //нажатие на элемент листа
     connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onSnakeSelected()));
     connect(ui->ObjectList,SIGNAL(clicked(QModelIndex)),this,SLOT(onObjectSelected()));
-    connect(ui->SnakeList,SIGNAL(clicked(QModelIndex)),this,SLOT(onItemSelected()));
+    connect(ui->ItemList,SIGNAL(clicked(QModelIndex)),this,SLOT(onItemSelected()));
+
+
+    isCreate = false;
+    map = getDefaultMap();
+
+    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_EDIT);
+    connect(mapView, SIGNAL(mousePress(QPoint)), this, SLOT(onLMBMapCellPressed(QPoint)));
+    connect(mapView, SIGNAL(mouseMove(QPoint)), this, SLOT(onLMBMapCellMove(QPoint)));
+    connect(mapView, SIGNAL(mouseRelease(QPoint)), this, SLOT(onLMBMapCellReleased(QPoint)));
+
+    ui->mapField->addWidget(mapView);
+    mapView->show();
+    mapView->showMap(map);
+
+    refreshLists();
 }
 
 /**
@@ -64,7 +82,7 @@ EditorWindow::~EditorWindow()
 
 void EditorWindow::onItemSelected()
 {
-
+    checkListId = ITEM_LIST;
 }
 
 void EditorWindow::onAddItemClick()
@@ -74,17 +92,17 @@ void EditorWindow::onAddItemClick()
 
     window->resize(200,100);
     btn = new QPushButton("Add", window );
-    btn->setMinimumWidth(10);
-    btn->setMinimumHeight(15);
+        btn->setMinimumWidth(10);
+        btn->setMinimumHeight(15);
 
-    QVBoxLayout *layout = new QVBoxLayout( window );
-    layout->addWidget(line);
-    layout->addWidget(btn);
+        QVBoxLayout *layout = new QVBoxLayout( window );
+        layout->addWidget(line);
+        layout->addWidget(btn);
 
-    window->setWindowTitle("New Item");
-    window->setLayout(layout);
-    window->setModal(true);
-    window->show();
+        window->setWindowTitle("New Item");
+        window->setLayout(layout);
+        window->setModal(true);
+        window->show();
 
   //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
 		//функ-я обновления листа
@@ -108,7 +126,7 @@ void EditorWindow::onDelItemClick()
 
 void EditorWindow::onObjectSelected()
 {
-
+    checkListId = OBJECT_LIST;
 }
 
 void EditorWindow::onAddObjectClick()
@@ -118,17 +136,17 @@ void EditorWindow::onAddObjectClick()
 
     window->resize(200,100);
     btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    btn->setMinimumWidth(10);
+    btn->setMinimumHeight(15);
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
+    QVBoxLayout *layout = new QVBoxLayout( window );
+    layout->addWidget(line);
+    layout->addWidget(btn);
 
-        window->setWindowTitle("New Object");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    window->setWindowTitle("New Object");
+    window->setLayout(layout);
+    window->setModal(true);
+    window->show();
 
   //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
 		//функ-я обновления листа
@@ -152,31 +170,35 @@ void EditorWindow::onDelObjectClick()
 
 void EditorWindow::onSnakeSelected()
 {
-
+    checkListId = SNAKE_LIST;
+    qDebug() << "SNAKE_LIST SELECTED";
 }
 
 void EditorWindow::onAddSnakeClick()
 {
+    bool ok;
     //создание окна добавления змейки
-    window = new QDialog();
-    line = new QLineEdit(window);
+    QString name = QInputDialog::getText(this, "Add Snake",
+                                  "Enter name:",
+                                   QLineEdit::Normal, "Snake name", &ok);
 
-    window->resize(200,100);
-    btn = new QPushButton("Add", window );
-        btn->setMinimumWidth(10);
-        btn->setMinimumHeight(15);
+    if(!ok) {
+        return;
+    }
 
-        QVBoxLayout *layout = new QVBoxLayout( window );
-        layout->addWidget(line);
-        layout->addWidget(btn);
+    for(int i=0;i<map->snakes.size();i++) {
+        if(name == map->snakes[i]->name) {
+            QMessageBox::warning(this, "Error name", "Snake name is dublicate! Retry enter snake name.");
+            onAddSnakeClick();
+            return;
+        }
+    }
 
-        window->setWindowTitle("New Snake");
-        window->setLayout(layout);
-        window->setModal(true);
-        window->show();
+    Snake *snake;
+    snake = new Snake(name, 0);
+    map->snakes.append(snake);
 
-  //  connect(btn,SIGNAL(clicked()),window,SLOT(/*нужную функцию впихнуть*/));
-		//функ-я обновления листа
+    refreshLists();
 }
 
 void EditorWindow::onDelSnakeClick()
@@ -185,70 +207,461 @@ void EditorWindow::onDelSnakeClick()
     row = ui->SnakeList->currentRow();
     if( row == -1 )
         return;
+
     QString str = ui->SnakeList->currentItem()->text();
 
+    if(map->snakes.size() == 1) {
+        QMessageBox::warning(this, "Error", "Can't delete last snake!");
+        return;
+    }
 
-    //сделать проверки и если нужно, то удалить
-    //ui->SnakeList->takeItem(row);
+    int i=0;
+    for(; i<map->snakes.size(); i++) {
+        if(map->snakes[i]->name == str) {
+            map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] = NULL;
+            for(int j=0;j<map->snakes[i]->tail.size();j++) {
+                map->field[map->snakes[i]->tail[j].x()][map->snakes[i]->tail[j].y()] = NULL;
+            }
+            map->snakes.remove(i);
+            break;
+        }
+    }
 
-	//функ-я обновления листа
+    mapView->showMap(map);
+    refreshLists();
+    if(i>0) {
+        ui->SnakeList->setCurrentRow(--i);
+    } else if(i<map->snakes.size()-1) {
+        ui->SnakeList->setCurrentRow(i);
+    }
+    if(map->snakes.size() == 1) {
+        ui->SnakeList->setCurrentRow(0);
+    }
 }
 
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onOpenMapClicked()
 {
+    OpenMapDialog *dialog;
+    QString fileName = "";
+    QVector<QString> maps = game->getMapList();
+    dialog = new OpenMapDialog(this, maps, fileName);
+    dialog->exec();
+
+    map = game->loadMapFromFile(fileName);
+
+    mapView->showMap(map);
+    refreshLists();
 
 }
 
 void EditorWindow::onCreateMapClicked()
 {
+    /** трэш какой то ниче не понял:D - MGerasimchuk */
+    /*map = getDefaultMap();
+    QSize picSize(35,35);
+    for (int i = 0; i < map->sizeX; i++)
+    {
+        for (int j = 0; j < map->sizeY; j++)
+        {
+            if (map->field[i][j] != NULL)
+            {
+                CellLabel *myLabel = new CellLabel();
+                myLabel->setParent(this);
+                QPixmap pic;
+                if (map->field[i][j]->getId()==SNAKE && *map->field[i][j]->position == QPoint(i,j))
+                    pic = QPixmap(":/img/SnakeHead.png");
+                else
+                    pic = map->field[i][j]->getBitmap();
+                myLabel->setPixmap(pic.scaled(picSize,Qt::KeepAspectRatio));
+                myLabel->setMinimumSize(50,50);
+//раскоментить                ui->mapField->addWidget(myLabel,j,i,5,5,Qt::AlignCenter);
+                //Создание карты на сетке grid, в качестве клеток должен быть element
+                //ui->mapField->addWidget(element,j,i,5,5,Qt::AlignCenter);
+            }
+            else
+            {
+                CellLabel *myLabel = new CellLabel();
+                myLabel->setParent(this);
+                myLabel->setPixmap(QPixmap(":/img/Floor.png").scaled(picSize,Qt::KeepAspectRatio));
+                myLabel->setMinimumSize(50,50);
+//раскоментить                ui->mapField->addWidget(myLabel,j,i,5,5,Qt::AlignCenter);
+            }
+        }
+    }*/
 
-}
+    map = getDefaultMap();
+    delete mapView;
+    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_EDIT);
+    connect(mapView, SIGNAL(mousePress(QPoint)), this, SLOT(onLMBMapCellPressed(QPoint)));
+    connect(mapView, SIGNAL(mouseMove(QPoint)), this, SLOT(onLMBMapCellMove(QPoint)));
+    connect(mapView, SIGNAL(mouseRelease(QPoint)), this, SLOT(onLMBMapCellReleased(QPoint)));
+    ui->mapField->addWidget(mapView);
+    mapView->show();
+    mapView->showMap(map);
 
-void EditorWindow::onSaveMapClicked()
-{
-
+    refreshLists();
 }
 
 /**
  * @author MGerasimchuk
- * 05.11
+ * 08.11
+ */
+void EditorWindow::onSaveMapClicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Сохранить как...",
+                        "Новая карта",
+                            "Файл карты (*.smp)");
+
+    game->saveMapToFile(map, fileName);
+}
+
+/**
+ * @author MGerasimchuk
+ * 08.11
  */
 void EditorWindow::onSetSizeClicked()
 {
+    /*//Минимальный возможный размер создаваемой карты - 6х6, максимальный - 100х90
+    QDialog *dialog = new QDialog();
+    QLabel *label_1 = new QLabel(dialog);
+    QLabel *label_2 = new QLabel(dialog);
+
+    label_1->setText("Size X");
+    label_2->setText("Size Y");
+
+    QLineEdit *line_edit_1 = new QLineEdit(dialog);
+    QLineEdit *line_edit_2 = new QLineEdit(dialog);
+
+    line_edit_1->setText(QString::number(map->sizeX));
+    line_edit_2->setText(QString::number(map->sizeY));
+
+    QPushButton *button_1 = new QPushButton("Set", dialog );
+    QPushButton *button_2 = new QPushButton("Cancel", dialog );
+
+    //Нажатие на кнопку "Set"
+    //connect(button_1, SIGNAL(clicked()), "reciver", SLOT("slot"));
+    connect(button_2, SIGNAL(clicked()), dialog, SLOT(close()));
+
+    QVBoxLayout *layout = new QVBoxLayout( dialog );
+    QHBoxLayout *horizontal_layout_1 = new QHBoxLayout( );
+    QHBoxLayout *horizontal_layout_2 = new QHBoxLayout( );
+    QHBoxLayout *horizontal_layout_3 = new QHBoxLayout( );
+    horizontal_layout_1->addWidget(label_1);
+    horizontal_layout_1->addWidget(line_edit_1);
+    layout->insertLayout(layout->count(),horizontal_layout_1);
+    horizontal_layout_2->addWidget(label_2);
+    horizontal_layout_2->addWidget(line_edit_2);
+    layout->insertLayout(layout->count(),horizontal_layout_2);
+    horizontal_layout_3->addWidget(button_1);
+    horizontal_layout_3->addWidget(button_2);
+    layout->insertLayout(layout->count(),horizontal_layout_3);
+
+    dialog->resize(200,100);
+    dialog->setWindowTitle("Set size of map");
+    dialog->setLayout(layout);
+    dialog->setModal(true);
+    dialog->show();*/
+
+
+    /**
+     *
+     * результат тотже
+     *
+     *
+     * QInputDialog::getInt(this, "Set size",
+     *                          "Enter width:",
+     *                          map->sizeX, minWidth + 1, 100, 1, &okw);
+     *
+    */
+
     int width, height;
+    bool okw, okh;
+    int minWidth = 0;
+    for(int i=0; i<map->sizeX; i++) {
+        for(int j=0; j<map->sizeY; j++) {
+            if(map->field[i][j] != NULL && i>minWidth) {
+                minWidth = i;
+            }
+        }
+    }
     width = QInputDialog::getInt(this, "Set size",
-                                              "Enter width:",
-                                              30, 1, 100);
+                                "Enter width:",
+                                map->sizeX, minWidth + 1, 100, 1, &okw);
+    if(!okw) {
+        return;
+    }
+
+    int minHeight = 0;
+    for(int i=0; i<map->sizeX; i++) {
+        for(int j=0; j<map->sizeY; j++) {
+            if(map->field[i][j] != NULL && j>minHeight) {
+                minHeight = j;
+            }
+        }
+    }
     height = QInputDialog::getInt(this, "Set size",
-                                           "Enter height:",
-                                           20, 1, 100);
-    this->map = new Map(width, height);
+                                "Enter height:",
+                                map->sizeY, minHeight + 1, 90, 1, &okh);
+    if(!okh) {
+        return;
+    }
 
-    MapWidget *view = new MapWidget(width, height, SCENARIO_EDIT);
 
 
 
-    ui->mapField->addWidget(view);
-    view->show();
+
+
+    map->resize(width, height);
+
+    delete mapView;
+    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_EDIT);
+    connect(mapView, SIGNAL(mousePress(QPoint)), this, SLOT(onLMBMapCellPressed(QPoint)));
+    connect(mapView, SIGNAL(mouseMove(QPoint)), this, SLOT(onLMBMapCellMove(QPoint)));
+    connect(mapView, SIGNAL(mouseRelease(QPoint)), this, SLOT(onLMBMapCellReleased(QPoint)));
+    ui->mapField->addWidget(mapView);
+    mapView->show();
+    mapView->showMap(map);
+}
+
+void EditorWindow::refreshField()
+{
+    for(int i=0;i<map->field.size();i++) {
+        for(int j=0;j<map->field[i].size();j++){
+            map->field[i][j] = NULL;
+        }
+    }
+
+
+    for(int i=0;i<map->snakes.size();i++) {
+        map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] = map->snakes[i];
+        for(int j=0;j<map->snakes[i]->tail.size();j++) {
+            map->field[map->snakes[i]->tail[j].x()][map->snakes[i]->tail[j].y()] = map->snakes[i];
+        }
+    }
+}
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
+void EditorWindow::refreshLists()
+{
+    ui->SnakeList->clear();
+    for(int i=0; i<map->snakes.size(); i++) {
+        ui->SnakeList->addItem(map->snakes[i]->name);
+    }
+
+    ui->ObjectList->clear();
+    for(int i=0; i<map->objects.size(); i++) {
+        ui->ObjectList->addItem(map->objects[i]->getName());
+    }
+
+    ui->ItemList->clear();
+    for(int i=0; i<map->items.size(); i++) {
+        ui->ItemList->addItem(map->items[i]->getName());
+    }
 
 
 }
 
-void EditorWindow::onLMBMapCellPressed()
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
+void EditorWindow::onLMBMapCellPressed(QPoint point)
+{
+    isCreate = true;
+
+    QString snakeName;
+    int snakeId;
+
+    int x = point.x()/minCellSize, y  = point.y()/minCellSize;
+
+    switch(checkListId) {
+    case SNAKE_LIST:
+        qDebug() << "SNAKE_LIST PRESSED";
+
+        for(int i=0;i<map->snakes.size();i++) {
+            if(map->snakes[i]->name == ui->SnakeList->currentIndex().data().toString()
+                    && map->snakes[i]->tail.size() != 0){
+                snakeName = map->snakes[i]->name;
+                snakeId = i;
+                QMessageBox::warning(this, "Create error", "Snake \"" + snakeName
+                                     +"\" already exist, create new Snake!");
+                isCreate = false;
+                return;
+            }
+
+            if(map->snakes[i]->name == ui->SnakeList->currentIndex().data().toString()
+                    && map->snakes[i]->tail.size() == 0){
+                snakeName = map->snakes[i]->name;
+                snakeId = i;
+            }
+
+
+        }
+
+        tempSnake = new Snake(snakeName, 0);
+        tempSnake->position->setX(x);
+        tempSnake->position->setY(y);
+
+        if(map->field[x][y]!=NULL) {
+            QMessageBox::warning(this, "Create error", "Area already busy!");
+            isCreate = false;
+            map->snakes[snakeId] = new Snake(snakeName, 0);
+
+            mapView->showMap(map);
+            return;
+        }
+
+
+        map->snakes[snakeId] = tempSnake;
+        map->field[x][y] = tempSnake;
+        mapView->showMap(map);
+
+        qDebug() << x << y;
+
+        break;
+    case OBJECT_LIST:
+        qDebug() << "OBJECT_LIST PRESSED";
+
+
+
+        isCreate = false;
+        break;
+    case ITEM_LIST:
+        qDebug() << "ITEM_LIST PRESSED";
+
+
+
+        isCreate = false;
+        break;
+    }
+}
+
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
+void EditorWindow::onLMBMapCellMove(QPoint point)
 {
 
+    int x = point.x()/minCellSize, y  = point.y()/minCellSize;
+
+    if(isCreate) {
+        QString snakeName;
+        int snakeId;
+
+        qDebug() << "STEP -3";
+
+        for(int i=0;i<map->snakes.size();i++) {
+            if(map->snakes[i]->name == ui->SnakeList->currentIndex().data().toString()){
+                snakeName = map->snakes[i]->name;
+                snakeId = i;
+            }
+        }
+
+        qDebug() << "STEP -2";
+
+        if(map->field[x][y] == NULL
+                || (map->field[x][y]->getId() == SNAKE && ((Snake*)map->field[x][y])->name == snakeName)) {
+
+            qDebug() << snakeName;
+            if(map->snakes[snakeId]->position->x() == x
+                    && map->snakes[snakeId]->position->y() == y) {
+                return;
+            }
+
+            qDebug() << "STEP 0";
+
+            for(int j=0;j<tempSnake->tail.size();j++) {
+                if(tempSnake->tail[j].x() == x && tempSnake->tail[j].y() == y){
+                    return;
+                }
+            }
+
+            if(map->field[x][y]!=NULL) {
+                QMessageBox::warning(this, "Create error", "Area already busy!");
+                isCreate = false;
+                map->snakes[snakeId] = new Snake(snakeName, 0);
+
+                mapView->showMap(map);
+                return;
+            }
+            qDebug() << "STEP 1";
+
+            QPoint last;
+            if(tempSnake->tail.size() == 0) {
+                last = *tempSnake->position;
+            } else {
+                last = tempSnake->tail[tempSnake->tail.size()-1];
+            }
+
+            qDebug() << "STEP 2";
+            bool canCreate = false;
+            if( (last.x() == x && qAbs(last.y() - y) == 1)
+                || (last.y() == y && qAbs(last.x() - x) == 1) ){
+                tempSnake->tail.append(QPoint(x,y));
+
+                map->snakes[snakeId] = tempSnake;
+                map->field[x][y] = tempSnake;
+                mapView->showMap(map);
+                qDebug() << "STEP 3";
+
+            } else {
+                QMessageBox::warning(this, "Create error", "Snake is broken:(!");
+                map->field[tempSnake->position->x()][tempSnake->position->y()] = NULL;
+                for(int i=0;i<tempSnake->tail.size();i++) {
+                    map->field[tempSnake->tail[i].x()][tempSnake->tail[i].y()] = NULL;
+                }
+                isCreate = false;
+                map->snakes[snakeId] = new Snake(snakeName, 0);
+                mapView->showMap(map);
+                return;
+            }
+
+
+        }
+    }
 }
 
-void EditorWindow::onLMBMapCellReleased()
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
+void EditorWindow::onLMBMapCellReleased(QPoint point)
 {
+    if(isCreate) {
 
+
+
+
+        isCreate = false;
+    }
 }
 
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onRMBMapCellPressed()
 {
 
 }
 
+
+/**
+ * @author MGerasimchuk
+ * 08.11
+ */
 void EditorWindow::onRMBMapCellReleased()
 {
 
@@ -258,14 +671,11 @@ Map* EditorWindow::getDefaultMap(){
 
     Map* ret = new Map(12,9);
 
-    Snake* s1= new Snake("Левая", 3);
-    s1->position->setX(2);
-    s1->position->setY(5);
+    Snake* s1= new Snake("Левая", 2);
+    s1->position = new QPoint(2,5);
 
-    s1->tail[0].setX(1);
-    s1->tail[0].setY(5);
-    s1->tail[1].setX(2);
-    s1->tail[1].setY(5);
+    s1->tail << QPoint(1,5);
+    s1->tail << QPoint(0,5);
 
     ret->field[2][5] = s1;
     ret->field[1][5] = s1;
@@ -274,24 +684,21 @@ Map* EditorWindow::getDefaultMap(){
     ret->snakes.append(s1);
 
 
-    Snake* s2= new Snake("Правая", 3);
+    Snake* s2= new Snake("Правая", 2);
+    s2->position = new QPoint(9,5);
 
-    s2->position->setX(9);
-    s2->position->setY(5);
+    s2->tail << QPoint(10,5);
+    s2->tail << QPoint(11,5);
 
-    s2->tail[0].setX(10);
-    s2->tail[0].setY(5);
-    s2->tail[1].setX(11);
-    s2->tail[1].setY(5);
-
-    ret->field[2][5] = s2;
-    ret->field[1][5] = s2;
-    ret->field[0][5] = s2;
+    ret->field[9][5] = s2;
+    ret->field[10][5] = s2;
+    ret->field[11][5] = s2;
 
     ret->snakes.append(s2);
 
+    /*FoodItem *food = new FoodItem();
+    food->position->setX(3);
+    ret->items.append(food);*/
 
-		return ret;
-
-
+    return ret;
 }
