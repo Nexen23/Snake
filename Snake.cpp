@@ -10,7 +10,7 @@
 Snake::Snake(QString name, int length)
 {
    this->name = name;
-   tail.resize(length);
+   tail.clear();
 }
 
 /**

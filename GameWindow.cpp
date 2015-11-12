@@ -54,7 +54,7 @@ void GameWindow::on_reset_button_clicked()
 
 void GameWindow::on_map_button_clicked()
 {
-
+    this->game->createMap();//TODO DELETE this row
 }
 
 void GameWindow::update()

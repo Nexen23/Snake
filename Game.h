@@ -16,6 +16,7 @@
 #include "GameWindow.h"
 #include "Map.h"
 #include "FoodItem.h"
+#include "WallObject.h"
 
 class GameWindow;
 class EditorWindow;

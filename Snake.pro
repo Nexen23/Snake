@@ -30,7 +30,9 @@ SOURCES += \
     BombItem.cpp \
     FoodItem.cpp \
     main.cpp \
-    CellLabel.cpp
+    CellLabel.cpp \
+    MapWidget.cpp \
+    OpenMapDialog.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -50,11 +52,14 @@ HEADERS  += \
     RandomAI.h \
     Score.h \
     SimpleAI.h \
-    CellLabel.h
+    CellLabel.h \
+    MapWidget.h \
+    OpenMapDialog.h
 
 FORMS    += \
     GameWindow.ui \
-    EditorWindow.ui
+    EditorWindow.ui \
+    OpenMapDialog.ui
 
 RESOURCES += \
     res.qrc

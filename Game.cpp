@@ -88,15 +88,19 @@ void Game::setMap(Map *map)
  *
  * @brief Game::saveMapToFile
  * @param map
- * @param mapName - имя карты для сохранения (без расширения)
+ * @param mapName - имя карты для сохранения (c расширением)
  */
 void Game::saveMapToFile(Map *map, QString mapName)
 {
-    QTextStream out;
-    QFile *outFile = new QFile(mapName + ".smp");
+    QFile *outFile = new QFile(mapName);
 
     outFile->open(QIODevice::WriteOnly);
-    out.setDevice(outFile);
+
+    QTextCodec *codec = QTextCodec::codecForName("UTF8");
+    QTextStream out(outFile);
+    out.setCodec("UTF-8");
+
+
     QString endl = "\n";
 
     out << mapName << endl
@@ -107,29 +111,48 @@ void Game::saveMapToFile(Map *map, QString mapName)
     for(int i=0; i<map->field.size(); i++) {
         out << map->field[i].size() << endl;
         for(int j=0; j<map->field[i].size(); j++) {
-            out << map->field[i][j]->position->x() << endl;
-            out << map->field[i][j]->position->y() << endl;
-            out << map->field[i][j]->isDead << endl;
+            if(map->field[i][j] == 0) {
+                out << "NULL" << endl;
+                out << "NULL" << endl;
+                out << "NULL" << endl;
+                out << "NULL" << endl;
+            } else {
+                out << map->field[i][j]->getId() << endl;
+                out << map->field[i][j]->position->x() << endl;
+                out << map->field[i][j]->position->y() << endl;
+                out << map->field[i][j]->isDead << endl;
+            }
         }
     }
 
     out << map->items.size() << endl;
     for(int i=0; i<map->items.size(); i++) {
+        out << map->items[i]->getId() << endl;
         out << map->items[i]->scoresForPicker->amount << endl;
+        out << map->items[i]->position->x() << endl;
+        out << map->items[i]->position->y() << endl;
     }
 
-    /**
-    ХЗ че тут сохранять у Objects полазил по веткам, ниукого не увидел
-    там полей в Object
+
     out << map->objects.size() << endl;
+
     for(int i=0; i<map->objects.size(); i++) {
-        out << map->items[i]->scoresForPicker->amount << endl;
+        out << map->objects[i]->getId() << endl;
+        out << map->objects[i]->position->x() << endl;
+        out << map->objects[i]->position->y() << endl;
     }
-    */
 
     out << map->snakes.size() << endl;
 
+
     for(int i=0; i<map->snakes.size(); i++) {
+
+
+        //пишем голову
+        out << map->snakes[i]->position->x() << endl;
+        out << map->snakes[i]->position->y() << endl;
+
+
         out << map->snakes[i]->name << endl;
         out << map->snakes[i]->currentScores->amount << endl;
         out << map->snakes[i]->mustDie << endl;
@@ -142,18 +165,42 @@ void Game::saveMapToFile(Map *map, QString mapName)
         }
     }
 
+
     out << map->itemsTypesForGeneration.size() << endl;
     for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
+        out << map->itemsTypesForGeneration[i]->getId() << endl;
         out << map->itemsTypesForGeneration[i]->scoresForPicker->amount << endl;
+        out << map->itemsTypesForGeneration[i]->position->x() << endl;
+        out << map->itemsTypesForGeneration[i]->position->y() << endl;
     }
 
+    /*out << map->itemsTypesForGeneration.size() << endl;
+    for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
+        out << map->itemsTypesForGeneration[i]->scoresForPicker->amount << endl;
+    }*/
+
     outFile->close();
 
-    outFile = new QFile("maps.txt");
-    outFile->open(QIODevice::Append);
-    out.setDevice(outFile);
-    out << mapName << endl;
-    outFile->close();
+    QVector<QString> maps = getMapList();
+
+    bool isExist = false;
+    for(int i=0; i<maps.size(); i++) {
+        if(mapName == maps[i]) {
+            isExist = true;
+            break;
+        }
+    }
+    if(!isExist) {
+        outFile = new QFile("maps.txt");
+        outFile->open(QIODevice::Append);
+
+
+        out.setDevice(outFile);
+        out.setCodec("UTF-8");
+        out << mapName << endl;
+        outFile->close();
+    }
+
 }
 
 /**
@@ -166,6 +213,7 @@ QVector<QString> Game::getMapList()
     QFile *inFile = new QFile("maps.txt");
     inFile->open(QIODevice::ReadOnly);
     in.setDevice(inFile);
+    in.setCodec("UTF-8");
 
     QVector<QString> names;
 
@@ -196,16 +244,20 @@ QVector<AI*> Game::getAIList()
  * 25.10
  * Так как наговнил с лхранением, наговнил и с загрузкой
  *
- * @brief Game::saveMapToFile
- * @param mapName - имя карты для сохранения (без расширения)
+ * @brief Game::loadMapFromFile
+ * @param mapName - имя карты для сохранения (c расширением)
  */
 Map *Game::loadMapFromFile(QString mapName)
 {
     Map* m;
-    QTextStream in;
     QFile *inFile = new QFile(mapName);
     inFile->open(QIODevice::ReadOnly);
-    in.setDevice(inFile);
+
+    QTextCodec *codec = QTextCodec::codecForName("UTF8");
+    QTextStream in(inFile);
+    in.setCodec("UTF-8");
+
+
     int maxLen = 255;
     int sizeX, sizeY;
     in.readLine(maxLen);//читаем mapName для прикола
@@ -214,48 +266,202 @@ Map *Game::loadMapFromFile(QString mapName)
     m = new Map(sizeX, sizeY);
 
     m->field.resize(in.readLine(maxLen).toInt());
-    for(int i=0; i<map->field.size(); i++) {
+
+    for(int i=0; i<m->field.size(); i++) {
+
         m->field[i].resize(in.readLine(maxLen).toInt());
-        for(int j=0; j<map->field[i].size(); j++) {
-            map->field[i][j]->position->setX(in.readLine(maxLen).toInt());
-            map->field[i][j]->position->setY(in.readLine(maxLen).toInt());
-            map->field[i][j]->isDead = in.readLine(maxLen).toInt();
+
+        for(int j=0; j<m->field[i].size(); j++) {
+            QString checkNULL = in.readLine(maxLen);
+            if(checkNULL == "NULL") {
+                in.readLine(maxLen).toInt();
+                in.readLine(maxLen).toInt();
+                in.readLine(maxLen).toInt();
+                m->field[i][j] = NULL;
+            } else {
+                FoodItem *foodItem;
+                BombItem *bombItem;
+                WallObject *wallObject;
+                HoleObject *holeObject;
+                Snake *snake;
+
+                int id = checkNULL.toInt();
+                switch(id) {
+                case FOOD_ITEM:
+                    foodItem = new FoodItem();
+                    foodItem->position->setX(in.readLine(maxLen).toInt());
+                    foodItem->position->setY(in.readLine(maxLen).toInt());
+                    foodItem->isDead = in.readLine(maxLen).toInt();
+                    m->field[i][j] = foodItem;
+                    break;
+                case BOMB_ITEM:
+                    bombItem = new BombItem();
+                    bombItem->position->setX(in.readLine(maxLen).toInt());
+                    bombItem->position->setY(in.readLine(maxLen).toInt());
+                    bombItem->isDead = in.readLine(maxLen).toInt();
+                    m->field[i][j] = bombItem;
+                    break;
+                case WALL_OBJECT:
+                    wallObject = new WallObject();
+                    wallObject->position->setX(in.readLine(maxLen).toInt());
+                    wallObject->position->setY(in.readLine(maxLen).toInt());
+                    wallObject->isDead = in.readLine(maxLen).toInt();
+                    m->field[i][j] = wallObject;
+                    break;
+                case HOLE_OBJECT:
+                    holeObject = new HoleObject();
+                    holeObject->position->setX(in.readLine(maxLen).toInt());
+                    holeObject->position->setY(in.readLine(maxLen).toInt());
+                    holeObject->isDead = in.readLine(maxLen).toInt();
+                    m->field[i][j] = holeObject;
+                    break;
+                case SNAKE:
+                    snake = new Snake("name", 1);
+                    snake->position->setX(in.readLine(maxLen).toInt());
+                    snake->position->setY(in.readLine(maxLen).toInt());
+                    snake->isDead = in.readLine(maxLen).toInt();
+                    m->field[i][j] = snake;
+                    break;
+                default:
+                    in.readLine(maxLen).toInt();
+                    in.readLine(maxLen).toInt();
+                    in.readLine(maxLen).toInt();
+                    m->field[i][j] = NULL;
+                }
+            }
         }
     }
 
+
     m->items.resize(in.readLine(maxLen).toInt());
-    for(int i=0; i<map->items.size(); i++) {
-        m->items[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+    for(int i=0; i<m->items.size(); i++) {
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case FOOD_ITEM:
+            m->items[i] = new FoodItem();
+            break;
+        case BOMB_ITEM:
+            m->items[i] = new BombItem();
+            break;
+        default:
+            m->items[i] = NULL;
+        }
+
+
+        if(m->items[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->items[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+            m->items[i]->position->setX(in.readLine(maxLen).toInt());
+            m->items[i]->position->setY(in.readLine(maxLen).toInt());
+        }
     }
 
-    /**
-    ХЗ че тут сохранять у Objects полазил по веткам, ниукого не увидел
-    там полей в Object
-    out << map->objects.size() << endl;
-    for(int i=0; i<map->objects.size(); i++) {
-        out << map->items[i]->scoresForPicker->amount << endl;
+
+    m->objects.resize(in.readLine(maxLen).toInt());
+
+    for(int i=0; i<m->objects.size(); i++) {
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case WALL_OBJECT:
+            m->objects[i] = new WallObject();
+            break;
+        case HOLE_OBJECT:
+            m->objects[i] = new HoleObject();
+            break;
+        default:
+            m->objects[i] = NULL;
+        }
+
+
+        if(m->objects[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->objects[i]->position->setX(in.readLine(maxLen).toInt());
+            m->objects[i]->position->setY(in.readLine(maxLen).toInt());
+            qDebug() << "STEP 3";
+        }
+
     }
-    */
 
     m->snakes.resize(in.readLine(maxLen).toInt());
 
-    for(int i=0; i<map->snakes.size(); i++) {
-        m->snakes[i]->name = in.readLine(maxLen);
-        m->snakes[i]->currentScores->amount = in.readLine(maxLen).toInt();
-        m->snakes[i]->mustDie = in.readLine(maxLen).toInt();
-        m->snakes[i]->snakeInTheHole = in.readLine(maxLen).toInt();
 
-        m->snakes[i]->tail.resize(in.readLine(maxLen).toInt());
-        for(int j=0; j<m->snakes[i]->tail.size(); j++) {
-            m->snakes[i]->tail[j].setX(in.readLine(maxLen).toInt());
-            m->snakes[i]->tail[j].setY(in.readLine(maxLen).toInt());
+
+    for(int i=0; i<m->snakes.size(); i++) {
+
+        int px, py;
+        //читаем голову
+        px = in.readLine(maxLen).toInt();
+        py = in.readLine(maxLen).toInt();
+
+
+        QString name;
+        int currentScore, mustDie, snakeTheHole, length;
+
+
+        name = in.readLine(maxLen);
+        currentScore = in.readLine(maxLen).toInt();
+        mustDie = in.readLine(maxLen).toInt();
+        snakeTheHole = in.readLine(maxLen).toInt();
+        length = in.readLine(maxLen).toInt();
+        Snake *snake = new Snake(name, length);
+        snake->currentScores->amount = currentScore;
+        snake->mustDie = mustDie;
+        snake->snakeInTheHole = snakeTheHole;
+
+        snake->position->setX(px);
+        snake->position->setY(py);
+
+
+
+        snake->tail.resize(length);
+
+        for(int j=0; j<snake->tail.size(); j++) {
+            snake->tail[j].setX(in.readLine(maxLen).toInt());
+            snake->tail[j].setY(in.readLine(maxLen).toInt());
+        }
+        m->snakes[i] = snake;
+    }
+
+    qDebug() << m->snakes.size();
+    qDebug() << "NORM";
+
+    m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
+    for(int i=0; i<m->itemsTypesForGeneration.size(); i++) {
+        int id = in.readLine(maxLen).toInt();
+        switch(id) {
+        case FOOD_ITEM:
+            m->itemsTypesForGeneration[i] = new FoodItem();
+            break;
+        case BOMB_ITEM:
+            m->itemsTypesForGeneration[i] = new BombItem();
+            break;
+        default:
+            m->itemsTypesForGeneration[i] = NULL;
+        }
+
+
+        if(m->itemsTypesForGeneration[i] == NULL) {
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+            in.readLine(maxLen).toInt();
+        } else {
+            m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
+            m->itemsTypesForGeneration[i]->position->setX(in.readLine(maxLen).toInt());
+            m->itemsTypesForGeneration[i]->position->setY(in.readLine(maxLen).toInt());
         }
     }
 
-    m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
-    for(int i=0; i<map->itemsTypesForGeneration.size(); i++) {
+
+    /*m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
+    for(int i=0; i<m->itemsTypesForGeneration.size(); i++) {
         m->itemsTypesForGeneration[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
-    }
+    }*/
+
 
     inFile->close();
     return m;
