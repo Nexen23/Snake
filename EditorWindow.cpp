@@ -25,6 +25,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     QAction *File_Create = File->addAction("Create");
     QAction *File_Open = File->addAction("Open");
     QAction *File_Save = File->addAction("Save");
+    QAction *Test_Map = File->addAction("Test Map");
     menu->addMenu(File);
 
     QMenu *Size = new QMenu("Size");
@@ -38,6 +39,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     connect(File_Open,SIGNAL(triggered()),this, SLOT(onOpenMapClicked()));
     connect(File_Save,SIGNAL(triggered()),this, SLOT(onSaveMapClicked()));
     connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
+    connect(Test_Map,SIGNAL(triggered()),this,SLOT(onTestMapClicked()));
 
 
 
@@ -98,13 +100,6 @@ void EditorWindow::onItemSelected()
  */
 void EditorWindow::onAddItemClick()
 {
-    bool ok;
-
-    if(!ok) {
-        return;
-    }
-
-
     if(ui->radioBombItem->isChecked()) {
         BombItem *bomb = new BombItem();
 
@@ -165,13 +160,6 @@ void EditorWindow::onObjectSelected()
  */
 void EditorWindow::onAddObjectClick()
 {
-    bool ok;
-
-    if(!ok) {
-        return;
-    }
-
-
     if(ui->radioHoleObject->isChecked()) {
         HoleObject *hole = new HoleObject();
 
@@ -221,7 +209,6 @@ void EditorWindow::onDelObjectClick()
 void EditorWindow::onSnakeSelected()
 {
     checkListId = SNAKE_LIST;
-    qDebug() << "SNAKE_LIST SELECTED";
 }
 
 /**
@@ -382,6 +369,12 @@ void EditorWindow::onSaveMapClicked()
     game->saveMapToFile(map, fileName);
 }
 
+void EditorWindow::onTestMapClicked()
+{
+    game->setMap(map);
+    game->activateMapOnGameWindow();
+}
+
 /**
  * @author MGerasimchuk
  * 08.11
@@ -530,7 +523,6 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
 
     switch(checkListId) {
     case SNAKE_LIST:
-        qDebug() << "SNAKE_LIST PRESSED";
 
         for(int i=0;i<map->snakes.size();i++) {
             if(map->snakes[i]->name == ui->SnakeList->currentIndex().data().toString()
@@ -570,11 +562,9 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
         map->field[x][y] = tempSnake;
         mapView->showMap(map);
 
-        qDebug() << x << y;
 
         break;
     case OBJECT_LIST:
-        qDebug() << "OBJECT_LIST PRESSED";
 
         if(map->field[x][y]!=NULL) {
             QMessageBox::warning(this, "Create error", "Area already busy!");
@@ -595,7 +585,6 @@ void EditorWindow::onLMBMapCellPressed(QPoint point)
         isCreate = false;
         break;
     case ITEM_LIST:
-        qDebug() << "ITEM_LIST PRESSED";
 
         if(map->field[x][y]!=NULL) {
             QMessageBox::warning(this, "Create error", "Area already busy!");
@@ -632,8 +621,6 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
         QString snakeName;
         int snakeId;
 
-        qDebug() << "STEP -3";
-
         for(int i=0;i<map->snakes.size();i++) {
             if(map->snakes[i]->name == ui->SnakeList->currentIndex().data().toString()){
                 snakeName = map->snakes[i]->name;
@@ -641,18 +628,15 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
             }
         }
 
-        qDebug() << "STEP -2";
 
         if(map->field[x][y] == NULL
                 || (map->field[x][y]->getId() == SNAKE && ((Snake*)map->field[x][y])->name == snakeName)) {
 
-            qDebug() << snakeName;
             if(map->snakes[snakeId]->position->x() == x
                     && map->snakes[snakeId]->position->y() == y) {
                 return;
             }
 
-            qDebug() << "STEP 0";
 
             for(int j=0;j<tempSnake->tail.size();j++) {
                 if(tempSnake->tail[j].x() == x && tempSnake->tail[j].y() == y){
@@ -668,7 +652,6 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
                 mapView->showMap(map);
                 return;
             }
-            qDebug() << "STEP 1";
 
             QPoint last;
             if(tempSnake->tail.size() == 0) {
@@ -677,7 +660,6 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
                 last = tempSnake->tail[tempSnake->tail.size()-1];
             }
 
-            qDebug() << "STEP 2";
             bool canCreate = false;
             if( (last.x() == x && qAbs(last.y() - y) == 1)
                 || (last.y() == y && qAbs(last.x() - x) == 1) ){
@@ -686,7 +668,6 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
                 map->snakes[snakeId] = tempSnake;
                 map->field[x][y] = tempSnake;
                 mapView->showMap(map);
-                qDebug() << "STEP 3";
 
             } else {
                 QMessageBox::warning(this, "Create error", "Snake is broken:(!");

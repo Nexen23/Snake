@@ -110,6 +110,11 @@ void MapWidget::showMap(Map *map)
         showGrid();
         drawMap(map);
         break;
+    case SCENARIO_GAME:
+        scene->clear();
+        showGrid();
+        drawMap(map);
+        break;
     default:
         ;
     }
@@ -127,7 +132,7 @@ void MapWidget::drawMap(Map *map)
         if(map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] == NULL) {
             continue;
         }
-        QPixmap head("./img/SnakeHead.png" );
+        QPixmap head(":/img/SnakeHead.png" );
         head = head.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *snake = new QGraphicsPixmapItem(head);
         snake->setPos(map->snakes[i]->position->x()*minCellSize, map->snakes[i]->position->y()*minCellSize);

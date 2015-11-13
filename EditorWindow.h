@@ -94,6 +94,7 @@ public slots:
 	void onCreateMapClicked();
 	void onSaveMapClicked();
 	void onSetSizeClicked();
+    void onTestMapClicked();
 
     void refreshLists();
 
@@ -103,7 +104,7 @@ public slots:
     void onLMBMapCellReleased(QPoint point);
 
 	void onRMBMapCellPressed();
-	void onRMBMapCellReleased();
+    void onRMBMapCellReleased();
 };
 
 #endif // EDITORWINDOW_H

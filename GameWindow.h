@@ -23,9 +23,11 @@ public:
     explicit GameWindow(Game *game, QWidget *parent = 0);
     ~GameWindow();
 
-		void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
-		void update();
-		void setWinner(QVector<Snake> snakes);
+    void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
+    void update();
+    void setWinner(QVector<Snake> snakes);
+
+    MapWidget *mapView;
 
 
 private:
@@ -33,6 +35,7 @@ private:
 
 	Map *map;
 	Game *game;
+
 
 signals:
 
@@ -43,14 +46,18 @@ public slots:
     void on_stop_button_clicked();
     void on_reset_button_clicked();
     void on_map_button_clicked();
-
+    void setMap(Map* map);
+    void showMap();
     //void onStartClicked();
     //void onStopClicked();
     //void onResetClicked();
 
     //void onOpenMapChoserDialog();
-    //void onMainSnakeSelected(QString name);
+    void onMainSnakeSelected();
+    void onBindAIToSnake();
     //void onOpenSnakeAIChoserDialog();
+    Snake* getSnakeBySnakeName(QString name);
+    void refreshMap();
 };
 
 #endif // GAMEWINDOW_H

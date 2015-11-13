@@ -379,7 +379,7 @@ case LEFT:
 
 MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
 {
-
+    //qDebug() << "CHECK6:";
     QPoint* head = controllerSnake->position;
     QPoint second = controllerSnake->tail.first();
 

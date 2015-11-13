@@ -63,7 +63,7 @@ void Game::showWindow()
  */
 void Game::createMap()
 {
-    EditorWindow *editorWindow = new EditorWindow(this);
+    editorWindow = new EditorWindow(this);
 
     editorWindow->setWindowModality(Qt::WindowModal);
     editorWindow->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
@@ -239,6 +239,32 @@ QVector<AI*> Game::getAIList()
     return list;
 }
 
+AI* Game::getAIBySnakeName(QString name)
+{
+    QMapIterator<Snake*, AI*> i(snakesAIs);
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.key()->getName() == name)
+            return i.value();
+    }
+    return NULL;
+}
+
+AI* Game::getAIByAIName(QString name)
+{
+    QVector<AI*> ListOfAI = getAIList();
+    for (int i = 0; i < ListOfAI.size(); i++)
+        if (ListOfAI[i]->getName() == name)
+            return ListOfAI[i];
+    return NULL;
+}
+
+Map* Game::getMap()
+{
+    return map;
+}
+
 /**
  * @author MGerasimchuk
  * 25.10
@@ -382,7 +408,6 @@ Map *Game::loadMapFromFile(QString mapName)
         } else {
             m->objects[i]->position->setX(in.readLine(maxLen).toInt());
             m->objects[i]->position->setY(in.readLine(maxLen).toInt());
-            qDebug() << "STEP 3";
         }
 
     }
@@ -426,9 +451,6 @@ Map *Game::loadMapFromFile(QString mapName)
         }
         m->snakes[i] = snake;
     }
-
-    qDebug() << m->snakes.size();
-    qDebug() << "NORM";
 
     m->itemsTypesForGeneration.resize(in.readLine(maxLen).toInt());
     for(int i=0; i<m->itemsTypesForGeneration.size(); i++) {
@@ -511,9 +533,9 @@ void Game::loop()
     //7. Отрисовка происходящего на карте
     /////////////////////
     //Головы змеек ходят.
-
     QMapIterator<Snake*, AI*> i(snakesAIs);
     QMap <Snake*, QPoint*> oldHead;
+    /* Ждет починки AI
     while (i.hasNext())
     {
         i.next();
@@ -543,6 +565,7 @@ void Game::loop()
             i.key()->position = oldHead[i.key()];
         }
     }
+    */
     //Обрабатываем коллайды на еду
     i.toFront();
     int x = -1, y = -1; //x и y новые координаты головы проверяем на collide
@@ -574,7 +597,6 @@ void Game::loop()
             }
         }
     }
-
     //Встречи со стенками
     i.toFront();
     x = -1, y = -1;
@@ -625,9 +647,7 @@ void Game::loop()
             while (j.hasNext())
             {
                 j.next();
-                if (i.key()==j.key()) //Та же самая змейка, с которой мы сравниваем
-                    j.next();
-                if (i.key()->position == j.key()->position) //Сравниваем всех змеек с нашей
+                if (i.key()->position == j.key()->position && i.key()!=j.key()) //Сравниваем всех змеек с нашей
                 {
                     i.key()->collide(j.key(),map); //Обработка врезания змейки в другую змейку (mustDie)
                 }
@@ -646,7 +666,7 @@ void Game::loop()
             x = i.key()->position->x(), y = i.key()->position->y(); //Координаты головы змейки
             if (map->field[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
             {
-                if (map->field[x][y]->getId()==SNAKE) //Совпадают с координатами змейки на карте
+                if (map->field[x][y]->getId()==SNAKE && map->field[x][y]->position->x() != x && map->field[x][y]->position->y() != y) //Совпадают с координатами змейки на карте но это не наша голова
                 {
                     if (((Snake*)map->field[x][y])->tail.last() == *i.key()->position) //Если удар в хвост
                     {
@@ -655,8 +675,11 @@ void Game::loop()
                         //! возможности, так как у него нет атрибута tail, а после преобразования, все нужные атрибуты появляются, со всеми
                         //! сохраненными значениями.
                         //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
+
                         if (((Snake*)map->field[x][y])->tail.last() == ((Snake*)map->field[x][y])->tail[((Snake*)map->field[x][y])->tail.size()-2])
+                        {
                             map->field[x][y]->collide(i.key(), map); //Убиваем змею mustDie
+                        }
                     }
                     else //Удар произошёл в тело - убиваем без раздумий
                     {
@@ -667,6 +690,7 @@ void Game::loop()
         }
     }
     //Сдвиг тел
+    /* Ждет починки AI
     i.toFront();
     while (i.hasNext())
     {
@@ -680,6 +704,7 @@ void Game::loop()
             i.key()->tail.insert(0,*oldHead[i.key()]); //Вставляем в начало хвоста
         }
     }
+    */
     //Встречи с snakeHoles
     i.toFront();
     x = -1, y = -1;
@@ -725,10 +750,14 @@ void Game::loop()
                     map->field[i.key()->tail.last().x()][i.key()->tail.last().y()] = NULL; //Отваливается одна ячейка
                     i.key()->tail.removeLast();
                     if (i.key()->tail.size() == 0)
+                    {
                         i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
+                    }
                 }
                 else
+                {
                     i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
+                }
             }
             CurrentMove = SnakeMovesBeforeTailCellDeath;
         }
@@ -762,7 +791,7 @@ void Game::loop()
 
     for (int imap = 0; imap < map->sizeX; imap++)
     {
-        for (int jmap = 0; jmap < map->sizeX; jmap++)
+        for (int jmap = 0; jmap < map->sizeY; jmap++)
         {
             if (map->field[imap][jmap] == NULL)
                 empty << QPoint(imap,jmap);
@@ -774,10 +803,13 @@ void Game::loop()
     {
         //Генерируем в пустое место
         int num = qrand()%empty.size();
-        map->field[empty[num].x()][empty[num].y()] = new FoodItem();//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+        for_generation->position->setX(empty[num].x());
+        for_generation->position->setY(empty[num].y());
+        map->field[empty[num].x()][empty[num].y()] = for_generation;//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
 
         //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
         empty.removeAt(num);
+        map->items.append(for_generation);
     }
     //Выбираем каждый элемент из map->itemsTypesForGeneration
     for (int loop = 0; loop < map->itemsTypesForGeneration.size(); loop++)
@@ -787,7 +819,13 @@ void Game::loop()
             //Генерируем в пустое место
             int num = qrand()%empty.size();
             if (map->itemsTypesForGeneration[loop]->getId() == BOMB_ITEM) //Проверка ID
-                map->field[empty[num].x()][empty[num].y()] = new BombItem();
+            {
+                BombItem *Bomb = new BombItem();
+                Bomb->position->setX(empty[num].x());
+                Bomb->position->setY(empty[num].y());
+                map->field[empty[num].x()][empty[num].y()] = Bomb;
+                map->items.append(Bomb);
+            }
             //else if (map->itemsTypesForGeneration[loop]->getId() == OTHER_ITEM) //Если появятся другие предметы, нужно будет добавить сюда код
             //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
             empty.removeAt(num);
@@ -796,6 +834,13 @@ void Game::loop()
     //Если пустого места нет - вектор сайз равен нулю, то скипаем генерацию объекта
 
     //Генерим до конца все объекты на карту
+    //рисуем всё новое
+    gameWindow->refreshMap();
+}
+void Game::activateMapOnGameWindow()
+{
+    gameWindow->setMap(map);
+    gameWindow->showMap();
 }
 
 void Game::start()

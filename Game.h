@@ -50,24 +50,27 @@ public:
     void showWindow();
 
 
-
+    void activateMapOnGameWindow();
 	void start();
 	void stop();
 	void reset();
-		void createMap();
-		void setMap(Map *map);
+    void createMap();
+    void setMap(Map *map);
 
 	void setItemSpawnCoef(float coef);
 	void setFoodSpawnCoef(float coef);
     //void setGameSpeedCoef(float coef);
 	void setSnakeMovesPerSecond(float moves);
     void setSnakeMovesBeforeTailCellDeath(int moves); // 0 = не удалять, целое число ходов.
-	void setSnakeAI(Snake *snake, AI *ai);
+    void setSnakeAI(Snake *snake, AI *ai);
 
     Map* loadMapFromFile(QString mapName);
-		void saveMapToFile(Map *map, QString mapName);
-		QVector<QString> getMapList();
-		QVector<AI*> getAIList();
+    void saveMapToFile(Map *map, QString mapName);
+    QVector<QString> getMapList();
+    QVector<AI*> getAIList();
+    AI* getAIBySnakeName(QString name);
+    AI* getAIByAIName(QString name);
+    Map* getMap();
 
 signals:
 
