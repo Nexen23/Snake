@@ -93,8 +93,7 @@ public slots:
 	void onOpenMapClicked();
 	void onCreateMapClicked();
 	void onSaveMapClicked();
-	void onSetSizeClicked();
-    void onTestMapClicked();
+    void onSetSizeClicked();
 
     void refreshLists();
 

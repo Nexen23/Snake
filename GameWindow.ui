@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>762</width>
-    <height>513</height>
+    <height>529</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,13 +40,16 @@
       <item row="6" column="1">
        <widget class="QDoubleSpinBox" name="eat_index">
         <property name="decimals">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>1.000000000000000</double>
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
         </property>
        </widget>
       </item>
@@ -72,12 +75,15 @@
       <item row="7" column="1">
        <widget class="QDoubleSpinBox" name="snake_speed">
         <property name="decimals">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
         <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
          <double>1.000000000000000</double>
         </property>
        </widget>
@@ -106,13 +112,16 @@
       <item row="5" column="1">
        <widget class="QDoubleSpinBox" name="object_index">
         <property name="decimals">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>1.000000000000000</double>
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
         </property>
        </widget>
       </item>
@@ -128,11 +137,17 @@
         <property name="decimals">
          <number>0</number>
         </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
         <property name="maximum">
          <double>10.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -162,6 +177,9 @@
       </item>
      </layout>
     </item>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="mapField"/>
+    </item>
     <item row="0" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
@@ -173,7 +191,7 @@
       <item>
        <widget class="QPushButton" name="map_button">
         <property name="text">
-         <string>Map</string>
+         <string>Editor</string>
         </property>
        </widget>
       </item>
@@ -203,10 +221,17 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
-     <layout class="QVBoxLayout" name="mapField"/>
-    </item>
    </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>762</width>
+     <height>21</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

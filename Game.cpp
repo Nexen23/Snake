@@ -20,7 +20,7 @@ Game::Game(QObject *parent) : QObject(parent)
     CurrentMove = 0;
     ItemSpawnCoef = 0.5;
     FoodSpawnCoef = 0.5;
-		SnakeMovesPerSecond = 1;
+    SnakeMovesPerSecond = 1;
 
     timer = new QTimer(parent);
     timer->setInterval(1000);
@@ -265,6 +265,26 @@ Map* Game::getMap()
     return map;
 }
 
+float Game::getItemSpawnCoef()
+{
+    return this->ItemSpawnCoef;
+}
+
+float Game::getFoodSpawnCoef()
+{
+    return this->FoodSpawnCoef;
+}
+
+float Game::getSnakeMovesPerSecond()
+{
+    return this->SnakeMovesPerSecond;
+}
+
+int Game::getSnakeMovesBeforeTailCellDeath()
+{
+    return this->SnakeMovesBeforeTailCellDeath;
+}
+
 /**
  * @author MGerasimchuk
  * 25.10
@@ -492,24 +512,28 @@ Map *Game::loadMapFromFile(QString mapName)
 		//gameWindow->show();
 }
 
-void Game::setItemSpawnCoef(float coef)
+void Game::setItemSpawnCoef(double coef)
 {
+    //qDebug() << "OLD:" << ItemSpawnCoef;
     ItemSpawnCoef = coef;
+    //qDebug() << "NEW:" << ItemSpawnCoef;
 }
 
-void Game::setFoodSpawnCoef(float coef)
+void Game::setFoodSpawnCoef(double coef)
 {
     FoodSpawnCoef = coef;
 }
 
-void Game::setSnakeMovesPerSecond(float moves)
+void Game::setSnakeMovesPerSecond(double moves)
 {
     SnakeMovesPerSecond = moves;
 }
 
-void Game::setSnakeMovesBeforeTailCellDeath(int moves) // 0 = не удалять, целое число ходов.
+void Game::setSnakeMovesBeforeTailCellDeath(double moves) // 0 = не удалять, целое число ходов.
 {
-    SnakeMovesBeforeTailCellDeath = moves;
+    //qDebug() << "OLD:" << SnakeMovesBeforeTailCellDeath;
+    SnakeMovesBeforeTailCellDeath = (int)(moves+0.01); //Лень подключать math.h и нормальный round();
+    //qDebug() << "NEW:" << SnakeMovesBeforeTailCellDeath;
 }
 
 void Game::setSnakeAI(Snake *snake, AI *ai)
@@ -859,5 +883,4 @@ void Game::stop()
 void Game::reset()
 {
     timer->stop();
-    //! loadMapFromFile("Here's our file"); //!Добавить тут ссылку на карту итп.
 }

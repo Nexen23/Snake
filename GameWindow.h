@@ -35,6 +35,7 @@ private:
 
 	Map *map;
 	Game *game;
+    QString currentMapName;
 
 
 signals:
@@ -52,7 +53,7 @@ public slots:
     //void onStopClicked();
     //void onResetClicked();
 
-    //void onOpenMapChoserDialog();
+    void onOpenMapChoserDialog();
     void onMainSnakeSelected();
     void onBindAIToSnake();
     //void onOpenSnakeAIChoserDialog();

@@ -18,19 +18,18 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 	this->game = game;
     map = new Map(0,0);
 
-    
-	//создание меню
+    //создание меню
     QMenuBar *menu = new QMenuBar(this);
     QMenu *File = new QMenu("File");
     QAction *File_Create = File->addAction("Create");
     QAction *File_Open = File->addAction("Open");
     QAction *File_Save = File->addAction("Save");
-    QAction *Test_Map = File->addAction("Test Map");
     menu->addMenu(File);
 
     QMenu *Size = new QMenu("Size");
     QAction *Size_Set = Size->addAction("Set");
     menu->addMenu(Size);
+    menu->setGeometry(QRect(0, 0, 82, 21));
     menu->show();
 
 
@@ -39,7 +38,6 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     connect(File_Open,SIGNAL(triggered()),this, SLOT(onOpenMapClicked()));
     connect(File_Save,SIGNAL(triggered()),this, SLOT(onSaveMapClicked()));
     connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
-    connect(Test_Map,SIGNAL(triggered()),this,SLOT(onTestMapClicked()));
 
 
 
@@ -297,12 +295,13 @@ void EditorWindow::onOpenMapClicked()
     QVector<QString> maps = game->getMapList();
     dialog = new OpenMapDialog(this, maps, fileName);
     dialog->exec();
-
-    map = game->loadMapFromFile(fileName);
-
-    mapView->showMap(map);
-    refreshLists();
-
+    //Дабы всё было хорошо лучше проверять строку
+    if (fileName != "")
+    {
+        map = game->loadMapFromFile(fileName);
+        mapView->showMap(map);
+        refreshLists();
+    }
 }
 /**
  * @author MGerasimchuk
@@ -367,12 +366,6 @@ void EditorWindow::onSaveMapClicked()
                             "Файл карты (*.smp)");
 
     game->saveMapToFile(map, fileName);
-}
-
-void EditorWindow::onTestMapClicked()
-{
-    game->setMap(map);
-    game->activateMapOnGameWindow();
 }
 
 /**

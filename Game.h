@@ -57,11 +57,6 @@ public:
     void createMap();
     void setMap(Map *map);
 
-	void setItemSpawnCoef(float coef);
-	void setFoodSpawnCoef(float coef);
-    //void setGameSpeedCoef(float coef);
-	void setSnakeMovesPerSecond(float moves);
-    void setSnakeMovesBeforeTailCellDeath(int moves); // 0 = не удалять, целое число ходов.
     void setSnakeAI(Snake *snake, AI *ai);
 
     Map* loadMapFromFile(QString mapName);
@@ -71,10 +66,18 @@ public:
     AI* getAIBySnakeName(QString name);
     AI* getAIByAIName(QString name);
     Map* getMap();
+    float getItemSpawnCoef();
+    float getFoodSpawnCoef();
+    float getSnakeMovesPerSecond();
+    int getSnakeMovesBeforeTailCellDeath();
 
 signals:
 
 public slots:
+    void setItemSpawnCoef(double coef);
+    void setFoodSpawnCoef(double coef);
+    void setSnakeMovesPerSecond(double moves);
+    void setSnakeMovesBeforeTailCellDeath(double moves); // 0 = не удалять, целое число ходов.
     void loop();
 };
 
