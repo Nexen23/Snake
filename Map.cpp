@@ -65,3 +65,73 @@ void Map::resize(int newSizeX, int newSizeY)
     this->sizeY = newSizeY;
 }
 
+void Map::removeObjectAt(int x, int y)
+{
+    if (field[x][y] != NULL)
+    {
+        if (field[x][y]->getId() == SNAKE)
+        {
+            if (*field[x][y]->position == QPoint(x,y))//Ищется голова змеи
+            {
+                ((Snake*)field[x][y])->mustDie = true; //Убиваем всю змейку в цикле mustDie, голова умерла от взрыва
+            }
+            //Тело
+            else if (((Snake*)field[x][y])->mustDie != true) //Рубим тело, только если змея не обречена еще на смерть
+            {
+                int since = 1; //Начинаем рубить змею с конца
+                Snake* thisSnake = (Snake*)field[x][y];
+                if (thisSnake->tail.size() != 0) //Если хвоста нет, то видимо нужно убить голову
+                {
+                    while (since)
+                    {
+                        if (thisSnake->tail.last().x()==x &&
+                            thisSnake->tail.last().y()==y) //Отрубаем последнюю часть
+                        {
+                            since = 0;
+                        }
+                        if (since != 0) //Удаляя последнюю часть, первый код не подходит из-за уничтожения объекта в x,y
+                        {
+                            field[thisSnake->tail.last().x()][thisSnake->tail.last().y()] = NULL;//Удаляем с карты
+                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
+                        }
+                        else
+                        {
+                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
+                        }
+                    }
+                }
+                else
+                {
+                    thisSnake->mustDie = true;
+                }
+            }
+        }
+        else if (field[x][y]->getId() == HOLE_OBJECT ||
+                 field[x][y]->getId() == WALL_OBJECT)
+        {
+            int size = objects.size();
+            for (int i = 0; i < size; i++)
+            {
+                if (*objects[i]->position == QPoint(x,y))
+                {
+                    objects.removeAt(i);
+                    i = size;
+                }
+            }
+        }
+        else if (field[x][y]->getId() == BOMB_ITEM ||
+                 field[x][y]->getId() == FOOD_ITEM)
+        {
+            int size = items.size();
+            for (int i = 0; i < size; i++)
+            {
+                if (*items[i]->position == QPoint(x,y))
+                {
+                    items.removeAt(i);
+                    i = size;
+                }
+            }
+        }
+        field[x][y] = NULL;
+    }
+}
