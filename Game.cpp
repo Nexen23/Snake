@@ -558,15 +558,16 @@ void Game::loop()
     /////////////////////
     //Головы змеек ходят.
     QMapIterator<Snake*, AI*> i(snakesAIs);
-    QMap <Snake*, QPoint*> oldHead;
-    /* Ждет починки AI
+    QMap <Snake*, QPoint> oldHead;
+    //qDebug() << "CHECK LOOP";
     while (i.hasNext())
     {
         i.next();
         if (i.key()->isDead == false && i.key()->snakeInTheHole == false)
         {
-            oldHead[i.key()] = i.key()->position; //В старую позицию головы понадобится вставить новую ячейку
+            oldHead[i.key()] = *i.key()->position; //В старую позицию головы понадобится вставить новую ячейку
             switch (i.value()->getNextMove(i.key(), map))
+            //switch (2)
             {
                 case 0:  //LEFT
                     *i.key()->position += QPoint(-1,0);
@@ -586,10 +587,11 @@ void Game::loop()
             i.key()->position->ry() >= map->sizeY || i.key()->position->ry() < 0)
         {
             i.key()->mustDie = true;
-            i.key()->position = oldHead[i.key()];
+            i.key()->position->setX(oldHead[i.key()].x());
+            i.key()->position->setY(oldHead[i.key()].y());
         }
     }
-    */
+
     //Обрабатываем коллайды на еду
     i.toFront();
     int x = -1, y = -1; //x и y новые координаты головы проверяем на collide
@@ -609,7 +611,8 @@ void Game::loop()
                     int iter = 0;
                     while (FoodExists)
                     {
-                        if (map->items[iter]->position == i.key()->position)
+                        //qDebug() << "X:" << map->items[iter]->position->x() << " Y:" << map->items[iter]->position->y();
+                        if (*map->items[iter]->position == *i.key()->position)
                         {
                             map->items.removeAt(iter);
                             map->field[x][y] = i.key();
@@ -635,6 +638,8 @@ void Game::loop()
                 if (map->field[x][y]->getId()==WALL_OBJECT) //Совпадают с координатами стенки на карте
                 {
                     map->field[x][y]->collide(i.key(), map); //Убиваем змейку, на карте она еще остается, в неё могут врезаться
+                    i.key()->position->setX(oldHead[i.key()].x());
+                    i.key()->position->setY(oldHead[i.key()].y());
                 }
             }
         }
@@ -690,19 +695,36 @@ void Game::loop()
             x = i.key()->position->x(), y = i.key()->position->y(); //Координаты головы змейки
             if (map->field[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
             {
-                if (map->field[x][y]->getId()==SNAKE && map->field[x][y]->position->x() != x && map->field[x][y]->position->y() != y) //Совпадают с координатами змейки на карте но это не наша голова
+                if (map->field[x][y]->getId()==SNAKE && !(map->field[x][y]->position->x() == x && map->field[x][y]->position->y() == y) ) //Совпадают с координатами змейки на карте но это не наша голова
                 {
-                    if (((Snake*)map->field[x][y])->tail.last() == *i.key()->position) //Если удар в хвост
+                    //Находим змею в списке
+                    Snake *collideSnake = NULL;
+                    for (int k = 0; k < map->snakes.size(); k++)
+                    {
+                        if (map->snakes[k]->tail.size() > 0)
+                        {
+                            for (int j = 0; j < map->snakes[k]->tail.size(); j++)
+                            {
+                                if (map->snakes[k]->tail[j] == QPoint(x,y))
+                                {
+                                    collideSnake = map->snakes[k];
+                                    j = map->snakes[k]->tail.size();
+                                }
+                            }
+                            if (collideSnake != NULL)
+                            {
+                                k = map->snakes.size();
+                            }
+                        }
+                    }
+                    if (collideSnake->tail.last() == *i.key()->position) //Если удар в хвост
                     {
                         //Коллайд сработает только если была съедена еда и хвост остался на месте
-                        //! Здесь преобразование Snake* используется для получения хвоста змеи, в которую врезались. Entity не даёт такой
-                        //! возможности, так как у него нет атрибута tail, а после преобразования, все нужные атрибуты появляются, со всеми
-                        //! сохраненными значениями.
                         //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
 
-                        if (((Snake*)map->field[x][y])->tail.last() == ((Snake*)map->field[x][y])->tail[((Snake*)map->field[x][y])->tail.size()-2])
+                        if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) )
                         {
-                            map->field[x][y]->collide(i.key(), map); //Убиваем змею mustDie
+                            collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                         }
                     }
                     else //Удар произошёл в тело - убиваем без раздумий
@@ -713,22 +735,6 @@ void Game::loop()
             }
         }
     }
-    //Сдвиг тел
-    /* Ждет починки AI
-    i.toFront();
-    while (i.hasNext())
-    {
-        i.next();
-        if (i.key()->isDead == false && i.key()->snakeInTheHole == false)
-        {
-            if (i.key()->tail.last() != i.key()->tail[i.key()->tail.size()-2]) // Если змея поела
-                map->field[i.key()->tail.last().x()][i.key()->tail.last().y()] = NULL; //Удаляем конец хвоста с карты
-            i.key()->tail.removeLast(); //Удаляем с конца хвоста
-            map->field[oldHead[i.key()]->x()][oldHead[i.key()]->y()] = i.key(); //Вставляем перёд на карту
-            i.key()->tail.insert(0,*oldHead[i.key()]); //Вставляем в начало хвоста
-        }
-    }
-    */
     //Встречи с snakeHoles
     i.toFront();
     x = -1, y = -1;
@@ -740,9 +746,18 @@ void Game::loop()
             x = i.key()->position->x(), y = i.key()->position->y(); //Координаты головы змейки
             if (map->field[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
             {
-                if (map->field[x][y]->getName()=="Hole") //Совпадают с координатами дырки на карте
+                if (map->field[x][y]->getId()==HOLE_OBJECT && i.key()->snakeInTheHole == false) //Совпадают с координатами дырки на карте
                 {
                     map->field[x][y]->collide(i.key(), map); //Засасываем змею в дыру
+                    if (i.key()->tail.size() > 0) //Делаем один ход
+                    {
+                        map->field[i.key()->tail.last().x()][i.key()->tail.last().y()] = NULL; //Удаляем конец хвоста с карты
+                        map->field[oldHead[i.key()].x()][oldHead[i.key()].y()] = i.key(); //Вставляем перёд на место старой головы
+                        i.key()->tail.removeLast(); //Удаляем с конца хвоста
+                        i.key()->tail.insert(0,oldHead[i.key()]); //Вставляем в начало хвоста
+                        i.key()->position->setX(oldHead[i.key()].x());
+                        i.key()->position->setY(oldHead[i.key()].y());
+                    }
                 }
             }
         }
@@ -753,10 +768,35 @@ void Game::loop()
                 map->field[i.key()->tail.last().x()][i.key()->tail.last().y()] = NULL; //Удаляем ячейку хвоста с карты
                 i.key()->tail.removeLast(); //Засасываем одну ячейку под землю русскую.
                 if (i.key()->tail.size() == 0) //Наконец убиваем нашу змею
-                    i.key()->isDead = true;
+                    i.key()->mustDie = true;
             }
-            else //Наконец убиваем нашу змею
-                i.key()->isDead = true;
+            else //Если змея и так была без хвоста
+                i.key()->mustDie = true;
+        }
+    }
+    //Сдвиг тел
+    //qDebug() << "MOVE BODY";
+    i.toFront();
+    while (i.hasNext())
+    {
+        i.next();
+        if (i.key()->isDead == false && i.key()->snakeInTheHole == false)
+        {
+            if (i.key()->tail.size() > 0) //Если у змейки есть хвост
+            {
+                if (i.key()->tail.size() > 1) //Если змея ела, то у нее больше одного хвоста
+                    if (i.key()->tail.last() != i.key()->tail[i.key()->tail.size()-2]) // Если змея поела
+                        map->field[i.key()->tail.last().x()][i.key()->tail.last().y()] = NULL; //Удаляем конец хвоста с карты
+                map->field[oldHead[i.key()].x()][oldHead[i.key()].y()] = i.key(); //Вставляем перёд на место старой головы
+                i.key()->tail.removeLast(); //Удаляем с конца хвоста
+                i.key()->tail.insert(0,oldHead[i.key()]); //Вставляем в начало хвоста
+                map->field[i.key()->position->x()][i.key()->position->y()] = i.key(); //Вставляем голову на новое место
+            }
+            else //У змеи нет хвоста
+            {
+                map->field[oldHead[i.key()].x()][oldHead[i.key()].y()] = NULL; //Удаляем старое отображение головы
+                map->field[i.key()->position->x()][i.key()->position->y()] = i.key(); //Вставляем голову на новое место
+            }
         }
     }
     //Реализуем все отмирания ячеек с ходами
@@ -792,7 +832,7 @@ void Game::loop()
     while (i.hasNext())
     {
         i.next();
-        if (i.key()->mustDie == true)
+        if (i.key()->mustDie == true && i.key()->isDead == false)
         {
             //!Убить змею, убрать с карты. (В списке по идее оставить)
             int size = i.key()->tail.size()-1;
@@ -800,8 +840,8 @@ void Game::loop()
             {
                 map->field[i.key()->tail[x].x()][i.key()->tail[x].y()] = NULL; //Убираем хвост на карте
             }
-            if (map->field[i.key()->position->x()][i.key()->position->y()]->getId() == SNAKE) //Если есть голова на карте (не потеряла при других обстоятельствах), голову отрубаем
-                map->field[i.key()->position->x()][i.key()->position->y()] = NULL; //Отрубаем голову (в карте)
+            //if (map->field[i.key()->position->x()][i.key()->position->y()]->getId() == SNAKE) //Если есть голова на карте (не потеряла при других обстоятельствах), голову отрубаем
+            map->field[i.key()->position->x()][i.key()->position->y()] = NULL; //Отрубаем голову (в карте)
             i.key()->isDead = true; //Убиваем змею
             i.key()->tail.clear(); //Удаляем всё с хвоста
         }
@@ -860,6 +900,7 @@ void Game::loop()
     //Генерим до конца все объекты на карту
     //рисуем всё новое
     gameWindow->refreshMap();
+    //SetWinner
 }
 void Game::activateMapOnGameWindow()
 {

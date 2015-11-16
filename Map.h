@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Item.h"
 #include "Object.h"
+#include "Snake.h"
 
 #include <QObject>
 #include <QTextCodec>
@@ -27,6 +28,7 @@ public:
     const QString getId();
 
     void resize(int newSizeX, int newSizeY);
+    void removeObjectAt(int x, int y);
 };
 
 #endif // MAP_H
