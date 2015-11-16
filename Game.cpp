@@ -638,6 +638,8 @@ void Game::loop()
                 if (map->field[x][y]->getId()==WALL_OBJECT) //Совпадают с координатами стенки на карте
                 {
                     map->field[x][y]->collide(i.key(), map); //Убиваем змейку, на карте она еще остается, в неё могут врезаться
+                    i.key()->position->setX(oldHead[i.key()].x());
+                    i.key()->position->setY(oldHead[i.key()].y());
                 }
             }
         }
