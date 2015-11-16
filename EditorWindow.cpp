@@ -68,6 +68,7 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
     mapView->showMap(map);
 
     refreshLists();
+    ui->SnakeList->setCurrentRow(0);
 }
 
 /**
