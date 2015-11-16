@@ -132,7 +132,7 @@ void MapWidget::drawMap(Map *map)
         if(map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] == NULL) {
             continue;
         }
-        QPixmap head(":/img/SnakeHead.png" );
+        QPixmap head("./img/SnakeHead.png" );
         head = head.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *snake = new QGraphicsPixmapItem(head);
         snake->setPos(map->snakes[i]->position->x()*minCellSize, map->snakes[i]->position->y()*minCellSize);
@@ -153,9 +153,13 @@ void MapWidget::drawMap(Map *map)
         if(map->field[map->objects[i]->position->x()][map->objects[i]->position->y()] == NULL) {
             continue;
         }
-        QPixmap pic(map->objects[i]->getBitmap().copy(map->objects[i]->position->x()*minCellSize,
-                                                     map->objects[i]->position->y()*minCellSize,
-                                                     minCellSize, minCellSize));
+        QPixmap pixMap;
+        pixMap = map->objects[i]->getBitmap();
+
+        QPixmap pic(pixMap.copy(map->items[i]->position->x(),
+                                                     map->items[i]->position->y(),
+                                                     pixMap.width(),
+                                                     pixMap.height()));
         pic = pic.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *graphicsItem = new QGraphicsPixmapItem(pic);
         graphicsItem->setPos(map->objects[i]->position->x()*minCellSize, map->objects[i]->position->y()*minCellSize);
@@ -166,9 +170,15 @@ void MapWidget::drawMap(Map *map)
         if(map->field[map->items[i]->position->x()][map->items[i]->position->y()] == NULL) {
             continue;
         }
-        QPixmap pic(map->items[i]->getBitmap().copy(map->items[i]->position->x()*minCellSize,
-                                                     map->items[i]->position->y()*minCellSize,
-                                                     minCellSize, minCellSize));
+
+        QPixmap pixMap;
+        pixMap = map->items[i]->getBitmap();
+
+        QPixmap pic(pixMap.copy(map->items[i]->position->x(),
+                                                     map->items[i]->position->y(),
+                                                     pixMap.width(),
+                                                     pixMap.height()));
+
         pic = pic.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *graphicsItem = new QGraphicsPixmapItem(pic);
         graphicsItem->setPos(map->items[i]->position->x()*minCellSize, map->items[i]->position->y()*minCellSize);
