@@ -16,5 +16,16 @@ Entity::Entity()
  */
 Entity::~Entity()
 {
-    delete position;
+	delete position;
+}
+
+const Type Entity::getType()
+{
+	Id id = getId();
+
+	if (id >= ITEM_FIRST && id <= ITEM_LAST)
+		return ITEM;
+	if (id >= OBJECT_FIRST && id <= OBJECT_LAST)
+		return OBJECT;
+	return SNAKE;
 }

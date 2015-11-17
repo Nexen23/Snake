@@ -19,6 +19,13 @@ OBJECT_LAST = HOLE_OBJECT,
 	SNAKE,
 };
 
+enum Type
+{
+	OBJECT,
+	ITEM,
+	SNAKE
+};
+
 
 class Snake;
 class Map;
@@ -33,8 +40,9 @@ public:
     bool isDead = false;
 
 	virtual const QString getName() = 0;
-    virtual const Id getId() = 0;
-    virtual const QPixmap getBitmap() = 0;
+	virtual const Id getId() = 0;
+	virtual const Type getType();
+	virtual const QPixmap getBitmap() = 0;
 	virtual void collide(Snake *snake, Map *map) = 0;
 };
 
