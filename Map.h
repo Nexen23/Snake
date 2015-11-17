@@ -1,13 +1,13 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "Entity.h"
-#include "Item.h"
-#include "Object.h"
-#include "Snake.h"
-
 #include <QObject>
 #include <QTextCodec>
+
+class Entity;
+class Item;
+class Object;
+class Snake;
 
 class Map : public QObject
 {
@@ -47,10 +47,15 @@ public:
 	void resize(int newSizeX, int newSizeY);
 	void setCellAt(int x, int y, Entity *newEntity);
 	void clearCellAt(int x, int y);
-	void clearCellAt(int x, int y);
+
+private:
+	void removeEntityFromVectors(Entity *entity);
+	void addEntityToVectors(Entity *entity);
+	template<class T>
+	void removeEntityFromVector(QVector<T> &vector, Entity *entity);
 
 signals:
-	void sizeChanged(int newSizeX, int newSizeY);
+	void sizeChanged(int newSizeX, int newSizeY, Map *map);
 	void cellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity);
 };
 

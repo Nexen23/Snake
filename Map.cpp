@@ -1,4 +1,8 @@
+#include "Item.h"
 #include "Map.h"
+#include "Object.h"
+#include "Snake.h"
+#include "Entity.h"
 
 /**
  * @author MGerasimchuk
@@ -53,27 +57,27 @@ const Entity* Map::getEntityAt(int x, int y)
 	return field[x][y];
 }
 
-const QVector<QVector<Entity *> > Map::getField()
+const QVector<QVector<Entity *> >& Map::getField()
 {
 	return field;
 }
 
-const QVector<Item *> Map::getItems()
+const QVector<Item *>& Map::getItems()
 {
 	return items;
 }
 
-const QVector<Object *> Map::getObjects()
+const QVector<Object *>& Map::getObjects()
 {
 	return objects;
 }
 
-const QVector<Snake *> Map::getSnakes()
+const QVector<Snake *>& Map::getSnakes()
 {
 	return snakes;
 }
 
-const QVector<Item *> Map::getItemsTypesForGeneration()
+const QVector<Item *>& Map::getItemsTypesForGeneration()
 {
 	return itemsTypesForGeneration;
 }
@@ -148,7 +152,7 @@ void Map::resize(int newSizeX, int newSizeY)
 		{
 			if (it->x() < newSizeX && it->y() < newSizeY)
 			{
-				field[x][y] = snakes[i];
+				field[it->x()][it->y()] = snakes[i];
 			}
 			else
 			{
@@ -160,13 +164,15 @@ void Map::resize(int newSizeX, int newSizeY)
 
 	sizeX = newSizeX;
 	sizeY = newSizeY;
-	emit sizeChanged(newSizeX, newSizeY);
+	emit sizeChanged(newSizeX, newSizeY, this);
 }
 
 void Map::setCellAt(int x, int y, Entity *newEntity)
 {
 	Entity *oldEntity = field[x][y];
 	field[x][y] = newEntity;
+	removeEntityFromVectors(oldEntity);
+	addEntityToVectors(newEntity);
 	emit cellChangedAt(x, y, oldEntity, newEntity);
 }
 
@@ -175,73 +181,130 @@ void Map::clearCellAt(int x, int y)
 	setCellAt(x, y, NULL);
 }
 
-void Map::removeEntityFullyAt(int x, int y)
+void Map::addEntityToVectors(Entity *entity)
 {
-    if (field[x][y] != NULL)
-    {
-				if (field[x][y]->getId() == SNAKE_NPC)
-        {
-            if (*field[x][y]->position == QPoint(x,y))//Ищется голова змеи
-            {
-                ((Snake*)field[x][y])->mustDie = true; //Убиваем всю змейку в цикле mustDie, голова умерла от взрыва
-            }
-            //Тело
-            else if (((Snake*)field[x][y])->mustDie != true) //Рубим тело, только если змея не обречена еще на смерть
-            {
-                int since = 1; //Начинаем рубить змею с конца
-                Snake* thisSnake = (Snake*)field[x][y];
-                if (thisSnake->tail.size() != 0) //Если хвоста нет, то видимо нужно убить голову
-                {
-                    while (since)
-                    {
-                        if (thisSnake->tail.last().x()==x &&
-                            thisSnake->tail.last().y()==y) //Отрубаем последнюю часть
-                        {
-                            since = 0;
-                        }
-                        if (since != 0) //Удаляя последнюю часть, первый код не подходит из-за уничтожения объекта в x,y
-                        {
-                            field[thisSnake->tail.last().x()][thisSnake->tail.last().y()] = NULL;//Удаляем с карты
-                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
-                        }
-                        else
-                        {
-                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
-                        }
-                    }
-                }
-                else
-                {
-                    thisSnake->mustDie = true;
-                }
-            }
-        }
-        else if (field[x][y]->getId() == HOLE_OBJECT ||
-                 field[x][y]->getId() == WALL_OBJECT)
-        {
-            int size = objects.size();
-            for (int i = 0; i < size; i++)
-            {
-                if (*objects[i]->position == QPoint(x,y))
-                {
-                    objects.removeAt(i);
-                    i = size;
-                }
-            }
-        }
-        else if (field[x][y]->getId() == BOMB_ITEM ||
-                 field[x][y]->getId() == FOOD_ITEM)
-        {
-            int size = items.size();
-            for (int i = 0; i < size; i++)
-            {
-                if (*items[i]->position == QPoint(x,y))
-                {
-                    items.removeAt(i);
-                    i = size;
-                }
-            }
-        }
-        field[x][y] = NULL;
-    }
+	if (entity != NULL)
+	{
+		switch(entity->getType())
+		{
+		ITEM :
+			items.append((Item*)entity);
+			break;
+
+		OBJECT :
+			objects.append((Object*)entity);
+			break;
+
+		SNAKE :
+			snakes.append((Snake*)entity);
+			break;
+		}
+	}
 }
+
+void Map::removeEntityFromVectors(Entity *entity)
+{
+	if (entity != NULL)
+	{
+		switch(entity->getType())
+		{
+		ITEM :
+			removeEntityFromVector<Item*>(items, entity);
+			break;
+
+		OBJECT :
+			removeEntityFromVector<Object*>(objects, entity);
+			break;
+
+		SNAKE :
+			removeEntityFromVector<Snake*>(snakes, entity);
+			break;
+		}
+	}
+}
+
+template<class T>
+void Map::removeEntityFromVector(QVector<T> &vector, Entity *entity)
+{
+	for (int i = 0; i < vector.size(); ++i)
+	{
+		if (vector[i]->position == entity->position)
+		{
+			vector.removeAt(i);
+			break;
+		}
+	}
+}
+
+
+
+//void Map::removeEntityFullyAt(int x, int y)
+//{
+//    if (field[x][y] != NULL)
+//    {
+//				if (field[x][y]->getId() == SNAKE_NPC)
+//        {
+//            if (*field[x][y]->position == QPoint(x,y))//Ищется голова змеи
+//            {
+//                ((Snake*)field[x][y])->mustDie = true; //Убиваем всю змейку в цикле mustDie, голова умерла от взрыва
+//            }
+//            //Тело
+//            else if (((Snake*)field[x][y])->mustDie != true) //Рубим тело, только если змея не обречена еще на смерть
+//            {
+//                int since = 1; //Начинаем рубить змею с конца
+//                Snake* thisSnake = (Snake*)field[x][y];
+//                if (thisSnake->tail.size() != 0) //Если хвоста нет, то видимо нужно убить голову
+//                {
+//                    while (since)
+//                    {
+//                        if (thisSnake->tail.last().x()==x &&
+//                            thisSnake->tail.last().y()==y) //Отрубаем последнюю часть
+//                        {
+//                            since = 0;
+//                        }
+//                        if (since != 0) //Удаляя последнюю часть, первый код не подходит из-за уничтожения объекта в x,y
+//                        {
+//                            field[thisSnake->tail.last().x()][thisSnake->tail.last().y()] = NULL;//Удаляем с карты
+//                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
+//                        }
+//                        else
+//                        {
+//                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    thisSnake->mustDie = true;
+//                }
+//            }
+//        }
+//        else if (field[x][y]->getId() == HOLE_OBJECT ||
+//                 field[x][y]->getId() == WALL_OBJECT)
+//        {
+//            int size = objects.size();
+//            for (int i = 0; i < size; i++)
+//            {
+//                if (*objects[i]->position == QPoint(x,y))
+//                {
+//                    objects.removeAt(i);
+//                    i = size;
+//                }
+//            }
+//        }
+//        else if (field[x][y]->getId() == BOMB_ITEM ||
+//                 field[x][y]->getId() == FOOD_ITEM)
+//        {
+//            int size = items.size();
+//            for (int i = 0; i < size; i++)
+//            {
+//                if (*items[i]->position == QPoint(x,y))
+//                {
+//                    items.removeAt(i);
+//                    i = size;
+//                }
+//            }
+//        }
+//        field[x][y] = NULL;
+//    }
+//}
