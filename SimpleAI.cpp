@@ -35,7 +35,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
 
     QVector<QVector<Entity*> > buf_field;
     int sizeX,sizeY, tmp;
-    int x=0,y=0, buf_sizeX = sizeX = map->sizeX-1, buf_sizeY = sizeY = map->sizeY-1;
+    int x=0,y=0, buf_sizeX = sizeX = map->getSizeX()-1, buf_sizeY = sizeY = map->getSizeY()-1;
     int byf_head_x=head.x(),byf_head_y=head.y();
 
     switch(moveDirection){
@@ -43,7 +43,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
     {
         for(x=0;x<sizeX;x++)
             for(y=0;y<sizeY;y++) {
-                buf_field[x][y]=map->field[x][y];
+                buf_field[x][y]=map->getField()[x][y];
 
             }
 
@@ -52,7 +52,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
     {
         for(x=0;x<sizeX;x++)
             for(y=0;y<sizeY;y++) {
-                buf_field[sizeX-1-x][sizeY-1-y]=map->field[x][y];
+                buf_field[sizeX-1-x][sizeY-1-y]=map->getField()[x][y];
 
             }
         byf_head_x=buf_sizeX-head.x();
@@ -64,7 +64,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
         Entity* temp =NULL;
         for(x=0;x<sizeX;x++)
             for(y=0;y<sizeY;y++)
-                 buf_field[sizeX-1-x][sizeY-1-y]=map->field[x][y];
+                 buf_field[sizeX-1-x][sizeY-1-y]=map->getField()[x][y];
 
         for(int r=0;r<3;r++){
 
@@ -134,7 +134,7 @@ int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*k
 
         for(x=0;x<sizeX;x++)
             for(y=0;y<sizeY;y++)
-                buf_field[sizeX-1-x][sizeY-1-y]=map->field[x][y];
+                buf_field[sizeX-1-x][sizeY-1-y]=map->getField()[x][y];
 
 
         int min=0;
@@ -235,7 +235,7 @@ for(y=byf_head_y; y<byf_head_y+6;y++)
               kof[UP]-=20;
               continue;
         }
-        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE){
+        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE_NPC){
               kof[UP]-=20;
               continue;
         }
@@ -282,7 +282,7 @@ for(x=byf_head_x-1; x<byf_head_x-6;x++)
               kof[LEFT]-=20;
               continue;
         }
-        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE){
+        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE_NPC){
               kof[LEFT]-=20;
               continue;
         }
@@ -329,7 +329,7 @@ for(x=byf_head_x+1; x<byf_head_x+6;x++)
               kof[RIGHT]-=20;
               continue;
         }
-        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE){
+        if(buf_field[byf_head_x][byf_head_y]->getId()==SNAKE_NPC){
               kof[RIGHT]-=20;
               continue;
         }
@@ -380,12 +380,12 @@ case LEFT:
 MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
 {
     //qDebug() << "CHECK6:";
-    QPoint* head = controllerSnake->position;
+		QPoint head = controllerSnake->position;
     QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
-        second=*head;
-    QPoint buf = *head - second;
+				second=head;
+		QPoint buf = head - second;
 
     int *kof = new int [4];
     for(int i=0;i<4;i++){   kof[i] =1000;  }
@@ -393,16 +393,16 @@ MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
     //учет положения первого за головой хвоста
     if(buf.x()==0)
         if(buf.y()>0){
-            kof[UP]=getCostsOfDirection(*head,UP,kof,map);
+						kof[UP]=getCostsOfDirection(head,UP,kof,map);
         }   else    {
 
-            kof[DOWN]=getCostsOfDirection(*head,DOWN,kof,map);;
+						kof[DOWN]=getCostsOfDirection(head,DOWN,kof,map);
         }
     else
         if(buf.x()>0){
-            kof[RIGHT]=getCostsOfDirection(*head,RIGHT,kof,map);;
+						kof[RIGHT]=getCostsOfDirection(head,RIGHT,kof,map);
         }   else    {
-            kof[LEFT]=getCostsOfDirection(*head,LEFT,kof,map);;
+						kof[LEFT]=getCostsOfDirection(head,LEFT,kof,map);
         }
 
     int ForRand=0, Rand;

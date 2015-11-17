@@ -7,8 +7,9 @@
  * @author MGerasimchuk
  * 25.10
  */
-Snake::Snake(QString name, int length)
+Snake::Snake(QString name)
 {
+	color = Qt::green;
    this->name = name;
    tail.clear();
 }
@@ -39,7 +40,7 @@ const QString Snake::getName()
  */
 const Id Snake::getId()
 {
-    return SNAKE;
+		return SNAKE_NPC;
 }
 
 /**
@@ -50,5 +51,12 @@ const QPixmap Snake::getBitmap()
 {
     QPixmap item(":/img/Snake.png");
 
-    return item;
+		return item;
+}
+
+Entity *Snake::clone()
+{
+	Snake *snake = new Snake(name);
+	snake->position = position;
+	return snake;
 }

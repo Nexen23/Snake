@@ -52,12 +52,12 @@ const QPixmap BombItem::getBitmap()
 void BombItem::collide(Snake *snake, Map *map)
 {
     QVector <QPoint> ourSnake;
-    ourSnake.append(*snake->position);
+		ourSnake.append(snake->position);
     for (int i = 0; i < snake->tail.size(); i++)
         ourSnake.append(snake->tail[i]);
     ourSnake.append(QPoint( (ourSnake[0].x()+ourSnake[1].x())/2 , (ourSnake[0].y()+ourSnake[1].y())/2) );
-    map->removeEntityFullyAt(snake->position->x(),snake->position->y());
-    //qDebug() << "POS X:" << snake->position->x() << " POS Y:" << snake->position->y();
+		map->clearCellAt(snake->position.x(),snake->position.y());
+		//qDebug() << "POS X:" << snake->position.x() << " POS Y:" << snake->position.y();
     //Взрыв всех вещей в радиусе damageRadius
     //Взрыв змеек, голов и их частей
     int x = 0, y = 0;
@@ -65,19 +65,19 @@ void BombItem::collide(Snake *snake, Map *map)
     {
         for (int j = 0; j < i*2+1; j++)
         {
-            x = position->x()-i+j;
+						x = position.x()-i+j;
             if (x<0)
                 x=0;
-            else if (x>=map->sizeX)
-                x=map->sizeX-1;
-            y = position->y()+i-damageRadius;
+						else if (x>=map->getSizeX())
+								x=map->getSizeX()-1;
+						y = position.y()+i-damageRadius;
             if (y<0)
                 y=0;
-            else if (y>=map->sizeY)
-                y=map->sizeY-1;
+						else if (y>=map->getSizeY())
+								y=map->getSizeY()-1;
             if (!ourSnake.contains(QPoint(x,y)))
             {
-                map->removeEntityFullyAt(x,y);
+								map->clearCellAt(x,y);
             }
         }
     }
@@ -85,19 +85,19 @@ void BombItem::collide(Snake *snake, Map *map)
     {
         for (int j = 0; j < i*2+1; j++)
         {
-            x = position->x()-i+j;
+						x = position.x()-i+j;
             if (x<0)
                 x=0;
-            else if (x>=map->sizeX)
-                x=map->sizeX-1;
-            y = position->y()-i+damageRadius;
+						else if (x>=map->getSizeX())
+								x=map->getSizeX()-1;
+						y = position.y()-i+damageRadius;
             if (y<0)
                 y=0;
-            else if (y>=map->sizeY)
-                y=map->sizeY-1;
+						else if (y>=map->getSizeY())
+								y=map->getSizeY()-1;
             if (!ourSnake.contains(QPoint(x,y)))
             {
-                map->removeEntityFullyAt(x,y);
+								map->clearCellAt(x,y);
             }
         }
     }
@@ -106,5 +106,12 @@ void BombItem::collide(Snake *snake, Map *map)
 
 float BombItem::getSpawnChance()
 {
-    return 0.15f;
+	return 0.15f;
+}
+
+Entity *BombItem::clone()
+{
+	BombItem *bomb = new BombItem();
+	bomb->position = position;
+	return bomb;
 }

@@ -51,5 +51,12 @@ const QPixmap WallObject::getBitmap()
 void WallObject::collide(Snake *snake, Map *map)
 {
 	Q_UNUSED(map);
-    snake->mustDie = true;
+	snake->mustDie = true;
+}
+
+Entity *WallObject::clone()
+{
+	WallObject* wall = new WallObject();
+	wall->position = position;
+	return wall;
 }

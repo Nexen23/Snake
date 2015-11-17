@@ -1,5 +1,6 @@
 #include "MapWidget.h"
 #include <QDebug>
+#include "Object.h"
 
 MapWidget::MapWidget(QWidget *parent)
 {
@@ -128,68 +129,68 @@ void MapWidget::showMap(Map *map)
  */
 void MapWidget::drawMap(Map *map)
 {
-    for(int i=0; i<map->snakes.size(); i++) {
+		for(int i=0; i<map->getSnakes().size(); i++) {
 
-        if(map->field[map->snakes[i]->position->x()][map->snakes[i]->position->y()] == NULL) {
+				if(map->getField()[map->getSnakes()[i]->position.x()][map->getSnakes()[i]->position.y()] == NULL) {
             continue;
         }
         QPixmap head("./img/SnakeHead.png" );
         head = head.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *snake = new QGraphicsPixmapItem(head);
-        snake->setPos(map->snakes[i]->position->x()*minCellSize, map->snakes[i]->position->y()*minCellSize);
+				snake->setPos(map->getSnakes()[i]->position.x()*minCellSize, map->getSnakes()[i]->position.y()*minCellSize);
         scene->addItem(snake);
 
-        for(int j=0; j<map->snakes[i]->tail.size(); j++) {
+				for(int j=0; j<map->getSnakes()[i]->tail.size(); j++) {
 
-            QPixmap tailItem(map->snakes[i]->getBitmap().copy());
+						QPixmap tailItem(map->getSnakes()[i]->getBitmap().copy());
             tailItem = tailItem.scaled(minCellSize, minCellSize);
 
             snake = new QGraphicsPixmapItem(tailItem);
-            snake->setPos(map->snakes[i]->tail[j].x()*minCellSize, map->snakes[i]->tail[j].y()*minCellSize);
+						snake->setPos(map->getSnakes()[i]->tail[j].x()*minCellSize, map->getSnakes()[i]->tail[j].y()*minCellSize);
             scene->addItem(snake);
         }
     }
 
-    for(int i=0; i<map->objects.size(); i++) {
-        if(map->field[map->objects[i]->position->x()][map->objects[i]->position->y()] == NULL) {
+		for(int i=0; i<map->getObjects().size(); i++) {
+				if(map->getField()[map->getObjects()[i]->position.x()][map->getObjects()[i]->position.y()] == NULL) {
             continue;
         }
         QPixmap pixMap;
-        pixMap = map->objects[i]->getBitmap();
+				pixMap = map->getObjects()[i]->getBitmap();
 
-        QPixmap pic(pixMap.copy(map->items[i]->position->x(),
-                                                     map->items[i]->position->y(),
+				QPixmap pic(pixMap.copy(map->getItems()[i]->position.x(),
+																										 map->getItems()[i]->position.y(),
                                                      pixMap.width(),
                                                      pixMap.height()));
         pic = pic.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *graphicsItem = new QGraphicsPixmapItem(pic);
-        graphicsItem->setPos(map->objects[i]->position->x()*minCellSize, map->objects[i]->position->y()*minCellSize);
+				graphicsItem->setPos(map->getObjects()[i]->position.x()*minCellSize, map->getObjects()[i]->position.y()*minCellSize);
         scene->addItem(graphicsItem);
     }
 
-    for(int i=0; i<map->items.size(); i++) {
-        if(map->field[map->items[i]->position->x()][map->items[i]->position->y()] == NULL) {
+		for(int i=0; i<map->getItems().size(); i++) {
+				if(map->getField()[map->getItems()[i]->position.x()][map->getItems()[i]->position.y()] == NULL) {
             continue;
         }
 
         QPixmap pixMap;
-        pixMap = map->items[i]->getBitmap();
+				pixMap = map->getItems()[i]->getBitmap();
 
-        QPixmap pic(pixMap.copy(map->items[i]->position->x(),
-                                                     map->items[i]->position->y(),
+				QPixmap pic(pixMap.copy(map->getItems()[i]->position.x(),
+																										 map->getItems()[i]->position.y(),
                                                      pixMap.width(),
                                                      pixMap.height()));
 
         pic = pic.scaled(minCellSize, minCellSize);
         QGraphicsPixmapItem *graphicsItem = new QGraphicsPixmapItem(pic);
-        graphicsItem->setPos(map->items[i]->position->x()*minCellSize, map->items[i]->position->y()*minCellSize);
+				graphicsItem->setPos(map->getItems()[i]->position.x()*minCellSize, map->getItems()[i]->position.y()*minCellSize);
         scene->addItem(graphicsItem);
     }
 
     /** dont touch - this for debug
-    for(int i=0;i<map->field.size();i++) {
-        for(int j=0;j<map->field[i].size();j++) {
-            QColor color = (map->field[i][j] != NULL) ? QColor(255, 0, 0, 100) : QColor(0, 255, 0, 100);
+		for(int i=0;i<map->getField().size();i++) {
+				for(int j=0;j<map->getField()[i].size();j++) {
+						QColor color = (map->getField()[i][j] != NULL) ? QColor(255, 0, 0, 100) : QColor(0, 255, 0, 100);
 
             scene->addEllipse(i*minCellSize + minCellSize/3, j*minCellSize + minCellSize/3,
                               minCellSize/4, minCellSize/4,QPen(color), QBrush(color));

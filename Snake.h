@@ -16,7 +16,9 @@ public:
     QVector<QPoint> tail;
     Score *currentScores = new Score();
 
-    explicit Snake(QString name, int length);
+		QColor color;
+
+		explicit Snake(QString name);
     ~Snake();
 
     const QString getName();
@@ -29,6 +31,8 @@ public:
 			Q_UNUSED(map);
         snake->mustDie = true;
     }
+
+		virtual Entity* clone();
 };
 
 #endif // SNAKE_H

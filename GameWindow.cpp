@@ -18,7 +18,7 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
         ui->menuBar->addMenu(File);
 
         //Пустая карта
-//        mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
+//        mapView = new MapWidget(map->getSizeX(), map->getSizeY(), SCENARIO_GAME);
 //        ui->mapField->addWidget(mapView);
 //        mapView->show();
 //        mapView->showMap(this->map);
@@ -28,13 +28,14 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 
 
         ui->select_snake->clear();
-        for (int i = 0; i < map->snakes.size(); i++)
+				for (int i = 0; i < map->getSnakes().size(); i++)
         {
-            ui->select_snake->addItem(map->snakes[i]->getName());
+						ui->select_snake->addItem(map->getSnakes()[i]->getName());
         }
 
         //Привязка меню
         connect(File_Load_Map,SIGNAL(triggered()),this, SLOT(onOpenMapChoserDialog()));
+
 
         //Привязка для ИИ и змеек
         connect(ui->select_snake,SIGNAL(currentTextChanged(QString)),this, SLOT(onMainSnakeSelected())); //Для змеек выводим их ИИ
@@ -144,7 +145,7 @@ void GameWindow::handleResults(const QString &)
 void GameWindow::showMap()
 {
 //    delete mapView;
-//    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
+//    mapView = new MapWidget(map->getSizeX(), map->getSizeY(), SCENARIO_GAME);
 //    ui->mapField->addWidget(mapView);
 //    mapView->show();
 //    mapView->showMap(this->map);
@@ -152,11 +153,11 @@ void GameWindow::showMap()
 		mapGrid->setMap(map);
 
     ui->select_snake->clear();
-    for (int i = 0; i < map->snakes.size(); i++)
+		for (int i = 0; i < map->getSnakes().size(); i++)
     {
-        ui->select_snake->addItem(map->snakes[i]->getName());
-        game->setSnakeAI(map->snakes[i],game->getAIList()[0]);
-        //qDebug() << "BOUND_HISTORY GET s:" << map->snakes[i]->getName() << " TO " << game->getAIList()[0]->getName();
+				ui->select_snake->addItem(map->getSnakes()[i]->getName());
+				game->setSnakeAI(map->getSnakes()[i],game->getAIList()[0]);
+				//qDebug() << "BOUND_HISTORY GET s:" << map->getSnakes()[i]->getName() << " TO " << game->getAIList()[0]->getName();
     }
     //Вдруг пригодится
     //ui->eat_index->setValue(game->getFoodSpawnCoef());
@@ -203,10 +204,10 @@ void GameWindow::onBindAIToSnake()
 
 Snake* GameWindow::getSnakeBySnakeName(QString name)
 {
-    for (int i = 0; i < map->snakes.size(); i++)
+		for (int i = 0; i < map->getSnakes().size(); i++)
     {
-        if (map->snakes[i]->getName() == name)
-            return map->snakes[i];
+				if (map->getSnakes()[i]->getName() == name)
+						return map->getSnakes()[i];
     }
     return NULL;
 }

@@ -59,5 +59,12 @@ void FoodItem::collide(Snake *snake, Map *map)
 
 float FoodItem::getSpawnChance()
 {
-    return 0.25f;
+	return 0.25f;
+}
+
+Entity *FoodItem::clone()
+{
+	FoodItem *food = new FoodItem();
+	food->position = position;
+	return food;
 }

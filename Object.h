@@ -3,7 +3,7 @@
 
 #include "Entity.h"
 
-class Object : public virtual Entity
+class Object : public Entity
 {
 };
 

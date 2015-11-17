@@ -2,7 +2,10 @@
 #define MAP_H
 
 #include <QObject>
+#include <QVector>
 #include <QTextCodec>
+#include <QMap>
+#include <QSet>
 
 class Entity;
 class Item;
@@ -20,8 +23,9 @@ class Map : public QObject
 	QVector<Item*> items;
 	QVector<Object*> objects;
 	QVector<Snake*> snakes;
+	QSet<Snake*> snakesUniqueConstraint;
 
-	QVector<Item*> itemsTypesForGeneration;
+	QMap<int, Item*> itemsTypesForGeneration;
 
 public:
 	explicit Map(int sizeX, int sizeY);
@@ -42,11 +46,18 @@ public:
 
 	const QVector<Item*>& getItemsTypesForGeneration();
 	void addItemTypeForGeneration(Item *item);
-	void removeItemTypeForGeneration(const Item *item);
+	void removeItemTypeForGeneration(Item *item);
 
 	void resize(int newSizeX, int newSizeY);
 	void setCellAt(int x, int y, Entity *newEntity);
+	void setCellByEntity(Entity *newEntity);
+	void setCellsBySnake(Snake *snake);
+
+	bool isSnakeExist(Snake* snake);
+	bool isCellEmpty(QPoint coords);
+
 	void clearCellAt(int x, int y);
+	void clearCellsBySnake(Snake *snake);
 
 private:
 	void removeEntityFromVectors(Entity *entity);
@@ -55,7 +66,7 @@ private:
 	void removeEntityFromVector(QVector<T> &vector, Entity *entity);
 
 signals:
-	void sizeChanged(int newSizeX, int newSizeY, Map *map);
+	void sizeChanged(int newSizeX, int newSizeY);
 	void cellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity);
 };
 

@@ -1,17 +1,26 @@
 #include "Entity.h"
+#include "MapGrid.h"
 #include "MapGridCelll.h"
 
-MapGridCell::MapGridCell(QSize size, Entity *entity)
+MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *entity)
 {
+	setMargin(1);
 	resize(size);
+	this->coords = coords;
 
-	QPixmap *image = new QPixmap(50, 50);
-	image->fill(Qt::green);
+	QPixmap *image = new QPixmap(size.width(), size.height());
+	image->fill(Qt::lightGray);
 	if (entity != NULL)
 	{
 		*image = entity->getBitmap();
 	}
 	setImage(*image);
+
+	connect(this, SIGNAL(mouseLmbClicked(QPoint)),
+					mapGrid, SIGNAL(mouseLmbClicked(QPoint)));
+	connect(this, SIGNAL(mouseRmbClicked(QPoint)),
+					mapGrid, SIGNAL(mouseRmbClicked(QPoint)));
+	//setMouseTracking(true);
 }
 
 MapGridCell::~MapGridCell()
@@ -26,3 +35,15 @@ void MapGridCell::setImage(const QPixmap &image)
 	setPixmap(image.scaled( w, h, Qt::KeepAspectRatio ));
 }
 
+void MapGridCell::mousePressEvent(QMouseEvent *event)
+{
+	if(event->button() == Qt::LeftButton) {
+			emit mouseLmbClicked(coords);
+	}
+	else
+	{
+		if (event->button() == Qt::RightButton) {
+			emit mouseRmbClicked(coords);
+		}
+	}
+}

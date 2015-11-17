@@ -10,23 +10,9 @@
  */
 Map::Map(int sizeX, int sizeY)
 {
-    field.clear();
-
-    for(int i=0; i<sizeX;i++){
-        QVector<Entity*> tmp;
-
-        field.append(tmp);
-        for(int j=0;j<sizeY;j++)
-            field[i].append(NULL);
-    }
-
-    items.clear();
-    objects.clear();
-    itemsTypesForGeneration.clear();
-    snakes.clear();
-
-		this->sizeX = sizeX;
-		this->sizeY = sizeY;
+	this->sizeX = sizeX;
+	this->sizeY = sizeY;
+	resize(sizeX, sizeY);
 }
 
 /**
@@ -79,24 +65,17 @@ const QVector<Snake *>& Map::getSnakes()
 
 const QVector<Item *>& Map::getItemsTypesForGeneration()
 {
-	return itemsTypesForGeneration;
+	return *(new QVector<Item *>(itemsTypesForGeneration.values().toVector()));
 }
 
 void Map::addItemTypeForGeneration(Item *item)
 {
-	itemsTypesForGeneration.append(item);
+	itemsTypesForGeneration[item->getId()] = item;
 }
 
-void Map::removeItemTypeForGeneration(const Item *item)
+void Map::removeItemTypeForGeneration(Item *item)
 {
-	for (int i = 0; i < itemsTypesForGeneration.size(); ++i)
-	{
-		if (itemsTypesForGeneration[i]->getId() == item->getId())
-		{
-			itemsTypesForGeneration.remove(i);
-			break;
-		}
-	}
+	itemsTypesForGeneration.remove(item->getId());
 }
 
 /**
@@ -121,16 +100,16 @@ void Map::resize(int newSizeX, int newSizeY)
 			{
 				switch(entity->getType())
 				{
-				ITEM :
+				case ITEM :
 					items.append((Item*)entity);
 					break;
 
-				OBJECT :
+				case OBJECT :
 					objects.append((Object*)entity);
 					break;
 
-				SNAKE :
-					if (entity->position->x() == x && entity->position->y() == y)
+				case SNAKE :
+					if (entity->position.x() == x && entity->position.y() == y)
 					{
 						snakes.append((Snake*)entity);
 					}
@@ -164,7 +143,7 @@ void Map::resize(int newSizeX, int newSizeY)
 
 	sizeX = newSizeX;
 	sizeY = newSizeY;
-	emit sizeChanged(newSizeX, newSizeY, this);
+	emit sizeChanged(newSizeX, newSizeY);
 }
 
 void Map::setCellAt(int x, int y, Entity *newEntity)
@@ -176,9 +155,48 @@ void Map::setCellAt(int x, int y, Entity *newEntity)
 	emit cellChangedAt(x, y, oldEntity, newEntity);
 }
 
+void Map::setCellByEntity(Entity *newEntity)
+{
+	setCellAt(newEntity->position.x(), newEntity->position.y(), newEntity);
+}
+
+void Map::setCellsBySnake(Snake *snake)
+{
+	setCellAt(snake->position.x(), snake->position.y(), snake);
+	for (int i = 0; i < snake->tail.size(); ++i)
+	{
+		QPoint &tailCell = snake->tail[i];
+		setCellAt(tailCell.x(), tailCell.y(), snake);
+	}
+}
+
+bool Map::isSnakeExist(Snake *snake)
+{
+	if (field[snake->position.x()][snake->position.y()]->getId() == SNAKE_NPC)
+		return true;
+	return false;
+}
+
+bool Map::isCellEmpty(QPoint coords)
+{
+	if (field[coords.x()][coords.y()] == NULL)
+		return true;
+	return false;
+}
+
 void Map::clearCellAt(int x, int y)
 {
 	setCellAt(x, y, NULL);
+}
+
+void Map::clearCellsBySnake(Snake *snake)
+{
+	setCellAt(snake->position.x(), snake->position.y(), NULL);
+	for (int i = 0; i < snake->tail.size(); ++i)
+	{
+		QPoint &tailCell = snake->tail[i];
+		setCellAt(tailCell.x(), tailCell.y(), NULL);
+	}
 }
 
 void Map::addEntityToVectors(Entity *entity)
@@ -187,16 +205,22 @@ void Map::addEntityToVectors(Entity *entity)
 	{
 		switch(entity->getType())
 		{
-		ITEM :
+		case ITEM :
 			items.append((Item*)entity);
 			break;
 
-		OBJECT :
+		case OBJECT :
 			objects.append((Object*)entity);
 			break;
 
-		SNAKE :
-			snakes.append((Snake*)entity);
+		case SNAKE :
+			Snake *snake = (Snake*)entity;
+			auto it = snakesUniqueConstraint.find(snake);
+			if (it == snakesUniqueConstraint.end())
+			{
+				snakes.append((Snake*)entity);
+				snakesUniqueConstraint.insert(snake);
+			}
 			break;
 		}
 	}
@@ -208,16 +232,17 @@ void Map::removeEntityFromVectors(Entity *entity)
 	{
 		switch(entity->getType())
 		{
-		ITEM :
+		case ITEM :
 			removeEntityFromVector<Item*>(items, entity);
 			break;
 
-		OBJECT :
+		case OBJECT :
 			removeEntityFromVector<Object*>(objects, entity);
 			break;
 
-		SNAKE :
+		case SNAKE :
 			removeEntityFromVector<Snake*>(snakes, entity);
+			snakesUniqueConstraint.remove((Snake*)entity);
 			break;
 		}
 	}

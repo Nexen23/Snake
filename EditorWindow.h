@@ -12,13 +12,16 @@
 #include <QListWidget>
 #include <QInputDialog>
 #include <QFileDialog>
-#include "MapWidget.h"
+//#include "MapWidget.h"
 #include "OpenMapDialog.h"
 #include "HoleObject.h"
 #include "Entity.h"
+#include "MapGrid.h"
 
 class Game;
 class Map;
+class Object;
+class Item;
 
 namespace Ui {
 	class EditorWindow;
@@ -33,6 +36,10 @@ enum {
 class EditorWindow : public QWidget
 {
 	Q_OBJECT
+
+	QVector<Item*> itemTypes;
+	QVector<Object*> objectTypes;
+	QVector<Snake*> snakes;
 
 public:
     explicit EditorWindow(Game *game, QWidget *parent = 0);
@@ -62,48 +69,33 @@ public:
     QDialog *dialog;
     QListWidget *list;
 
-
-
-    int checkListId;
-    //временные объекты для создания
-    Snake *tempSnake;
+		Entity* selectedEntity = NULL;
 
 
 private:
 	Ui::EditorWindow *ui;
 	Game *game;
 	Map *map;
-    MapWidget *mapView;
+	//MapWidget *mapView;
+	MapGrid *mapGrid = NULL;
 
-    bool isCreate;
+	void addSnake(Snake*);
+	void loadSnakesFromMap(Map *map);
 
 public slots:
-	void onItemSelected();
-	void onAddItemClick();
-	void onDelItemClick();
+	void onItemSelected(QListWidgetItem* itemWidget);
+	void onObjectSelected(QListWidgetItem* itemWidget);
+	void onSnakeSelected(QListWidgetItem* itemWidget);
 
-	void onObjectSelected();
-	void onAddObjectClick();
-	void onDelObjectClick();
-
-	void onSnakeSelected();
 	void onAddSnakeClick();
-	void onDelSnakeClick();
 
 	void onOpenMapClicked();
 	void onCreateMapClicked();
 	void onSaveMapClicked();
-    void onSetSizeClicked();
+	void onSetSizeClicked();
 
-    void refreshLists();
-
-
-    void onLMBMapCellPressed(QPoint point);
-    void onLMBMapCellMove(QPoint point);
-    void onLMBMapCellReleased(QPoint point);
-
-	void onRMBMapCellPressed();
-    void onRMBMapCellReleased();
+	void onMouseLmbClicked(QPoint);
+	void onMouseRmbClicked(QPoint);
 };
 
 #endif // EDITORWINDOW_H

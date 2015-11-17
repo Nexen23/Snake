@@ -52,5 +52,12 @@ const QPixmap HoleObject::getBitmap()
 void HoleObject::collide(Snake *snake, Map *map)
 {
 	Q_UNUSED(map);
-    snake->snakeInTheHole = true;
+	snake->snakeInTheHole = true;
+}
+
+Entity *HoleObject::clone()
+{
+	HoleObject *hole = new HoleObject();
+	hole->position = position;
+	return hole;
 }

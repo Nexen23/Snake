@@ -29,7 +29,7 @@ public:
     void setWinner(QVector<Snake> snakes);
 
 		MapGrid *mapGrid;
-    MapWidget *mapView;
+		//MapWidget *mapView;
 
 
 private:

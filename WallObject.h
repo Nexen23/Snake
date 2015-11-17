@@ -15,6 +15,8 @@ public:
     const QPixmap getBitmap();
 
     virtual void collide(Snake *snake, Map *map);
+
+		virtual Entity* clone();
 };
 
 #endif // WALLOBJECT_H

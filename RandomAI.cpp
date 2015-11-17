@@ -22,13 +22,13 @@ RandomAI::~RandomAI()
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
 
-    QPoint* head = controllerSnake->position;
+    QPoint head = controllerSnake->position;
     QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
-        second=*head;
+	second=head;
 
-    QPoint buf = *head - second;
+    QPoint buf = head - second;
 
     int kof[4] = {1,1,1,1};
     //учет положения первого за головой хвоста
@@ -50,16 +50,16 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
                 kof[RIGHT]=-2;
             }
    //учет стен, дырок, остального хвоста
-    if((map->field[head->x()-1][head->y()]->getId()>=WALL_OBJECT && map->field[head->x()-1][head->y()]->getId()<=SNAKE) || (head->x()-1)<0 )
+    if((map->getField()[head.x()-1][head.y()]->getId()>=WALL_OBJECT && map->getField()[head.x()-1][head.y()]->getId()<=SNAKE_NPC) || (head.x()-1)<0 )
         kof[LEFT]=-1;
 
-    if((map->field[head->x()+1][head->y()]->getId()>=WALL_OBJECT && map->field[head->x()+1][head->y()]->getId()<=SNAKE) || (head->x()+1)>=map->sizeX)
+    if((map->getField()[head.x()+1][head.y()]->getId()>=WALL_OBJECT && map->getField()[head.x()+1][head.y()]->getId()<=SNAKE_NPC) || (head.x()+1)>=map->getSizeX())
         kof[RIGHT]=-1;
 
-    if((map->field[head->x()][head->y()+1]->getId()>=WALL_OBJECT && map->field[head->x()][head->y()+1]->getId()<=SNAKE) || (head->y()+1) >= map->sizeY)
+    if((map->getField()[head.x()][head.y()+1]->getId()>=WALL_OBJECT && map->getField()[head.x()][head.y()+1]->getId()<=SNAKE_NPC) || (head.y()+1) >= map->getSizeY())
         kof[UP]=-1;
 
-    if((map->field[head->x()][head->y()-1]->getId()>=WALL_OBJECT && map->field[head->x()][head->y()-1]->getId()<=SNAKE) || (head->y()-1) <0)
+    if((map->getField()[head.x()][head.y()-1]->getId()>=WALL_OBJECT && map->getField()[head.x()][head.y()-1]->getId()<=SNAKE_NPC) || (head.y()-1) <0)
         kof[DOWN]=-1;
 
 

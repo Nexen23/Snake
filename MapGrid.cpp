@@ -7,6 +7,7 @@
 MapGrid::MapGrid(Map *map, QWidget *parent)
 {
 	Q_UNUSED(parent);
+	setSpacing(0);
 	setMap(map);
 }
 
@@ -19,31 +20,41 @@ void MapGrid::setMap(Map *map)
 {
 	QRect rec = QApplication::desktop()->screenGeometry();
 	int windowHeight = rec.height(), windowWidth = rec.width();
-	int cellSizeXYMax = qMax(windowHeight / map->sizeX, windowWidth / map->sizeY);
+	int cellSizeXYMax = qMax(windowHeight / map->getSizeX(), windowWidth / map->getSizeY());
 	int cellSizeXY = qMax(1, qMin(cellSizeXYMax, cellSizeMaxPx) );
 	cellSize.setHeight(cellSizeXY);
 	cellSize.setWidth(cellSizeXY);
 
-	for (int x = 0; x < map->sizeX; ++x) {
-		for (int y = 0; y < map->sizeY; ++y) {
-			Entity *entity = map->field[x][y];
+	for (int x = 0; x < map->getSizeX(); ++x) {
+		for (int y = 0; y < map->getSizeY(); ++y) {
+			Entity *entity = map->getField()[x][y];
 			setCellAt(x, y, entity);
 		}
 	}
+
+	this->map = map;
+	connect(map, SIGNAL(cellChangedAt(int,int,Entity*,Entity*)),
+					this, SLOT(onCellChangedAt(int,int,Entity*,Entity*)));
+
+	connect(map, SIGNAL(sizeChanged(int,int)),
+					this, SLOT(onSizeChanged(int,int)));
 }
 
 void MapGrid::setCellAt(int x, int y, Entity *entity)
 {
-	QWidget *widget = new MapGridCell(cellSize, entity);
-	//createWidgetCell( entity->getBitmap() );
-
+	QWidget *widget = new MapGridCell(this, QPoint(x, y), cellSize, entity);
 	addWidget(widget, y, x, 1, 1);
 }
 
-QWidget *MapGrid::createWidgetCell(const QPixmap &image)
+void MapGrid::onCellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity)
 {
-	MapGridCell *cell = new MapGridCell(cellSize, NULL);
-	cell->setPixmap(image);
-	return cell;
+	setCellAt(x, y, newEntity);
+	//QWidget *widget = new MapGridCell(cellSize, newEntity);
+	//replaceWidget(itemAtPosition(y, x)->widget(), widget);
+}
+
+void MapGrid::onSizeChanged(int newSizeX, int newSizeY)
+{
+
 }
 

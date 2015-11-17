@@ -17,6 +17,7 @@ class MapGrid : public QGridLayout
 
 	const int cellSizeMaxPx = 50;
 	QSize cellSize;
+	Map *map;
 
 public:
 	explicit MapGrid(Map *map = 0, QWidget *parent = 0);
@@ -28,17 +29,14 @@ public:
 private:
 	QWidget* createWidgetCell(const QPixmap &image);
 
-//signals:
-//	void onLmbPressed();
-//	void onLmbReleased();
-//	void onRmbPressed();
-//	void onRmbReleased();
-//	void onMouseMoved();
+signals:
+	void mouseLmbClicked(QPoint);
+	void mouseRmbClicked(QPoint);
 
 
-//public slots:
-//	void onCellChangedAt();
-//	void onSizeChanged();
+public slots:
+	void onCellChangedAt(int x, int y, Entity* oldEntity, Entity *newEntity);
+	void onSizeChanged(int newSizeX, int newSizeY);
 };
 
 #endif // MAPGRID_H

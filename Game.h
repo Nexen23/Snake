@@ -63,6 +63,10 @@ public:
     void saveMapToFile(Map *map, QString mapName);
     QVector<QString> getMapList();
     QVector<AI*> getAIList();
+
+		QVector<Item*> getAllItemTypes();
+		QVector<Object*> getAllObjectTypes();
+
     AI* getAIBySnakeName(QString name);
     AI* getAIByAIName(QString name);
     Map* getMap();

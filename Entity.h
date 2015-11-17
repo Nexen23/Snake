@@ -36,7 +36,7 @@ public:
     Entity();
     ~Entity();
 
-	QPoint *position;
+	QPoint position;
     bool isDead = false;
 
 	virtual const QString getName() = 0;
@@ -44,6 +44,8 @@ public:
 	virtual const Type getType();
 	virtual const QPixmap getBitmap() = 0;
 	virtual void collide(Snake *snake, Map *map) = 0;
+
+	virtual Entity* clone() = 0;
 };
 
 #endif // ENTITY_H

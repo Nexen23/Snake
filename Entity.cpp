@@ -6,7 +6,7 @@
  */
 Entity::Entity()
 {
-    position = new QPoint(0,0);
+		position = QPoint(0,0);
     isDead = false;
 }
 
@@ -16,7 +16,6 @@ Entity::Entity()
  */
 Entity::~Entity()
 {
-	delete position;
 }
 
 const Type Entity::getType()
