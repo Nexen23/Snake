@@ -163,11 +163,16 @@ void Map::resize(int newSizeX, int newSizeY)
 	emit sizeChanged(newSizeX, newSizeY);
 }
 
-void Map::setEntityAt(int x, int y, Entity *newEntity)
+void Map::setCellAt(int x, int y, Entity *newEntity)
 {
 	Entity *oldEntity = field[x][y];
 	field[x][y] = newEntity;
 	emit cellChangedAt(x, y, oldEntity, newEntity);
+}
+
+void Map::clearCellAt(int x, int y)
+{
+	setCellAt(x, y, NULL);
 }
 
 void Map::removeEntityFullyAt(int x, int y)

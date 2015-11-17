@@ -45,8 +45,9 @@ public:
 	void removeItemTypeForGeneration(const Item *item);
 
 	void resize(int newSizeX, int newSizeY);
-	void setEntityAt(int x, int y, Entity *newEntity);
-	void removeEntityFullyAt(int x, int y);
+	void setCellAt(int x, int y, Entity *newEntity);
+	void clearCellAt(int x, int y);
+	void clearCellAt(int x, int y);
 
 signals:
 	void sizeChanged(int newSizeX, int newSizeY);
