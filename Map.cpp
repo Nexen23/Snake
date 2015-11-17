@@ -21,8 +21,8 @@ Map::Map(int sizeX, int sizeY)
     itemsTypesForGeneration.clear();
     snakes.clear();
 
-    this->sizeX = sizeX;
-    this->sizeY = sizeY;
+		this->sizeX = sizeX;
+		this->sizeY = sizeY;
 }
 
 /**
@@ -46,6 +46,11 @@ const int Map::getSizeX()
 const int Map::getSizeY()
 {
 	return sizeY;
+}
+
+const Entity* Map::getEntityAt(int x, int y)
+{
+	return field[x][y];
 }
 
 const QVector<QVector<Entity *> > Map::getField()
@@ -73,7 +78,7 @@ const QVector<Item *> Map::getItemsTypesForGeneration()
 	return itemsTypesForGeneration;
 }
 
-void Map::addItemTypeForGeneration(const Item *item)
+void Map::addItemTypeForGeneration(Item *item)
 {
 	itemsTypesForGeneration.append(item);
 }
@@ -96,27 +101,66 @@ void Map::removeItemTypeForGeneration(const Item *item)
  */
 void Map::resize(int newSizeX, int newSizeY)
 {
+	objects.clear();
+	items.clear();
+	snakes.clear();
 
-    QVector< QVector<Entity*> > temp = field;
+	// Создаем новую карту на основе старой
+	field.resize(newSizeX);
+	for (int x = 0; x < newSizeX; ++x)
+	{
+		field[x].resize(newSizeX);
+		for (int y = 0; y < newSizeY; ++y)
+		{
+			Entity *entity = field[x][y];
+			if (entity != NULL)
+			{
+				switch(entity->getType())
+				{
+				ITEM :
+					items.append((Item*)entity);
+					break;
 
-    field.clear();
-    for(int i=0; i<newSizeX;i++){
-        QVector<Entity*> tmp;
-        field.append(tmp);
-        for(int j=0;j<newSizeY;j++)
-            field[i].append(NULL);
-    }
-    int n = (sizeX<=newSizeX) ? sizeX : newSizeX;
-    int m = (sizeY<=newSizeY) ? sizeY : newSizeY;
-    for(int i=0; i<n;i++){
-        for(int j=0;j<m;j++)
-            field[i][j] = temp[i][j];
-    }
+				OBJECT :
+					objects.append((Object*)entity);
+					break;
 
-    this->sizeX = newSizeX;
-		this->sizeY = newSizeY;
+				SNAKE :
+					if (entity->position->x() == x && entity->position->y() == y)
+					{
+						snakes.append((Snake*)entity);
+					}
+					else
+					{
+						field[x][y] = NULL;
+					}
+					break;
+				}
+			}
+		}
+	}
 
-		emit sizeChanged(newSizeX, newSizeY);
+	// Удаляем остатки змеек за пределами нового размера
+	for (int i = 0; i < snakes.size(); ++i)
+	{
+		QVector<QPoint> &tail = snakes[i]->tail;
+		for (QVector<QPoint>::Iterator it = tail.begin(); it != tail.end(); ++it)
+		{
+			if (it->x() < newSizeX && it->y() < newSizeY)
+			{
+				field[x][y] = snakes[i];
+			}
+			else
+			{
+				tail.erase(it, tail.end());
+				break;
+			}
+		}
+	}
+
+	sizeX = newSizeX;
+	sizeY = newSizeY;
+	emit sizeChanged(newSizeX, newSizeY);
 }
 
 void Map::setEntityAt(int x, int y, Entity *newEntity)
@@ -130,7 +174,7 @@ void Map::removeEntityFullyAt(int x, int y)
 {
     if (field[x][y] != NULL)
     {
-        if (field[x][y]->getId() == SNAKE)
+				if (field[x][y]->getId() == SNAKE_NPC)
         {
             if (*field[x][y]->position == QPoint(x,y))//Ищется голова змеи
             {

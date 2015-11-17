@@ -33,14 +33,15 @@ public:
 	const int getSizeX();
 	const int getSizeY();
 
-	const QVector<QVector<Entity*> > getField();
+	const QVector<QVector<Entity*> >& getField();
+	const Entity* getEntityAt(int x, int y);
 
-	const QVector<Item*> getItems();
-	const QVector<Object*> getObjects();
-	const QVector<Snake*> getSnakes();
+	const QVector<Item*>& getItems();
+	const QVector<Object*>& getObjects();
+	const QVector<Snake*>& getSnakes();
 
-	const QVector<Item*> getItemsTypesForGeneration();
-	void addItemTypeForGeneration(const Item *item);
+	const QVector<Item*>& getItemsTypesForGeneration();
+	void addItemTypeForGeneration(Item *item);
 	void removeItemTypeForGeneration(const Item *item);
 
 	void resize(int newSizeX, int newSizeY);
