@@ -30,9 +30,10 @@ SOURCES += \
     BombItem.cpp \
     FoodItem.cpp \
     main.cpp \
-    CellLabel.cpp \
     MapWidget.cpp \
-    OpenMapDialog.cpp
+    OpenMapDialog.cpp \
+    MapGrid.cpp \
+    MapGridCell.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -52,9 +53,10 @@ HEADERS  += \
     RandomAI.h \
     Score.h \
     SimpleAI.h \
-    CellLabel.h \
     MapWidget.h \
-    OpenMapDialog.h
+    OpenMapDialog.h \
+    MapGrid.h \
+    MapGridCelll.h
 
 FORMS    += \
     GameWindow.ui \

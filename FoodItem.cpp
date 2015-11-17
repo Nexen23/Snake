@@ -52,6 +52,7 @@ const QPixmap FoodItem::getBitmap()
 
 void FoodItem::collide(Snake *snake, Map *map)
 {
+	Q_UNUSED(map);
     QPoint cell = snake->tail.last();
     snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
 }

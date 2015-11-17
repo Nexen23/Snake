@@ -24,8 +24,9 @@ public:
 
     const QPixmap getBitmap();
 
-    virtual void collide(Snake *snake, Map *map)
+		virtual void collide(Snake *snake, Map *map)
     {
+			Q_UNUSED(map);
         snake->mustDie = true;
     }
 };

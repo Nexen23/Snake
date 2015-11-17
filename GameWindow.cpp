@@ -1,4 +1,5 @@
 #include "GameWindow.h"
+#include "MapGrid.h"
 #include "ui_GameWindow.h"
 
 GameWindow::GameWindow(Game *game, QWidget *parent) :
@@ -17,10 +18,15 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
         ui->menuBar->addMenu(File);
 
         //Пустая карта
-        mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
-        ui->mapField->addWidget(mapView);
-        mapView->show();
-        mapView->showMap(this->map);
+//        mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
+//        ui->mapField->addWidget(mapView);
+//        mapView->show();
+//        mapView->showMap(this->map);
+
+				mapGrid = new MapGrid(map);
+				ui->mapField->addLayout(mapGrid);
+
+
         ui->select_snake->clear();
         for (int i = 0; i < map->snakes.size(); i++)
         {
@@ -105,7 +111,7 @@ void GameWindow::on_reset_button_clicked()
         ui->snake_speed->setEnabled(true);
         ui->select_snake->setEnabled(true);
         ui->snake_intelligence->setEnabled(true);
-        OpenMapDialog *dialog;
+				OpenMapDialog *dialog;
         if (currentMapName != "")
         {
             Map *mapLoaded = game->loadMapFromFile(currentMapName);
@@ -137,11 +143,14 @@ void GameWindow::handleResults(const QString &)
 
 void GameWindow::showMap()
 {
-    delete mapView;
-    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
-    ui->mapField->addWidget(mapView);
-    mapView->show();
-    mapView->showMap(this->map);
+//    delete mapView;
+//    mapView = new MapWidget(map->sizeX, map->sizeY, SCENARIO_GAME);
+//    ui->mapField->addWidget(mapView);
+//    mapView->show();
+//    mapView->showMap(this->map);
+
+		mapGrid->setMap(map);
+
     ui->select_snake->clear();
     for (int i = 0; i < map->snakes.size(); i++)
     {
@@ -204,5 +213,6 @@ Snake* GameWindow::getSnakeBySnakeName(QString name)
 
 void GameWindow::refreshMap()
 {
-    mapView->showMap(game->getMap());
+//    mapView->showMap(game->getMap());
+	mapGrid->setMap(map);
 }

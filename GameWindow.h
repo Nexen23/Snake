@@ -6,6 +6,7 @@
 #include "Game.h"
 
 class Game;
+class MapGrid;
 //class Game;
 //class Map;
 //class Snake;
@@ -27,6 +28,7 @@ public:
     void update();
     void setWinner(QVector<Snake> snakes);
 
+		MapGrid *mapGrid;
     MapWidget *mapView;
 
 

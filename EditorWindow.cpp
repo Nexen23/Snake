@@ -3,7 +3,6 @@
 
 #include "Map.h"
 #include "Snake.h"
-#include "CellLabel.h"
 #include "Game.h"
 
 /**
@@ -654,7 +653,7 @@ void EditorWindow::onLMBMapCellMove(QPoint point)
                 last = tempSnake->tail[tempSnake->tail.size()-1];
             }
 
-            bool canCreate = false;
+						bool canCreate = false;
             if( (last.x() == x && qAbs(last.y() - y) == 1)
                 || (last.y() == y && qAbs(last.x() - x) == 1) ){
                 tempSnake->tail.append(QPoint(x,y));

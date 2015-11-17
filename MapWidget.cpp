@@ -3,6 +3,7 @@
 
 MapWidget::MapWidget(QWidget *parent)
 {
+	Q_UNUSED(parent);
     /*this->setRenderHint(QPainter::Antialiasing, true);
     this->setGeometry(0, 0, width * minCellSize, heigh * minCellSize);
 
