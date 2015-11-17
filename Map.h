@@ -9,14 +9,13 @@
 #include <QObject>
 #include <QTextCodec>
 
-class Map
+class Map : public QObject
 {
-public:
-    explicit Map(int sizeX, int sizeY);
-	~Map();
+	Q_OBJECT
 
 	int sizeX, sizeY;
-    QVector<QVector<Entity*> > field;
+
+	QVector<QVector<Entity*> > field;
 
 	QVector<Item*> items;
 	QVector<Object*> objects;
@@ -24,11 +23,33 @@ public:
 
 	QVector<Item*> itemsTypesForGeneration;
 
-    const QString getName();
-    const QString getId();
+public:
+	explicit Map(int sizeX, int sizeY);
+	~Map();
 
-    void resize(int newSizeX, int newSizeY);
-    void removeObjectAt(int x, int y);
+	const QString getName();
+	const QString getId();
+
+	const int getSizeX();
+	const int getSizeY();
+
+	const QVector<QVector<Entity*> > getField();
+
+	const QVector<Item*> getItems();
+	const QVector<Object*> getObjects();
+	const QVector<Snake*> getSnakes();
+
+	const QVector<Item*> getItemsTypesForGeneration();
+	void addItemTypeForGeneration(const Item *item);
+	void removeItemTypeForGeneration(const Item *item);
+
+	void resize(int newSizeX, int newSizeY);
+	void setEntityAt(int x, int y, Entity *newEntity);
+	void removeEntityFullyAt(int x, int y);
+
+signals:
+	void sizeChanged(int newSizeX, int newSizeY);
+	void cellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity);
 };
 
 #endif // MAP_H

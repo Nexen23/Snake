@@ -35,7 +35,59 @@ Map::~Map()
     items.clear();
     objects.clear();
     itemsTypesForGeneration.clear();
-    snakes.clear();
+		snakes.clear();
+}
+
+const int Map::getSizeX()
+{
+	return sizeX;
+}
+
+const int Map::getSizeY()
+{
+	return sizeY;
+}
+
+const QVector<QVector<Entity *> > Map::getField()
+{
+	return field;
+}
+
+const QVector<Item *> Map::getItems()
+{
+	return items;
+}
+
+const QVector<Object *> Map::getObjects()
+{
+	return objects;
+}
+
+const QVector<Snake *> Map::getSnakes()
+{
+	return snakes;
+}
+
+const QVector<Item *> Map::getItemsTypesForGeneration()
+{
+	return itemsTypesForGeneration;
+}
+
+void Map::addItemTypeForGeneration(const Item *item)
+{
+	itemsTypesForGeneration.append(item);
+}
+
+void Map::removeItemTypeForGeneration(const Item *item)
+{
+	for (int i = 0; i < itemsTypesForGeneration.size(); ++i)
+	{
+		if (itemsTypesForGeneration[i]->getId() == item->getId())
+		{
+			itemsTypesForGeneration.remove(i);
+			break;
+		}
+	}
 }
 
 /**
@@ -62,10 +114,19 @@ void Map::resize(int newSizeX, int newSizeY)
     }
 
     this->sizeX = newSizeX;
-    this->sizeY = newSizeY;
+		this->sizeY = newSizeY;
+
+		emit sizeChanged(newSizeX, newSizeY);
 }
 
-void Map::removeObjectAt(int x, int y)
+void Map::setEntityAt(int x, int y, Entity *newEntity)
+{
+	Entity *oldEntity = field[x][y];
+	field[x][y] = newEntity;
+	emit cellChangedAt(x, y, oldEntity, newEntity);
+}
+
+void Map::removeEntityFullyAt(int x, int y)
 {
     if (field[x][y] != NULL)
     {

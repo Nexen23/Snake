@@ -56,7 +56,7 @@ void BombItem::collide(Snake *snake, Map *map)
     for (int i = 0; i < snake->tail.size(); i++)
         ourSnake.append(snake->tail[i]);
     ourSnake.append(QPoint( (ourSnake[0].x()+ourSnake[1].x())/2 , (ourSnake[0].y()+ourSnake[1].y())/2) );
-    map->removeObjectAt(snake->position->x(),snake->position->y());
+    map->removeEntityFullyAt(snake->position->x(),snake->position->y());
     //qDebug() << "POS X:" << snake->position->x() << " POS Y:" << snake->position->y();
     //Взрыв всех вещей в радиусе damageRadius
     //Взрыв змеек, голов и их частей
@@ -77,7 +77,7 @@ void BombItem::collide(Snake *snake, Map *map)
                 y=map->sizeY-1;
             if (!ourSnake.contains(QPoint(x,y)))
             {
-                map->removeObjectAt(x,y);
+                map->removeEntityFullyAt(x,y);
             }
         }
     }
@@ -97,7 +97,7 @@ void BombItem::collide(Snake *snake, Map *map)
                 y=map->sizeY-1;
             if (!ourSnake.contains(QPoint(x,y)))
             {
-                map->removeObjectAt(x,y);
+                map->removeEntityFullyAt(x,y);
             }
         }
     }
