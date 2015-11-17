@@ -14,6 +14,7 @@ class Snake;
 
 class Map : public QObject
 {
+    friend class Game;
 	Q_OBJECT
 
 	int sizeX, sizeY;

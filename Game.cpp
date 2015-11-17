@@ -107,20 +107,20 @@ void Game::saveMapToFile(Map *map, QString mapName)
 				 <<  map->getSizeX() << endl
 				 << map->getSizeY() <<endl;
 
-		out << map->getField().size() << endl;
-		for(int i=0; i<map->getField().size(); i++) {
-				out << map->getField()[i].size() << endl;
-				for(int j=0; j<map->getField()[i].size(); j++) {
-						if(map->getField()[i][j] == 0) {
+        out << map->sizeX << endl;
+        for(int i=0; i<map->sizeX; i++) {
+                out << map->sizeY << endl;
+                for(int j=0; j<map->sizeY; j++) {
+                        if(map->field[i][j] == NULL) {
 								out << "NULL" << endl;
 								out << "NULL" << endl;
 								out << "NULL" << endl;
 								out << "NULL" << endl;
 						} else {
-								out << map->getField()[i][j]->getId() << endl;
-								out << map->getField()[i][j]->position.x() << endl;
-								out << map->getField()[i][j]->position.y() << endl;
-								out << map->getField()[i][j]->isDead << endl;
+                                out << map->field[i][j]->getId() << endl;
+                                out << map->field[i][j]->position.x() << endl;
+                                out << map->field[i][j]->position.y() << endl;
+                                out << map->field[i][j]->isDead << endl;
 						}
 				}
 		}
@@ -146,6 +146,11 @@ void Game::saveMapToFile(Map *map, QString mapName)
 
 
 		for(int i=0; i<map->getSnakes().size(); i++) {
+
+                //пишем color
+                out << map->getSnakes()[i]->color.red() << endl;
+                out << map->getSnakes()[i]->color.green() << endl;
+                out << map->getSnakes()[i]->color.blue() << endl;
 
 
 				//пишем голову
@@ -323,20 +328,21 @@ Map *Game::loadMapFromFile(QString mapName)
 		int maxLen = 255;
 		int sizeX, sizeY;
 		in.readLine(maxLen);//читаем mapName для прикола
-		sizeX = in.readLine(maxLen).toInt();
-		sizeY = in.readLine(maxLen).toInt();
+        sizeX = in.readLine(maxLen).toInt();
+        sizeY = in.readLine(maxLen).toInt();
 		m = new Map(sizeX, sizeY);
 
-		for(int i=0; i<sizeX; i++) {
-
-				for(int j=0; j<sizeY; j++) {
+        in.readLine(maxLen).toInt();
+        for(int i=0; i<sizeX; i++) {
+                in.readLine(maxLen).toInt();
+                for(int j=0; j<sizeY; j++) {
 						QString checkNULL = in.readLine(maxLen);
-						if(checkNULL == "NULL") {
-								in.readLine(maxLen).toInt();
-								in.readLine(maxLen).toInt();
-								in.readLine(maxLen).toInt();
-								m->setCellAt(i, j, NULL);
-						} else {
+                        if(checkNULL == "NULL") {
+                                in.readLine(maxLen);
+                                in.readLine(maxLen);
+                                in.readLine(maxLen);
+                                m->setCellAt(i, j, NULL);
+                        } else {
 								FoodItem *foodItem;
 								BombItem *bombItem;
 								WallObject *wallObject;
@@ -344,54 +350,55 @@ Map *Game::loadMapFromFile(QString mapName)
 								Snake *snake;
 
 								int id = checkNULL.toInt();
-								switch(id) {
+                                switch(id) {
 								case FOOD_ITEM:
 										foodItem = new FoodItem();
 										foodItem->position.setX(in.readLine(maxLen).toInt());
 										foodItem->position.setY(in.readLine(maxLen).toInt());
 										foodItem->isDead = in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, foodItem);
+                                        m->setCellAt(i, j, foodItem);
 										break;
 								case BOMB_ITEM:
 										bombItem = new BombItem();
 										bombItem->position.setX(in.readLine(maxLen).toInt());
 										bombItem->position.setY(in.readLine(maxLen).toInt());
 										bombItem->isDead = in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, bombItem);
+                                        m->setCellAt(i, j, bombItem);
 										break;
 								case WALL_OBJECT:
 										wallObject = new WallObject();
 										wallObject->position.setX(in.readLine(maxLen).toInt());
 										wallObject->position.setY(in.readLine(maxLen).toInt());
 										wallObject->isDead = in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, wallObject);
+                                        m->setCellAt(i, j, wallObject);
 										break;
 								case HOLE_OBJECT:
 										holeObject = new HoleObject();
 										holeObject->position.setX(in.readLine(maxLen).toInt());
 										holeObject->position.setY(in.readLine(maxLen).toInt());
 										holeObject->isDead = in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, holeObject);
+                                        m->setCellAt(i, j, holeObject);
 										break;
 								case SNAKE_NPC:
 										snake = new Snake("name");
 										snake->position.setX(in.readLine(maxLen).toInt());
 										snake->position.setY(in.readLine(maxLen).toInt());
 										snake->isDead = in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, snake);
+                                        m->setCellAt(i, j, snake);
 										break;
 								default:
-										in.readLine(maxLen).toInt();
-										in.readLine(maxLen).toInt();
-										in.readLine(maxLen).toInt();
-										m->setCellAt(i, j, NULL);
+                                        in.readLine(maxLen);
+                                        in.readLine(maxLen);
+                                        in.readLine(maxLen);
+                                        m->setCellAt(i, j, NULL);
 								}
 						}
 				}
-		}
+        }
 
 
 		int itemsCount = in.readLine(maxLen).toInt();
+
 		for(int i = 0; i < itemsCount; i++) {
 				int id = in.readLine(maxLen).toInt();
 				Item *newItem;
@@ -420,6 +427,7 @@ Map *Game::loadMapFromFile(QString mapName)
 						m->setCellByEntity(newItem);
 				}
 		}
+
 
 
 		int objectsCount = in.readLine(maxLen).toInt();
@@ -452,12 +460,22 @@ Map *Game::loadMapFromFile(QString mapName)
 
 
 		int snakesCount = in.readLine(maxLen).toInt();
+
 		for(int i=0; i<snakesCount; i++) {
+
+                //читаем color
+                QColor color;
+                color.setRed(in.readLine(maxLen).toInt());
+                color.setGreen(in.readLine(maxLen).toInt());
+                color.setBlue(in.readLine(maxLen).toInt());
+
 
 				int px, py;
 				//читаем голову
 				px = in.readLine(maxLen).toInt();
 				py = in.readLine(maxLen).toInt();
+
+
 
 
 				QString name;
@@ -470,12 +488,14 @@ Map *Game::loadMapFromFile(QString mapName)
 				snakeTheHole = in.readLine(maxLen).toInt();
 				length = in.readLine(maxLen).toInt();
 				Snake *snake = new Snake(name);
-				snake->currentScores->amount = currentScore;
+                snake->color = color;
+                snake->currentScores->amount = currentScore;
 				snake->mustDie = mustDie;
 				snake->snakeInTheHole = snakeTheHole;
 
 				snake->position.setX(px);
 				snake->position.setY(py);
+
 
 
 
@@ -486,18 +506,26 @@ Map *Game::loadMapFromFile(QString mapName)
 						snake->tail[j].setY(in.readLine(maxLen).toInt());
 				}
 				m->setCellsBySnake(snake);
+
+
+
 		}
 
+
+
 		int itemsTypesForGenerationCount = in.readLine(maxLen).toInt();
-		for(int i=0; i<itemsTypesForGenerationCount; i++) {
+
+
+        for(int i=0; i<itemsTypesForGenerationCount; i++) {
 				int id = in.readLine(maxLen).toInt();
 				Item *item;
+
 				switch(id) {
 				case FOOD_ITEM:
-						item = new FoodItem();
+                        item = new FoodItem();
 						break;
 				case BOMB_ITEM:
-						item = new BombItem();
+                        item = new BombItem();
 						break;
 				default:
 						item = NULL;
@@ -509,11 +537,13 @@ Map *Game::loadMapFromFile(QString mapName)
 						in.readLine(maxLen).toInt();
 						in.readLine(maxLen).toInt();
 				} else {
-						m->getItemsTypesForGeneration()[i]->scoresForPicker->amount = in.readLine(maxLen).toInt();
-						m->getItemsTypesForGeneration()[i]->position.setX(in.readLine(maxLen).toInt());
-						m->getItemsTypesForGeneration()[i]->position.setY(in.readLine(maxLen).toInt());
+                        item->scoresForPicker->amount = in.readLine(maxLen).toInt();
+                        item->position.setX(in.readLine(maxLen).toInt());
+                        item->position.setY(in.readLine(maxLen).toInt());
 						m->addItemTypeForGeneration(item);
 				}
+
+
 		}
 
 

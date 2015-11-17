@@ -30,6 +30,7 @@ SOURCES += \
     BombItem.cpp \
     FoodItem.cpp \
     main.cpp \
+    MapWidget.cpp \
     OpenMapDialog.cpp \
     MapGrid.cpp \
     MapGridCell.cpp
@@ -52,6 +53,7 @@ HEADERS  += \
     RandomAI.h \
     Score.h \
     SimpleAI.h \
+    MapWidget.h \
     OpenMapDialog.h \
     MapGrid.h \
     MapGridCelll.h

@@ -5,9 +5,7 @@
 MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *entity)
 {
 	setMargin(1);
-	setScaledContents(true);
-	setMaximumSize(size);
-
+	resize(size);
 	this->coords = coords;
 
 	QPixmap *image = new QPixmap(size.width(), size.height());
@@ -32,7 +30,9 @@ MapGridCell::~MapGridCell()
 
 void MapGridCell::setImage(const QPixmap &image)
 {
-	setPixmap(image);
+	int w = width();
+	int h = height();
+	setPixmap(image.scaled( w, h, Qt::KeepAspectRatio ));
 }
 
 void MapGridCell::mousePressEvent(QMouseEvent *event)
