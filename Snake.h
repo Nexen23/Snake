@@ -24,7 +24,8 @@ public:
 		virtual const QString getName() const;
 		virtual const Id getId() const;
 
-		virtual const QPixmap getBitmap() const;
+		virtual const QPixmap getImage() const;
+		virtual const QPixmap getHeadImage() const;
 
 		virtual void collide(Snake *snake, Map *map);
 

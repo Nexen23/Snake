@@ -47,11 +47,18 @@ const Id Snake::getId() const
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap Snake::getBitmap() const
+const QPixmap Snake::getImage() const
 {
     QPixmap item(":/img/Snake.png");
 
 		return item;
+}
+
+const QPixmap Snake::getHeadImage() const
+{
+	QPixmap item(":/img/SnakeHead.png");
+
+	return item;
 }
 
 void Snake::collide(Snake *snake, Map *map)

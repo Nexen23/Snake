@@ -42,7 +42,7 @@ const Id BombItem::getId() const
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap BombItem::getBitmap() const
+const QPixmap BombItem::getImage() const
 {
     QPixmap item(":/img/BombItem.png");
 

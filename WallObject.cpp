@@ -41,7 +41,7 @@ const Id WallObject::getId() const
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap WallObject::getBitmap() const
+const QPixmap WallObject::getImage() const
 {
     QPixmap item(":/img/WallObject.png");
 

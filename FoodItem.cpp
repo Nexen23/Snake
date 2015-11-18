@@ -42,7 +42,7 @@ const Id FoodItem::getId() const
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap FoodItem::getBitmap() const
+const QPixmap FoodItem::getImage() const
 {
     QString fileName = QString().sprintf("%s%d%s", ":/img/FoodItem", qrand() % 3, ".png");
     QPixmap item(fileName);

@@ -42,7 +42,7 @@ public:
 	virtual const QString getName() const = 0;
 	virtual const Id getId() const = 0;
 	virtual const Type getType() const;
-	virtual const QPixmap getBitmap() const = 0;
+	virtual const QPixmap getImage() const = 0;
 	virtual Entity* clone() const = 0;
 
 	virtual void collide(Snake *snake, Map *map) = 0;

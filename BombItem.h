@@ -14,7 +14,7 @@ public:
 
 		virtual const QString getName() const;
 		virtual const Id getId() const;
-		virtual const QPixmap getBitmap() const;
+		virtual const QPixmap getImage() const;
 	virtual float getSpawnChance() const;
 	virtual Entity* clone() const;
 
