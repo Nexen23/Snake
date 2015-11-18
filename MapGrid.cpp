@@ -20,11 +20,11 @@ void MapGrid::setMap(Map *map)
 {
 	clearPrevMap();
 
-	int standardWindowWidth = 800,
-			standardWindowHeight = 600;
+	int standardWindowWidth = 980,
+			standardWindowHeight = 520;
 	int cellSizeMin = qMin(standardWindowHeight / map->getSizeX(),
 													 standardWindowWidth / map->getSizeY());
-	int cellSizeXY = qMax(1, qMin(cellSizeMin, cellSizeMaxPx) );
+	int cellSizeXY = qMax(CELL_SIZE_MIN, qMin(cellSizeMin, CELL_SIZE_MAX) );
 	cellSize.setHeight(cellSizeXY);
 	cellSize.setWidth(cellSizeXY);
 

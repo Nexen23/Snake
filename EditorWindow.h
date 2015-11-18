@@ -37,6 +37,9 @@ class EditorWindow : public QWidget
 {
 	Q_OBJECT
 
+	const int MAP_SIZE_X_MAX = 40,
+						MAP_SIZE_Y_MAX = 50;
+
 	QVector<Item*> itemTypes;
 	QVector<Object*> objectTypes;
 	QVector<Snake*> snakes;

@@ -15,7 +15,8 @@ class MapGrid : public QGridLayout
 {
 	Q_OBJECT
 
-	const int cellSizeMaxPx = 50;
+	const int CELL_SIZE_MAX = 50,
+						CELL_SIZE_MIN = 3;
 	QSize cellSize;
 	Map *map = NULL;
 

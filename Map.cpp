@@ -83,10 +83,6 @@ void Map::removeItemTypeForGeneration(Item *item)
 	itemsTypesForGeneration.remove(item->getId());
 }
 
-/**
- * @author MGerasimchuk
- * 08.11
- */
 void Map::resize(int newSizeX, int newSizeY)
 {
 	objects.clear();
@@ -97,7 +93,7 @@ void Map::resize(int newSizeX, int newSizeY)
 	field.resize(newSizeX);
 	for (int x = 0; x < newSizeX; ++x)
 	{
-		field[x].resize(newSizeX);
+		field[x].resize(newSizeY);
 		for (int y = 0; y < newSizeY; ++y)
 		{
 			Entity *entity = field[x][y];

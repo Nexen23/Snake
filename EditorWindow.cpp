@@ -232,9 +232,11 @@ void EditorWindow::onSetSizeClicked()
 						}
 				}
 		}
-		width = QInputDialog::getInt(this, "Set size",
-																"Enter width:",
-																map->getSizeX(), minWidth + 1, 100, 1, &okw);
+
+		QString message, messagePattern = QString("Enter number in range [%1; %2]: ");
+		message = messagePattern.arg(QString::number(minWidth + 1), QString::number(MAP_SIZE_Y_MAX));
+		width = QInputDialog::getInt(this, "Set width", message,
+																map->getSizeX(), minWidth + 1, MAP_SIZE_Y_MAX, 1, &okw);
 		if(!okw) {
 				return;
 		}
@@ -247,9 +249,10 @@ void EditorWindow::onSetSizeClicked()
 						}
 				}
 		}
-		height = QInputDialog::getInt(this, "Set size",
-																"Enter height:",
-																map->getSizeY(), minHeight + 1, 90, 1, &okh);
+
+		message = messagePattern.arg(QString::number(minHeight + 1), QString::number(MAP_SIZE_X_MAX));
+		height = QInputDialog::getInt(this, "Set height", message,
+																map->getSizeY(), minHeight + 1, MAP_SIZE_X_MAX, 1, &okh);
 		if(!okh) {
 				return;
 		}
