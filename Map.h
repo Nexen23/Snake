@@ -54,10 +54,14 @@ public:
 	void setCellAt(int x, int y, Entity *newEntity);
 	void setCellByEntity(Entity *newEntity);
 	void setCellsBySnake(Snake *snake);
+	bool addSnakeTailAt(Snake *snake, QPoint coords);
 
 	bool isSnakeExist(Snake* snake);
 	bool isCellEmpty(QPoint coords);
 
+	void cutSnakeFrom(QPoint coords, bool& cuttedAtLeast1, bool& wasFullyRemoved);
+	bool cutSnakeTailFrom(QPoint coords);
+	void clearCellAt(QPoint coords);
 	void clearCellAt(int x, int y);
 	void clearCellsBySnake(Snake *snake);
 

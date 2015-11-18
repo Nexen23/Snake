@@ -151,7 +151,12 @@ void Map::setCellAt(int x, int y, Entity *newEntity)
 {
 	Entity *oldEntity = field[x][y];
 	field[x][y] = newEntity;
-	removeEntityFromVectors(oldEntity);
+	if (oldEntity != NULL && oldEntity->getType() == SNAKE && oldEntity->position != QPoint(x, y))
+	{}
+	else
+	{
+		removeEntityFromVectors(oldEntity);
+	}
 	addEntityToVectors(newEntity);
 	emit cellChangedAt(x, y, oldEntity, newEntity);
 }
@@ -171,9 +176,33 @@ void Map::setCellsBySnake(Snake *snake)
 	}
 }
 
+bool Map::addSnakeTailAt(Snake *snake, QPoint coords)
+{
+	bool wasTailCellAdded = false;
+
+	if (getEntityAt(coords) == NULL)
+	{
+		QPoint lastTailCell = snake->position;
+		if (snake->tail.size() > 0)
+		{
+			lastTailCell = snake->tail.last();
+		}
+
+		QPoint cellsDiff = lastTailCell - coords;
+		if (qAbs(cellsDiff.x()) + qAbs(cellsDiff.y()) == 1)
+		{
+			wasTailCellAdded = true;
+			snake->tail.push_back(coords);
+			setCellAt(coords.x(), coords.y(), snake);
+		}
+	}
+
+	return wasTailCellAdded;
+}
+
 bool Map::isSnakeExist(Snake *snake)
 {
-	if (field[snake->position.x()][snake->position.y()]->getId() == SNAKE_NPC)
+	if (snakesUniqueConstraint.find(snake) != snakesUniqueConstraint.end())
 		return true;
 	return false;
 }
@@ -185,6 +214,75 @@ bool Map::isCellEmpty(QPoint coords)
 	return false;
 }
 
+void Map::cutSnakeFrom(QPoint coords, bool &cuttedAtLeast1, bool &wasFullyRemoved)
+{
+	cuttedAtLeast1 = false;
+	wasFullyRemoved = false;
+
+	if (getEntityAt(coords)->getType() == SNAKE)
+	{
+		Snake *snake = (Snake*)getEntityAt(coords);
+		cuttedAtLeast1 = true;
+
+		if (snake->position == coords)
+		{
+			if (getSnakes().size() <= 2)
+			{
+				if (snake->tail.size() > 0)
+				{
+					cutSnakeTailFrom(snake->tail.first());
+				}
+			}
+			else
+			{
+				wasFullyRemoved = true;
+				clearCellsBySnake(snake);
+			}
+		}
+		else
+		{
+			cutSnakeTailFrom(coords);
+		}
+	}
+}
+
+bool Map::cutSnakeTailFrom(QPoint coords)
+{
+	bool wasCutted = false;
+	if (getEntityAt(coords)->getType() == SNAKE)
+	{
+		Snake *snake = (Snake*)getEntityAt(coords);
+
+		QVector<QPoint> &tail = snake->tail;
+		QVector<QPoint>::Iterator cuttingPoint = nullptr;
+		for (QVector<QPoint>::Iterator it = tail.begin(); it != tail.end(); ++it)
+		{
+			if (*it == coords)
+			{
+				cuttingPoint = it;
+				wasCutted = true;
+			}
+
+			if (cuttingPoint != nullptr)
+			{
+				clearCellAt(*it);
+			}
+		}
+
+		if (cuttingPoint != nullptr)
+		{
+			tail.erase(cuttingPoint, tail.end());
+		}
+	}
+	return wasCutted;
+}
+
+void Map::clearCellAt(QPoint coords)
+{
+	clearCellAt(coords.x(), coords.y());
+}
+
+
 void Map::clearCellAt(int x, int y)
 {
 	setCellAt(x, y, NULL);
@@ -192,12 +290,13 @@ void Map::clearCellAt(int x, int y)
 
 void Map::clearCellsBySnake(Snake *snake)
 {
-	setCellAt(snake->position.x(), snake->position.y(), NULL);
+	clearCellAt(snake->position);
 	for (int i = 0; i < snake->tail.size(); ++i)
 	{
 		QPoint &tailCell = snake->tail[i];
-		setCellAt(tailCell.x(), tailCell.y(), NULL);
+		clearCellAt(tailCell);
 	}
+	removeEntityFromVectors(snake);
 }
 
 void Map::addEntityToVectors(Entity *entity)

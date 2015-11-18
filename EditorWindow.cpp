@@ -148,6 +148,7 @@ void EditorWindow::onCreateMapClicked()
 
 		loadSnakesFromMap(map);
 		ui->SnakeList->setCurrentRow(0);
+		selectedEntity = snakes[0];
 }
 
 /**
@@ -273,21 +274,36 @@ void EditorWindow::onMouseLmbClicked(QPoint coords)
 				map->setCellByEntity(newEntity);
 			}
 		}
-	}
-	else
-	{
-
+		else
+		{
+			Snake *snake = (Snake*)selectedEntity;
+			if (map->isSnakeExist(snake) == false)
+			{
+				snake->position = coords;
+				map->setCellsBySnake(snake);
+			}
+			else
+			{
+				map->addSnakeTailAt(snake, coords);
+			}
+		}
 	}
 }
 
 void EditorWindow::onMouseRmbClicked(QPoint coords)
 {
-	if (map->getEntityAt(coords)->getType() != SNAKE)
+	const Entity *entity = map->getEntityAt(coords);
+	if (entity != NULL)
 	{
-		map->clearCellAt(coords.x(), coords.y());
-	}
-	else
-	{
+		if (entity->getType() != SNAKE)
+		{
+			map->clearCellAt(coords.x(), coords.y());
+		}
+		else
+		{
+			bool cuttedAtLeast1, wasFullyRemoved;
+			map->cutSnakeFrom(coords, cuttedAtLeast1, wasFullyRemoved);
+		}
 	}
 }
 
