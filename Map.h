@@ -39,6 +39,7 @@ public:
 	const int getSizeY();
 
 	const QVector<QVector<Entity*> >& getField();
+	const Entity* getEntityAt(const QPoint &point);
 	const Entity* getEntityAt(int x, int y);
 
 	const QVector<Item*>& getItems();

@@ -271,13 +271,20 @@ void EditorWindow::onMouseLmbClicked(QPoint coords)
 			}
 		}
 	}
+	else
+	{
+
+	}
 }
 
 void EditorWindow::onMouseRmbClicked(QPoint coords)
 {
-	if (selectedEntity->getType() != SNAKE)
+	if (map->getEntityAt(coords)->getType() != SNAKE)
 	{
 		map->clearCellAt(coords.x(), coords.y());
+	}
+	else
+	{
 	}
 }
 

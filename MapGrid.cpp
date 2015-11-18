@@ -18,10 +18,13 @@ MapGrid::~MapGrid()
 
 void MapGrid::setMap(Map *map)
 {
-	QRect rec = QApplication::desktop()->screenGeometry();
-	int windowHeight = rec.height(), windowWidth = rec.width();
-	int cellSizeXYMax = qMax(windowHeight / map->getSizeX(), windowWidth / map->getSizeY());
-	int cellSizeXY = qMax(1, qMin(cellSizeXYMax, cellSizeMaxPx) );
+	clearPrevMap();
+
+	int standardWindowWidth = 800,
+			standardWindowHeight = 600;
+	int cellSizeMin = qMin(standardWindowHeight / map->getSizeX(),
+													 standardWindowWidth / map->getSizeY());
+	int cellSizeXY = qMax(1, qMin(cellSizeMin, cellSizeMaxPx) );
 	cellSize.setHeight(cellSizeXY);
 	cellSize.setWidth(cellSizeXY);
 
@@ -46,8 +49,40 @@ void MapGrid::setCellAt(int x, int y, Entity *entity)
 	addWidget(widget, y, x, 1, 1);
 }
 
+void MapGrid::clearPrevMap()
+{
+	if (map != NULL)
+	{
+		disconnect(map, SIGNAL(cellChangedAt(int,int,Entity*,Entity*)),
+						this, SLOT(onCellChangedAt(int,int,Entity*,Entity*)));
+
+		disconnect(map, SIGNAL(sizeChanged(int,int)),
+						this, SLOT(onSizeChanged(int,int)));
+
+		clearLayout(this);
+
+		map = NULL;
+	}
+}
+
+void MapGrid::clearLayout(QLayout* layout, bool deleteWidgets)
+{
+		while (QLayoutItem* item = layout->takeAt(0))
+		{
+				if (deleteWidgets)
+				{
+						if (QWidget* widget = item->widget())
+								delete widget;
+				}
+				if (QLayout* childLayout = item->layout())
+						clearLayout(childLayout, deleteWidgets);
+				delete item;
+		}
+}
+
 void MapGrid::onCellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity)
 {
+	Q_UNUSED(oldEntity);
 	setCellAt(x, y, newEntity);
 	//QWidget *widget = new MapGridCell(cellSize, newEntity);
 	//replaceWidget(itemAtPosition(y, x)->widget(), widget);
@@ -55,6 +90,8 @@ void MapGrid::onCellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity
 
 void MapGrid::onSizeChanged(int newSizeX, int newSizeY)
 {
-
+	Q_UNUSED(newSizeX);
+	Q_UNUSED(newSizeY);
+	setMap(map);
 }
 

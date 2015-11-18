@@ -38,6 +38,11 @@ const int Map::getSizeY()
 	return sizeY;
 }
 
+const Entity* Map::getEntityAt(const QPoint &point)
+{
+	return field[point.x()][point.y()];
+}
+
 const Entity* Map::getEntityAt(int x, int y)
 {
 	return field[x][y];

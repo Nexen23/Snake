@@ -11,7 +11,8 @@ MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *en
 	this->coords = coords;
 
 	QPixmap *image = new QPixmap(size.width(), size.height());
-	image->fill(Qt::lightGray);
+	int clr = 223;
+	image->fill(QColor(clr, clr, clr));//Qt::lightGray);
 	if (entity != NULL)
 	{
 		*image = entity->getBitmap();
