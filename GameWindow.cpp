@@ -13,8 +13,8 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 
 				this->map = game->getMap();
 
-        QMenu *File = new QMenu("File");
-        QAction *File_Load_Map = File->addAction("Load Map");
+        QMenu *File = new QMenu("Load Map");
+
         ui->menuBar->addMenu(File);
 
         //Пустая карта
@@ -34,7 +34,7 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
         }
 
         //Привязка меню
-        connect(File_Load_Map,SIGNAL(triggered()),this, SLOT(onOpenMapChoserDialog()));
+        connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
 
 
         //Привязка для ИИ и змеек

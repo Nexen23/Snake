@@ -193,7 +193,6 @@ void EditorWindow::onSaveMapClicked()
  */
 void EditorWindow::onSetSizeClicked()
 {
-    ui->SnakeAddButton->setFocus();
 		/*//Минимальный возможный размер создаваемой карты - 6х6, максимальный - 100х90
 		QDialog *dialog = new QDialog();
 		QLabel *label_1 = new QLabel(dialog);

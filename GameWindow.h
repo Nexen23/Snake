@@ -32,6 +32,7 @@ public:
 		//MapWidget *mapView;
 
 
+
 private:
 	Ui::GameWindow *ui;
 
