@@ -4,6 +4,9 @@
 #include "Map.h"
 #include "Snake.h"
 #include "Game.h"
+#include "SnakeListWidgetItem.h"
+
+#include <QColorDialog>
 
 /**
  * @author MGerasimchuk
@@ -59,6 +62,16 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 		connect(ui->ObjectList,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(onObjectSelected(QListWidgetItem*)));
 		connect(ui->ItemList,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(onItemSelected(QListWidgetItem*)));
 
+		//уникальность выбора!
+		connect(ui->ItemList,SIGNAL(itemClicked(QListWidgetItem*)),ui->ObjectList,SLOT(clearSelection()));
+		connect(ui->ItemList,SIGNAL(itemClicked(QListWidgetItem*)),ui->SnakeList,SLOT(clearSelection()));
+
+		connect(ui->ObjectList,SIGNAL(itemClicked(QListWidgetItem*)),ui->ItemList,SLOT(clearSelection()));
+		connect(ui->ObjectList,SIGNAL(itemClicked(QListWidgetItem*)),ui->SnakeList,SLOT(clearSelection()));
+
+		connect(ui->SnakeList,SIGNAL(itemClicked(QListWidgetItem*)),ui->ObjectList,SLOT(clearSelection()));
+		connect(ui->SnakeList,SIGNAL(itemClicked(QListWidgetItem*)),ui->ItemList,SLOT(clearSelection()));
+
 		onCreateMapClicked();
 }
 
@@ -103,11 +116,18 @@ void EditorWindow::onAddSnakeClick()
 				}
 		}
 
+		QColor color(qrand()%256, qrand()%256, qrand()%256);
+		color = QColorDialog::getColor(color, this, QString("Set snake [%1] color").arg(name));
+		if (!color.isValid())
+			return;
+
 		Snake *snake;
 		snake = new Snake(name);
-		addSnake(snake);
+		snake->color = color;
 
+		addSnake(snake);
 		ui->SnakeList->setCurrentRow(ui->SnakeList->count()-1);
+		selectedEntity = snakes.last();
 }
 
 void EditorWindow::onOpenMapClicked()
@@ -317,6 +337,7 @@ Map* EditorWindow::getDefaultMap(){
 		s1->tail << QPoint(1,4);
 		s1->tail << QPoint(0,4);
 
+		s1->color = Qt::magenta;
 		ret->setCellsBySnake(s1);
 
 
@@ -326,6 +347,7 @@ Map* EditorWindow::getDefaultMap(){
 		s2->tail << QPoint(10,4);
 		s2->tail << QPoint(11,4);
 
+		s2->color = Qt::blue;
 		ret->setCellsBySnake(s2);
 
 		for (int i = 0; i < itemTypes.size(); ++i) {
@@ -338,7 +360,7 @@ Map* EditorWindow::getDefaultMap(){
 void EditorWindow::addSnake(Snake *snake)
 {
 	snakes.append(snake);
-	ui->SnakeList->addItem(snake->getName());
+	ui->SnakeList->addItem(new SnakeListWidgetItem(snake));
 }
 
 void EditorWindow::loadSnakesFromMap(Map *map)
@@ -351,5 +373,4 @@ void EditorWindow::loadSnakesFromMap(Map *map)
 	{
 		addSnake(snakes[i]);
 	}
-	ui->SnakeList->setCurrentRow(ui->SnakeList->count()-1);
 }

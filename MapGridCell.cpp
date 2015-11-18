@@ -20,14 +20,6 @@ MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *en
 	if (entity != NULL && entity->getType() == SNAKE)
 	{
 		color = ((Snake*)entity)->color;
-		// NO COLOR YET
-
-		while (color == Qt::green)
-		{
-			int x = qrand()%256, y = qrand()%256, z = qrand()%256;
-			color = QColor(x, y, z);
-			((Snake*)entity)->color = color;
-		}
 	}
 
 	image->fill(color); //Qt::lightGray);
