@@ -24,7 +24,7 @@ FoodItem::~FoodItem()
  * @author MGerasimchuk
  * 22.10
  */
-const QString FoodItem::getName()
+const QString FoodItem::getName() const
 {
     return "Food";
 }
@@ -33,7 +33,7 @@ const QString FoodItem::getName()
  * @author MGerasimchuk
  * 22.10
  */
-const Id FoodItem::getId()
+const Id FoodItem::getId() const
 {
     return FOOD_ITEM;
 }
@@ -42,7 +42,7 @@ const Id FoodItem::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap FoodItem::getBitmap()
+const QPixmap FoodItem::getBitmap() const
 {
     QString fileName = QString().sprintf("%s%d%s", ":/img/FoodItem", qrand() % 3, ".png");
     QPixmap item(fileName);
@@ -57,12 +57,12 @@ void FoodItem::collide(Snake *snake, Map *map)
     snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
 }
 
-float FoodItem::getSpawnChance()
+float FoodItem::getSpawnChance() const
 {
 	return 0.25f;
 }
 
-Entity *FoodItem::clone()
+Entity *FoodItem::clone() const
 {
 	FoodItem *food = new FoodItem();
 	food->position = position;

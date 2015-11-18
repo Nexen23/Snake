@@ -24,7 +24,7 @@ BombItem::~BombItem()
  * @author MGerasimchuk
  * 22.10
  */
-const QString BombItem::getName()
+const QString BombItem::getName() const
 {
     return "Bomb";
 }
@@ -33,7 +33,7 @@ const QString BombItem::getName()
  * @author MGerasimchuk
  * 22.10
  */
-const Id BombItem::getId()
+const Id BombItem::getId() const
 {
     return BOMB_ITEM;
 }
@@ -42,7 +42,7 @@ const Id BombItem::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap BombItem::getBitmap()
+const QPixmap BombItem::getBitmap() const
 {
     QPixmap item(":/img/BombItem.png");
 
@@ -104,12 +104,12 @@ void BombItem::collide(Snake *snake, Map *map)
 
 }
 
-float BombItem::getSpawnChance()
+float BombItem::getSpawnChance() const
 {
 	return 0.15f;
 }
 
-Entity *BombItem::clone()
+Entity *BombItem::clone() const
 {
 	BombItem *bomb = new BombItem();
 	bomb->position = position;

@@ -23,7 +23,7 @@ WallObject::~WallObject()
  * @author MGerasimchuk
  * 22.10
  */
-const QString WallObject::getName()
+const QString WallObject::getName() const
 {
     return "Wall";
 }
@@ -32,7 +32,7 @@ const QString WallObject::getName()
  * @author MGerasimchuk
  * 22.10
  */
-const Id WallObject::getId()
+const Id WallObject::getId() const
 {
     return WALL_OBJECT;
 }
@@ -41,7 +41,7 @@ const Id WallObject::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap WallObject::getBitmap()
+const QPixmap WallObject::getBitmap() const
 {
     QPixmap item(":/img/WallObject.png");
 
@@ -54,7 +54,7 @@ void WallObject::collide(Snake *snake, Map *map)
 	snake->mustDie = true;
 }
 
-Entity *WallObject::clone()
+Entity *WallObject::clone() const
 {
 	WallObject* wall = new WallObject();
 	wall->position = position;

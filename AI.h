@@ -10,7 +10,7 @@ class AI
 {
 public:
     virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map) = 0;
-	virtual QString getName() = 0;
+	virtual QString getName() const = 0;
 };
 
 #endif // AI_H

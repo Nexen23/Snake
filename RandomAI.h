@@ -12,8 +12,8 @@ public:
 	RandomAI();
 	~RandomAI();
 
-    MoveDirection getNextMove(Snake *controllerSnake, Map *map);
-		QString getName();
+		virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map);
+		virtual QString getName() const;
 };
 
 #endif // RANDOMAI_H

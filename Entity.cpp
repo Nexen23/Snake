@@ -18,7 +18,7 @@ Entity::~Entity()
 {
 }
 
-const Type Entity::getType()
+const Type Entity::getType() const
 {
 	Id id = getId();
 

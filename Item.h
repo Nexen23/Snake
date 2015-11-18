@@ -7,15 +7,12 @@
 class Item : public Entity
 {
 public:
-    Item();
-    ~Item();
+		Item();
+		~Item();
 
 	Score *scoresForPicker;
 
-    virtual float getSpawnChance()
-    {
-        return (qrand()%10)/10;
-    }
+		virtual float getSpawnChance() const;
 };
 
 #endif // ITEM_H

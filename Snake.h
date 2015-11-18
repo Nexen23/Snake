@@ -21,18 +21,14 @@ public:
 		explicit Snake(QString name);
     ~Snake();
 
-    const QString getName();
-    const Id getId();
+		virtual const QString getName() const;
+		virtual const Id getId() const;
 
-    const QPixmap getBitmap();
+		virtual const QPixmap getBitmap() const;
 
-		virtual void collide(Snake *snake, Map *map)
-    {
-			Q_UNUSED(map);
-        snake->mustDie = true;
-    }
+		virtual void collide(Snake *snake, Map *map);
 
-		virtual Entity* clone();
+		virtual Entity* clone() const;
 };
 
 #endif // SNAKE_H

@@ -39,13 +39,13 @@ public:
 	QPoint position;
     bool isDead = false;
 
-	virtual const QString getName() = 0;
-	virtual const Id getId() = 0;
-	virtual const Type getType();
-	virtual const QPixmap getBitmap() = 0;
-	virtual void collide(Snake *snake, Map *map) = 0;
+	virtual const QString getName() const = 0;
+	virtual const Id getId() const = 0;
+	virtual const Type getType() const;
+	virtual const QPixmap getBitmap() const = 0;
+	virtual Entity* clone() const = 0;
 
-	virtual Entity* clone() = 0;
+	virtual void collide(Snake *snake, Map *map) = 0;
 };
 
 #endif // ENTITY_H

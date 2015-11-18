@@ -29,7 +29,7 @@ Snake::~Snake()
  * @author MGerasimchuk
  * 22.10
  */
-const QString Snake::getName()
+const QString Snake::getName() const
 {
     return name;
 }
@@ -38,7 +38,7 @@ const QString Snake::getName()
  * @author MGerasimchuk
  * 22.10
  */
-const Id Snake::getId()
+const Id Snake::getId() const
 {
 		return SNAKE_NPC;
 }
@@ -47,14 +47,20 @@ const Id Snake::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap Snake::getBitmap()
+const QPixmap Snake::getBitmap() const
 {
     QPixmap item(":/img/Snake.png");
 
 		return item;
 }
 
-Entity *Snake::clone()
+void Snake::collide(Snake *snake, Map *map)
+{
+	Q_UNUSED(map);
+	snake->mustDie = true;
+}
+
+Entity *Snake::clone() const
 {
 	Snake *snake = new Snake(name);
 	snake->position = position;

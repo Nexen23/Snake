@@ -24,7 +24,7 @@ HoleObject::~HoleObject()
  * @author MGerasimchuk
  * 22.10
  */
-const QString HoleObject::getName()
+const QString HoleObject::getName() const
 {
     return "Hole";
 }
@@ -33,7 +33,7 @@ const QString HoleObject::getName()
  * @author MGerasimchuk
  * 22.10
  */
-const Id HoleObject::getId()
+const Id HoleObject::getId() const
 {
     return HOLE_OBJECT;
 }
@@ -42,7 +42,7 @@ const Id HoleObject::getId()
  * @author MGerasimchuk
  * 25.10
  */
-const QPixmap HoleObject::getBitmap()
+const QPixmap HoleObject::getBitmap() const
 {
     QPixmap item(":/img/HoleObject.png");
 
@@ -55,7 +55,7 @@ void HoleObject::collide(Snake *snake, Map *map)
 	snake->snakeInTheHole = true;
 }
 
-Entity *HoleObject::clone()
+Entity *HoleObject::clone() const
 {
 	HoleObject *hole = new HoleObject();
 	hole->position = position;

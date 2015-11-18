@@ -9,16 +9,16 @@ public:
     FoodItem();
     ~FoodItem();
 
-    const QString getName();
-    const Id getId();
+	 virtual const QString getName() const;
+	 virtual const Id getId() const;
 
-    const QPixmap getBitmap();
+	 virtual const QPixmap getBitmap() const;
 
     virtual void collide(Snake *snake, Map *map);
 
-    virtual float getSpawnChance();
+		virtual float getSpawnChance() const;
 
-		virtual Entity* clone();
+		virtual Entity* clone() const;
 };
 
 #endif // FOODITEM_H

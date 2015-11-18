@@ -17,3 +17,8 @@ Item::~Item()
 {
     delete scoresForPicker;
 }
+
+float Item::getSpawnChance() const
+{
+	return (qrand()%10)/10;
+}

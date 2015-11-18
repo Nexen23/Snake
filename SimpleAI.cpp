@@ -433,7 +433,7 @@ MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
 
 }
 
-QString SimpleAI::getName()
+QString SimpleAI::getName() const
 {
 	return "SimpleAI";
 }

@@ -90,7 +90,7 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
 
 }
 
-QString RandomAI::getName()
+QString RandomAI::getName() const
 {
 	return "RandomAI";
 }

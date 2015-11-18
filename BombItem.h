@@ -12,16 +12,16 @@ public:
 	// 2 cells to left + central + 2 cells to right = field 5x5
 	const int damageRadius = 3; 
 
-    const QString getName();
-    const Id getId();
-
-    const QPixmap getBitmap();
+		virtual const QString getName() const;
+		virtual const Id getId() const;
+		virtual const QPixmap getBitmap() const;
+	virtual float getSpawnChance() const;
+	virtual Entity* clone() const;
 
     virtual void collide(Snake *snake, Map *map);
 
-    virtual float getSpawnChance();
 
-		virtual Entity* clone();
+
 };
 
 #endif // BOMBITEM_H
