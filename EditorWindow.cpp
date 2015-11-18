@@ -39,20 +39,23 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 		QAction *File_Create = File->addAction("Create");
 		QAction *File_Open = File->addAction("Open");
 		QAction *File_Save = File->addAction("Save");
-		menu->addMenu(File);
+        //QAction *Size_Set = File->addAction("Set Size");
+        menu->addMenu(File);
 
-		QMenu *Size = new QMenu("Size");
-		QAction *Size_Set = Size->addAction("Set");
-		menu->addMenu(Size);
-		menu->setGeometry(QRect(0, 0, 82, 21));
+        QMenu *Size = new QMenu("Size");
+        Size->setAcceptDrops(false);
+        Size->setHidden(false);
+        menu->addMenu(Size);
+
 		menu->show();
 
 
 		//привязка нажатия на пункты меню к функциям
 		connect(File_Create,SIGNAL(triggered()),this, SLOT(onCreateMapClicked()));
 		connect(File_Open,SIGNAL(triggered()),this, SLOT(onOpenMapClicked()));
-		connect(File_Save,SIGNAL(triggered()),this, SLOT(onSaveMapClicked()));
-		connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
+        connect(File_Save,SIGNAL(triggered()),this, SLOT(onSaveMapClicked()));
+        //connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
+        connect(Size,SIGNAL(aboutToShow()),this, SLOT(onSetSizeClicked()));
 
 		//привязка нажатий по кнопкам add и del
 		connect(ui->SnakeAddButton,SIGNAL(clicked()),this, SLOT(onAddSnakeClick()));
@@ -190,6 +193,7 @@ void EditorWindow::onSaveMapClicked()
  */
 void EditorWindow::onSetSizeClicked()
 {
+    ui->SnakeAddButton->setFocus();
 		/*//Минимальный возможный размер создаваемой карты - 6х6, максимальный - 100х90
 		QDialog *dialog = new QDialog();
 		QLabel *label_1 = new QLabel(dialog);
