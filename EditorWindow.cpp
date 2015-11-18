@@ -37,9 +37,13 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 		QMenuBar *menu = new QMenuBar(this);
 		QMenu *File = new QMenu("File");
 		QAction *File_Create = File->addAction("Create");
+        File_Create->setIcon(QIcon(":/img/menu/create.png"));
 		QAction *File_Open = File->addAction("Open");
+        File_Open->setIcon(QIcon(":/img/menu/load.png"));
 		QAction *File_Save = File->addAction("Save");
-        //QAction *Size_Set = File->addAction("Set Size");
+        File_Save->setIcon(QIcon(":/img/menu/save.png"));
+        QAction *Size_Set = File->addAction("Set Size");
+        Size_Set->setIcon(QIcon(":/img/menu/set.png"));
         menu->addMenu(File);
 
         QMenu *Size = new QMenu("Size");
@@ -49,12 +53,26 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 
 		menu->show();
 
+        menu->setVisible(false);
+
+        QToolBar *tools = new QToolBar(this);
+        QSizePolicy pref;
+
+        tools->setSizePolicy(pref.Preferred, pref.Fixed);
+        tools->setToolButtonStyle(Qt::ToolButtonIconOnly);
+        tools->setGeometry(0,0,this->width(), 38);
+        tools->addAction(File_Create);
+        tools->addAction(File_Open);
+        tools->addAction(File_Save);
+        tools->addSeparator();
+        tools->addAction(Size_Set);
+        tools->show();
 
 		//привязка нажатия на пункты меню к функциям
 		connect(File_Create,SIGNAL(triggered()),this, SLOT(onCreateMapClicked()));
 		connect(File_Open,SIGNAL(triggered()),this, SLOT(onOpenMapClicked()));
         connect(File_Save,SIGNAL(triggered()),this, SLOT(onSaveMapClicked()));
-        //connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
+        connect(Size_Set,SIGNAL(triggered()),this, SLOT(onSetSizeClicked()));
         connect(Size,SIGNAL(aboutToShow()),this, SLOT(onSetSizeClicked()));
 
 		//привязка нажатий по кнопкам add и del

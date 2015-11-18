@@ -33,8 +33,10 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 						ui->select_snake->addItem(map->getSnakes()[i]->getName());
         }
 
+        ui->menuBar->setVisible(false);
         //Привязка меню
         connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
+        connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
 
 
         //Привязка для ИИ и змеек

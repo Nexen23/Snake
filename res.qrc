@@ -10,5 +10,9 @@
         <file>img/Snake.png</file>
         <file>img/Floor.png</file>
         <file>img/SnakeHead.png</file>
+        <file>img/menu/create.png</file>
+        <file>img/menu/load.png</file>
+        <file>img/menu/save.png</file>
+        <file>img/menu/set.png</file>
     </qresource>
 </RCC>

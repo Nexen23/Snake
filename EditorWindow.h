@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QToolBar>
 
 #include <QDebug>
 #include <QListWidget>
