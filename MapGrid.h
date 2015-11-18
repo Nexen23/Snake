@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QSize>
 #include <QDesktopWidget>
+#include <QProgressDialog>
 
 class Map;
 class Entity;
@@ -20,6 +21,8 @@ class MapGrid : public QGridLayout
 	QSize cellSize;
 	Map *map = NULL;
 
+	QProgressDialog *progressDialog = NULL;
+
 public:
 	explicit MapGrid(Map *map = 0, QWidget *parent = 0);
 	~MapGrid();
@@ -30,10 +33,15 @@ public:
 private:
 	void clearPrevMap();
 	void clearLayout(QLayout* layout, bool deleteWidgets = true);
+	void showWaitingDialog();
+	void cancelWaitingDialog();
 
 signals:
 	void mouseLmbClicked(QPoint);
 	void mouseRmbClicked(QPoint);
+
+	void elementsCountChanged(int);
+	void elementsLoaded(int);
 
 
 public slots:

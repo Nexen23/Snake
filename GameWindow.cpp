@@ -11,7 +11,7 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 		ui->stop_button->setDisabled(true);
 		ui->reset_button->setDisabled(true);
 
-        this->map = new Map(12,9);
+				this->map = game->getMap();
 
         QMenu *File = new QMenu("File");
         QAction *File_Load_Map = File->addAction("Load Map");

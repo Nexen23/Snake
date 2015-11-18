@@ -12,9 +12,9 @@
  */
 Game::Game(QObject *parent) : QObject(parent)
 {
+	editorWindow = new EditorWindow(this);
+	setMap(editorWindow->getDefaultMap());
 		gameWindow = new GameWindow(this);
-		editorWindow = new EditorWindow(this);
-		map = new Map(0, 0);
 		snakesAIs.clear();
 		SnakeMovesBeforeTailCellDeath = 0;
 		CurrentMove = 0;

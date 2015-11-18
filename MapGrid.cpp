@@ -2,11 +2,16 @@
 #include "Map.h"
 #include "MapGridCelll.h"
 
+#include <QtConcurrent/QtConcurrent>
+
 
 
 MapGrid::MapGrid(Map *map, QWidget *parent)
 {
 	Q_UNUSED(parent);
+	progressDialog = new QProgressDialog(widget());
+	connect(this, SIGNAL(elementsCountChanged(int)), progressDialog, SLOT(setMaximum(int)));
+	connect(this, SIGNAL(elementsLoaded(int)), progressDialog, SLOT(setValue(int)));
 	setSpacing(0);
 	setMap(map);
 }
@@ -18,7 +23,19 @@ MapGrid::~MapGrid()
 
 void MapGrid::setMap(Map *map)
 {
+	int widgetsCount = map->getSizeX() * map->getSizeY(),
+			widgetsCreated = 0;
+	emit elementsCountChanged(widgetsCount);
+	showWaitingDialog();
+
 	clearPrevMap();
+
+	this->map = map;
+	connect(map, SIGNAL(cellChangedAt(int,int,Entity*,Entity*)),
+					this, SLOT(onCellChangedAt(int,int,Entity*,Entity*)));
+
+	connect(map, SIGNAL(sizeChanged(int,int)),
+					this, SLOT(onSizeChanged(int,int)));
 
 	int standardWindowWidth = 980,
 			standardWindowHeight = 520;
@@ -32,15 +49,13 @@ void MapGrid::setMap(Map *map)
 		for (int y = 0; y < map->getSizeY(); ++y) {
 			Entity *entity = map->getField()[x][y];
 			setCellAt(x, y, entity);
+
+			++widgetsCreated;
+			emit elementsLoaded(widgetsCreated);
 		}
 	}
 
-	this->map = map;
-	connect(map, SIGNAL(cellChangedAt(int,int,Entity*,Entity*)),
-					this, SLOT(onCellChangedAt(int,int,Entity*,Entity*)));
-
-	connect(map, SIGNAL(sizeChanged(int,int)),
-					this, SLOT(onSizeChanged(int,int)));
+	cancelWaitingDialog();
 }
 
 void MapGrid::setCellAt(int x, int y, Entity *entity)
@@ -78,6 +93,35 @@ void MapGrid::clearLayout(QLayout* layout, bool deleteWidgets)
 						clearLayout(childLayout, deleteWidgets);
 				delete item;
 		}
+}
+
+void MapGrid::showWaitingDialog()
+{
+	if (progressDialog != NULL)
+	{
+		progressDialog->reset();
+
+		QString message = "Loading map. Please wait...";
+		//progressDialog = new QProgressDialog(widget());
+		progressDialog->setLabelText(message);
+		//progressDialog->setAttribute(Qt::WA_DeleteOnClose);
+		progressDialog->setCancelButton(0);
+
+		//progressDialog->exec();
+		progressDialog->setWindowModality(Qt::WindowModal);
+		progressDialog->setAutoClose(true);
+		progressDialog->show();
+	}
+}
+
+void MapGrid::cancelWaitingDialog()
+{
+	if (progressDialog != NULL)
+	{
+		//progressDialog->cancel();
+		//delete progressDialog;
+		//progressDialog = NULL;
+	}
 }
 
 void MapGrid::onCellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity)

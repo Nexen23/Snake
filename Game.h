@@ -55,7 +55,7 @@ public:
 	void stop();
 	void reset();
     void createMap();
-    void setMap(Map *map);
+		void setMap(Map *map);
 
     void setSnakeAI(Snake *snake, AI *ai);
 
