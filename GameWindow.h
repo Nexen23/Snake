@@ -28,14 +28,14 @@ public:
     void update();
     void setWinner(QVector<Snake> snakes);
 
-		MapGrid *mapGrid;
-		//MapWidget *mapView;
+		QString getMapName() const;
 
 
 
 private:
 	Ui::GameWindow *ui;
 
+	MapGrid *mapGrid;
 	Map *map;
 	Game *game;
     QString currentMapName;
@@ -49,9 +49,8 @@ public slots:
     void on_start_button_clicked();
     void on_stop_button_clicked();
     void on_reset_button_clicked();
-    void on_map_button_clicked();
-    void setMap(Map* map);
-    void showMap();
+		void on_map_button_clicked();
+		void onMapChanged(Map *map);
     //void onStartClicked();
     //void onStopClicked();
     //void onResetClicked();
@@ -60,8 +59,7 @@ public slots:
     void onMainSnakeSelected();
     void onBindAIToSnake();
     //void onOpenSnakeAIChoserDialog();
-    Snake* getSnakeBySnakeName(QString name);
-    void refreshMap();
+		Snake* getSnakeBySnakeName(QString name);
 };
 
 #endif // GAMEWINDOW_H

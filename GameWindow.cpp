@@ -52,7 +52,12 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 
 GameWindow::~GameWindow()
 {
-		delete ui;
+	delete ui;
+}
+
+QString GameWindow::getMapName() const
+{
+	return currentMapName;
 }
 
 void GameWindow::onOpenMapChoserDialog()
@@ -65,9 +70,7 @@ void GameWindow::onOpenMapChoserDialog()
     if (currentMapName != "")
     {
         Map *mapLoaded = game->loadMapFromFile(currentMapName);
-        game->setMap(mapLoaded);
-        this->setMap(mapLoaded);
-        this->showMap();
+				game->setMap(mapLoaded);
     }
 }
 
@@ -113,59 +116,22 @@ void GameWindow::on_reset_button_clicked()
         ui->object_index->setEnabled(true);
         ui->snake_speed->setEnabled(true);
         ui->select_snake->setEnabled(true);
-        ui->snake_intelligence->setEnabled(true);
-				OpenMapDialog *dialog;
-        if (currentMapName != "")
-        {
-            Map *mapLoaded = game->loadMapFromFile(currentMapName);
-            game->setMap(mapLoaded);
-            this->setMap(mapLoaded);
-            this->showMap();
-        }
-}
-
-void GameWindow::setMap(Map* map)
-{
-    this->map = map;
+				ui->snake_intelligence->setEnabled(true);
 }
 
 void GameWindow::on_map_button_clicked()
 {
-    this->game->createMap();//TODO DELETE this row
+	this->game->createMap();//TODO DELETE this row
 }
 
-void GameWindow::update()
+void GameWindow::onMapChanged(Map *map)
 {
-
+	mapGrid->setMap(map);
 }
 
 void GameWindow::handleResults(const QString &)
 {
 
-}
-
-void GameWindow::showMap()
-{
-//    delete mapView;
-//    mapView = new MapWidget(map->getSizeX(), map->getSizeY(), SCENARIO_GAME);
-//    ui->mapField->addWidget(mapView);
-//    mapView->show();
-//    mapView->showMap(this->map);
-
-		mapGrid->setMap(map);
-
-    ui->select_snake->clear();
-		for (int i = 0; i < map->getSnakes().size(); i++)
-    {
-				ui->select_snake->addItem(map->getSnakes()[i]->getName());
-				game->setSnakeAI(map->getSnakes()[i],game->getAIList()[0]);
-				//qDebug() << "BOUND_HISTORY GET s:" << map->getSnakes()[i]->getName() << " TO " << game->getAIList()[0]->getName();
-    }
-    //Вдруг пригодится
-    //ui->eat_index->setValue(game->getFoodSpawnCoef());
-    //ui->snake_speed->setValue(game->getSnakeMovesPerSecond());
-    //ui->death_speed->setValue(game->getSnakeMovesBeforeTailCellDeath());
-    //ui->object_index->setValue(game->getItemSpawnCoef());
 }
 
 void GameWindow::onMainSnakeSelected()
@@ -212,10 +178,4 @@ Snake* GameWindow::getSnakeBySnakeName(QString name)
 						return map->getSnakes()[i];
     }
     return NULL;
-}
-
-void GameWindow::refreshMap()
-{
-//    mapView->showMap(game->getMap());
-	mapGrid->setMap(map);
 }

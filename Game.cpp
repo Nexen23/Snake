@@ -15,19 +15,17 @@ Game::Game(QObject *parent) : QObject(parent)
 	editorWindow = new EditorWindow(this);
 	setMap(editorWindow->getDefaultMap());
 		gameWindow = new GameWindow(this);
-		snakesAIs.clear();
 		SnakeMovesBeforeTailCellDeath = 0;
 		CurrentMove = 0;
 		ItemSpawnCoef = 0.5;
 		FoodSpawnCoef = 0.5;
-		SnakeMovesPerSecond = 1;
+		SnakeMovesPerSecond = 1.f;
 
 		timer = new QTimer(parent);
 		timer->setInterval(1000);
 		timer->setSingleShot(false);
 		connect(timer, SIGNAL(timeout()), this, SLOT(loop()));
 
-		SnakeMovesPerSecond = 0.5f;
 		//this->moveToThread(&workerThread);
 		//connect(&workerThread, &QThread::finished, this, &QObject::deleteLater);
 		//connect(this, &Game::sendToWindow, gameWindow, &GameWindow::handleResults);
@@ -42,7 +40,6 @@ Game::~Game()
 {
 		delete gameWindow;
 		delete map;
-		snakesAIs.clear();
 
 		//workerThread.quit();
 		//workerThread.wait();
@@ -63,8 +60,6 @@ void Game::showWindow()
  */
 void Game::createMap()
 {
-		editorWindow = new EditorWindow(this);
-
 		editorWindow->setWindowModality(Qt::WindowModal);
 		editorWindow->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
 
@@ -78,6 +73,12 @@ void Game::createMap()
 void Game::setMap(Map *map)
 {
 		this->map = map;
+	const QVector<Snake*> &snakes = map->getSnakes();
+	for (int i = 0; i < snakes.size(); ++i)
+	{
+		setSnakeAI(snakes[i], new RandomAI());
+	}
+	emit mapChanged(map);
 }
 
 /**
@@ -303,7 +304,7 @@ float Game::getSnakeMovesPerSecond()
 
 int Game::getSnakeMovesBeforeTailCellDeath()
 {
-		return this->SnakeMovesBeforeTailCellDeath;
+	return this->SnakeMovesBeforeTailCellDeath;
 }
 
 /**
@@ -316,6 +317,9 @@ int Game::getSnakeMovesBeforeTailCellDeath()
  */
 Map *Game::loadMapFromFile(QString mapName)
 {
+	if (mapName == "") {
+		return editorWindow->getDefaultMap();
+	}
 		Map* m;
 		QFile *inFile = new QFile(mapName);
 		inFile->open(QIODevice::ReadOnly);
@@ -947,18 +951,13 @@ void Game::loop()
 
 		//Генерим до конца все объекты на карту
 		//рисуем всё новое
-		gameWindow->refreshMap();
+		//gameWindow->refreshMap();
 		//SetWinner
-}
-void Game::activateMapOnGameWindow()
-{
-		gameWindow->setMap(map);
-		gameWindow->showMap();
 }
 
 void Game::start()
 {
-		timer->setInterval(1000/SnakeMovesPerSecond/movesPerSecondDefault);
+		timer->setInterval(1000/SnakeMovesPerSecond/*/movesPerSecondDefault*/);
 		timer->start();
 		//this->moveToThread(&GameThread);
 		//GameThread.start();
@@ -972,4 +971,6 @@ void Game::stop()
 void Game::reset()
 {
 		timer->stop();
+		Map *mapLoaded = loadMapFromFile(gameWindow->getMapName());
+		setMap(mapLoaded);
 }

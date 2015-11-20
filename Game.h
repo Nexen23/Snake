@@ -39,8 +39,7 @@ class Game : public QObject
     float FoodSpawnCoef;
     float SnakeMovesPerSecond;
     int SnakeMovesBeforeTailCellDeath;
-    int CurrentMove;
-	const float movesPerSecondDefault = 0.5f;
+		int CurrentMove;
 
 
 public:
@@ -75,7 +74,11 @@ public:
     float getSnakeMovesPerSecond();
     int getSnakeMovesBeforeTailCellDeath();
 
+private:
+		void setSnakesDefaultAi();
+
 signals:
+	void mapChanged(Map *map);
 
 public slots:
     void setItemSpawnCoef(double coef);
