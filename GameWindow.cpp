@@ -219,7 +219,6 @@ Snake* GameWindow::getSnakeBySnakeName(QString name)
 void GameWindow::refreshSelectedSnakeAIGrid()
 {
     ui->tableWidget->setRowCount(map->getSnakes().count());
-    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/2);
 
     for(int i=0; i<ui->tableWidget->rowCount(); i++) {
         ui->tableWidget->setItem(i,0,
@@ -240,6 +239,7 @@ void GameWindow::refreshSelectedSnakeAIGrid()
     }
 
     ui->tableWidget->resizeColumnsToContents();
+    ui->tableWidget->setColumnWidth(0, ui->tableWidget->width()/10 * 4);
     ui->tableWidget->horizontalHeader()->stretchLastSection();
 }
 
