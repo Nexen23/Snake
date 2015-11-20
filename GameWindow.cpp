@@ -36,6 +36,11 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 				//Привязка меню
 				connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
 				connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
+
+    ui->select_snake->setVisible(false);
+    ui->snake_intelligence->setVisible(false);
+    ui->label->setVisible(false);
+    ui->label_6->setVisible(false);
 }
 
 GameWindow::~GameWindow()
@@ -108,7 +113,8 @@ void GameWindow::on_reset_button_clicked()
         ui->snake_speed->setEnabled(true);
         ui->select_snake->setEnabled(true);
         ui->tableWidget->setEnabled(true);
-				ui->snake_intelligence->setEnabled(true);
+        ui->snake_intelligence->setEnabled(true);
+
 }
 
 void GameWindow::on_map_button_clicked()
@@ -154,6 +160,8 @@ void GameWindow::setMap(Map *map)
 	ui->select_snake->setCurrentIndex(0);
 	emit ui->select_snake->currentIndexChanged(0);
     refreshSelectedSnakeAIGrid();
+
+    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 
 }
 
@@ -232,6 +240,7 @@ void GameWindow::refreshSelectedSnakeAIGrid()
     }
 
     ui->tableWidget->resizeColumnsToContents();
+    ui->tableWidget->horizontalHeader()->stretchLastSection();
 }
 
 
