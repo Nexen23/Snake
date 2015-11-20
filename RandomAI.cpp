@@ -21,18 +21,19 @@ RandomAI::~RandomAI()
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
-
+    int kof[4] = {1,1,1,1};
     QPoint head = controllerSnake->position;
-    QPoint second = controllerSnake->tail.first();
+
+    /*QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
 	second=head;
 
     QPoint buf = head - second;
 
-    int kof[4] = {1,1,1,1};
+
     //учет положения первого за головой хвоста
-    if(buf.x()!=buf.y())
+/*    if(buf.x()!=buf.y())
         if(buf.x()==0)
             if(buf.y()>0){
                 kof[DOWN]=-2;
@@ -49,18 +50,36 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
                 kof[LEFT]=2;
                 kof[RIGHT]=-2;
             }
+            */
+
    //учет стен, дырок, остального хвоста
-    if((map->getField()[head.x()-1][head.y()]->getId()>=WALL_OBJECT && map->getField()[head.x()-1][head.y()]->getId()<=SNAKE_NPC) || (head.x()-1)<0 )
+    if((head.x()-1)<0)
         kof[LEFT]=-1;
+    else
+        if(map->getField()[head.x()-1][head.y()]!=NULL)
+            if((map->getField()[head.x()-1][head.y()]->getId()>=OBJECT_FIRST && map->getField()[head.x()-1][head.y()]->getId()<=SNAKE_NPC))
+                kof[LEFT]=-1;
 
-    if((map->getField()[head.x()+1][head.y()]->getId()>=WALL_OBJECT && map->getField()[head.x()+1][head.y()]->getId()<=SNAKE_NPC) || (head.x()+1)>=map->getSizeX())
+    if((head.x()+1)>=map->getSizeX())
         kof[RIGHT]=-1;
+    else
+        if(map->getField()[head.x()+1][head.y()]!=NULL)
+            if((map->getField()[head.x()+1][head.y()]->getId()>=OBJECT_FIRST && map->getField()[head.x()+1][head.y()]->getId()<=SNAKE_NPC))
+                kof[RIGHT]=-1;
 
-    if((map->getField()[head.x()][head.y()+1]->getId()>=WALL_OBJECT && map->getField()[head.x()][head.y()+1]->getId()<=SNAKE_NPC) || (head.y()+1) >= map->getSizeY())
+    if((head.y()+1) >= map->getSizeY())
         kof[UP]=-1;
+    else
+        if(map->getField()[head.x()][head.y()+1]!=NULL)
+            if((map->getField()[head.x()][head.y()+1]->getId()>=OBJECT_FIRST && map->getField()[head.x()][head.y()+1]->getId()<=SNAKE_NPC))
+                kof[UP]=-1;
 
-    if((map->getField()[head.x()][head.y()-1]->getId()>=WALL_OBJECT && map->getField()[head.x()][head.y()-1]->getId()<=SNAKE_NPC) || (head.y()-1) <0)
+    if((head.y()-1) <0)
         kof[DOWN]=-1;
+    else
+        if(map->getField()[head.x()][head.y()-1]!=NULL)
+            if((map->getField()[head.x()][head.y()-1]->getId()>=OBJECT_FIRST && map->getField()[head.x()][head.y()-1]->getId()<=SNAKE_NPC))
+            kof[DOWN]=-1;
 
 
     int ForRand=0, Rand;
