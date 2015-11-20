@@ -48,8 +48,6 @@ public:
 
     void showWindow();
 
-
-    void activateMapOnGameWindow();
 	void start();
 	void stop();
 	void reset();
@@ -66,16 +64,13 @@ public:
 		QVector<Item*> getAllItemTypes();
 		QVector<Object*> getAllObjectTypes();
 
-    AI* getAIBySnakeName(QString name);
-    AI* getAIByAIName(QString name);
     Map* getMap();
     float getItemSpawnCoef();
     float getFoodSpawnCoef();
     float getSnakeMovesPerSecond();
     int getSnakeMovesBeforeTailCellDeath();
 
-private:
-		void setSnakesDefaultAi();
+		int getDefaultAiIndex() const;
 
 signals:
 	void mapChanged(Map *map);

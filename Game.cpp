@@ -14,7 +14,8 @@ Game::Game(QObject *parent) : QObject(parent)
 {
 	editorWindow = new EditorWindow(this);
 	setMap(editorWindow->getDefaultMap());
-		gameWindow = new GameWindow(this);
+	gameWindow = new GameWindow(this);
+
 		SnakeMovesBeforeTailCellDeath = 0;
 		CurrentMove = 0;
 		ItemSpawnCoef = 0.5;
@@ -72,6 +73,7 @@ void Game::createMap()
  */
 void Game::setMap(Map *map)
 {
+	snakesAIs.clear();
 		this->map = map;
 	const QVector<Snake*> &snakes = map->getSnakes();
 	for (int i = 0; i < snakes.size(); ++i)
@@ -261,27 +263,6 @@ QVector<Object *> Game::getAllObjectTypes()
 	return objects;
 }
 
-AI* Game::getAIBySnakeName(QString name)
-{
-		QMapIterator<Snake*, AI*> i(snakesAIs);
-		while (i.hasNext())
-		{
-				i.next();
-				if (i.key()->getName() == name)
-						return i.value();
-		}
-		return NULL;
-}
-
-AI* Game::getAIByAIName(QString name)
-{
-		QVector<AI*> ListOfAI = getAIList();
-		for (int i = 0; i < ListOfAI.size(); i++)
-				if (ListOfAI[i]->getName() == name)
-						return ListOfAI[i];
-		return NULL;
-}
-
 Map* Game::getMap()
 {
 		return map;
@@ -305,6 +286,11 @@ float Game::getSnakeMovesPerSecond()
 int Game::getSnakeMovesBeforeTailCellDeath()
 {
 	return this->SnakeMovesBeforeTailCellDeath;
+}
+
+int Game::getDefaultAiIndex() const
+{
+	return 0;
 }
 
 /**

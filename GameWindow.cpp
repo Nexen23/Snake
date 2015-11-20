@@ -1,53 +1,41 @@
 #include "GameWindow.h"
 #include "MapGrid.h"
+#include "SnakeListWidgetItem.h"
 #include "ui_GameWindow.h"
 
 GameWindow::GameWindow(Game *game, QWidget *parent) :
 		QMainWindow(parent),
 		ui(new Ui::GameWindow)
 {
-		ui->setupUi(this);
-		this->game = game;
+	ui->setupUi(this);
+
+	this->game = game;
+
+	currentMapName = "";
+	setMap(game->getMap());
+
+	//Привязка параметров
+	connect(ui->object_index,SIGNAL(valueChanged(double)),this->game, SLOT(setItemSpawnCoef(double)));
+	connect(ui->eat_index,SIGNAL(valueChanged(double)),this->game, SLOT(setFoodSpawnCoef(double)));
+	connect(ui->snake_speed,SIGNAL(valueChanged(double)),this->game, SLOT(setSnakeMovesPerSecond(double)));
+	connect(ui->death_speed,SIGNAL(valueChanged(double)),this->game, SLOT(setSnakeMovesBeforeTailCellDeath(double)));
+
+	connect(game, SIGNAL(mapChanged(Map*)), this, SLOT(onMapChanged(Map*)));
+
+
 		ui->stop_button->setDisabled(true);
 		ui->reset_button->setDisabled(true);
-
-				this->map = game->getMap();
 
         QMenu *File = new QMenu("Load Map");
 
         ui->menuBar->addMenu(File);
 
-        //Пустая карта
-//        mapView = new MapWidget(map->getSizeX(), map->getSizeY(), SCENARIO_GAME);
-//        ui->mapField->addWidget(mapView);
-//        mapView->show();
-//        mapView->showMap(this->map);
-
-				mapGrid = new MapGrid(map);
-				ui->mapField->addLayout(mapGrid);
-
-
-        ui->select_snake->clear();
-				for (int i = 0; i < map->getSnakes().size(); i++)
-        {
-						ui->select_snake->addItem(map->getSnakes()[i]->getName());
-        }
 
         ui->menuBar->setVisible(false);
-        //Привязка меню
-        connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
-        connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
 
-
-        //Привязка для ИИ и змеек
-        connect(ui->select_snake,SIGNAL(currentTextChanged(QString)),this, SLOT(onMainSnakeSelected())); //Для змеек выводим их ИИ
-        connect(ui->snake_intelligence,SIGNAL(currentTextChanged(QString)),this,SLOT(onBindAIToSnake())); //Привязка при смене АИ к змее
-
-        //Привязка параметров
-        connect(ui->object_index,SIGNAL(valueChanged(double)),this->game, SLOT(setItemSpawnCoef(double)));
-        connect(ui->eat_index,SIGNAL(valueChanged(double)),this->game, SLOT(setFoodSpawnCoef(double)));
-        connect(ui->snake_speed,SIGNAL(valueChanged(double)),this->game, SLOT(setSnakeMovesPerSecond(double)));
-        connect(ui->death_speed,SIGNAL(valueChanged(double)),this->game, SLOT(setSnakeMovesBeforeTailCellDeath(double)));
+				//Привязка меню
+				connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
+				connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
 }
 
 GameWindow::~GameWindow()
@@ -59,6 +47,7 @@ QString GameWindow::getMapName() const
 {
 	return currentMapName;
 }
+
 
 void GameWindow::onOpenMapChoserDialog()
 {
@@ -124,9 +113,48 @@ void GameWindow::on_map_button_clicked()
 	this->game->createMap();//TODO DELETE this row
 }
 
+void GameWindow::setMap(Map *map)
+{
+	if (mapGrid == NULL)
+	{
+		mapGrid = new MapGrid(map);
+		ui->mapField->addLayout(mapGrid);
+		this->map = map;
+	}
+
+	if (map != this->map)
+	{
+		mapGrid->setMap(map);
+		this->map = map;
+	}
+
+	int defaultAiIndex = game->getDefaultAiIndex();
+	QVector<AI*> &ais = game->getAIList();
+
+	disconnect(ui->select_snake,SIGNAL(currentIndexChanged(int)),this, SLOT(onMainSnakeSelected(int))); //Для змеек выводим их ИИ
+	disconnect(ui->snake_intelligence,SIGNAL(currentIndexChanged(int)),this,SLOT(onBindAIToSnake(int))); //Привязка при смене АИ к змее
+
+	snakesAiIndecies.clear();
+	ui->select_snake->clear();
+	for (int i = 0; i < map->getSnakes().size(); i++)
+	{
+		Snake *snake = map->getSnakes()[i];
+			ui->select_snake->addItem(
+						SnakeListWidgetItem::CreateIcon(snake), snake->getName());
+			snakesAiIndecies[snake] = defaultAiIndex;
+			game->setSnakeAI(snake, ais[0]);
+	}
+
+	connect(ui->select_snake,SIGNAL(currentIndexChanged(int)),this, SLOT(onMainSnakeSelected(int))); //Для змеек выводим их ИИ
+	connect(ui->snake_intelligence,SIGNAL(currentIndexChanged(int)),this,SLOT(onBindAIToSnake(int))); //Привязка при смене АИ к змее
+
+	ui->select_snake->setCurrentIndex(0);
+	emit ui->select_snake->currentIndexChanged(0);
+}
+
 void GameWindow::onMapChanged(Map *map)
 {
-	mapGrid->setMap(map);
+	setMap(map);
 }
 
 void GameWindow::handleResults(const QString &)
@@ -134,38 +162,32 @@ void GameWindow::handleResults(const QString &)
 
 }
 
-void GameWindow::onMainSnakeSelected()
+void GameWindow::onMainSnakeSelected(int index)
 {
-    disconnect(ui->snake_intelligence,SIGNAL(currentTextChanged(QString)),this,SLOT(onBindAIToSnake()));
-    QString name = ui->select_snake->currentText();
-    ui->snake_intelligence->clear();
-    QVector<AI*> listAI = game->getAIList();
-    for (int i = 0; i < listAI.size(); i++)
-    {
-        ui->snake_intelligence->addItem(listAI[i]->getName());
-    }
-    AI* snakeAI = game->getAIBySnakeName(name);
-    //qDebug() << "CHECK_LIST SET";
-    if (snakeAI!=NULL)
-    {
-        ui->snake_intelligence->setCurrentText(snakeAI->getName());
-        //qDebug() << "CHECK_LIST GET " << snakeAI->getName();
-    }
-    connect(ui->snake_intelligence,SIGNAL(currentTextChanged(QString)),this,SLOT(onBindAIToSnake()));
+	if (index != -1)
+	{
+		if (ui->snake_intelligence->count() == 0)
+		{
+			ui->snake_intelligence->clear();
+			for (int i = 0; i < game->getAIList().size(); i++)
+			{
+				QString aiName = game->getAIList()[i]->getName();
+					ui->snake_intelligence->addItem(aiName);
+			}
+		}
+
+		Snake *snake = map->getSnakes()[index];
+		ui->snake_intelligence->setCurrentIndex(snakesAiIndecies[snake]);
+		emit ui->snake_intelligence->currentIndexChanged(snakesAiIndecies[snake]);
+	}
 }
 
-void GameWindow::onBindAIToSnake()
+void GameWindow::onBindAIToSnake(int index)
 {
-    QString snakeName = ui->select_snake->currentText();
-    QString aiName = ui->snake_intelligence->currentText();
-    Snake *snake = getSnakeBySnakeName(snakeName);
-    AI *snakeAI = game->getAIByAIName(aiName);
-    //qDebug() << snakeName << " " << aiName;
-    if (snakeAI != NULL && snake != NULL)
-    {
-        //qDebug() << "BOUND_HISTORY GET s:" << snake->getName() << " TO " << snakeAI->getName();
-        game->setSnakeAI(snake,snakeAI);
-    }
+	int snakeIndex = ui->select_snake->currentIndex();
+	Snake *snake = map->getSnakes()[snakeIndex];
+	snakesAiIndecies[snake] = index;
+	game->setSnakeAI(snake, game->getAIList()[index]);
 }
 
 

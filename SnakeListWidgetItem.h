@@ -8,13 +8,15 @@ class Snake;
 
 class SnakeListWidgetItem : public QListWidgetItem
 {
-	const int ICON_SIZE = 50;
+	static const int ICON_SIZE = 50;
 
 	Snake *snake;
 
 public:
 	SnakeListWidgetItem(Snake *snake);
 	~SnakeListWidgetItem();
+
+	static QIcon CreateIcon(Snake *snake);
 };
 
 #endif // SNAKELISTWIDGETITEM_H

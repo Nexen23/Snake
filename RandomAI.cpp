@@ -50,7 +50,7 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
                 kof[LEFT]=2;
                 kof[RIGHT]=-2;
             }
-            */
+						*/
 
    //учет стен, дырок, остального хвоста
     if((head.x()-1)<0)

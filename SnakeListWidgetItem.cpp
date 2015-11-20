@@ -5,14 +5,19 @@ SnakeListWidgetItem::SnakeListWidgetItem(Snake *snake)
 {
 	this->snake = snake;
 
-	QPixmap pixmap(ICON_SIZE, ICON_SIZE);
-	pixmap.fill(snake->color);
-	setIcon(pixmap);
+	setIcon(CreateIcon(snake));
 	setText(snake->getName());
 }
 
 SnakeListWidgetItem::~SnakeListWidgetItem()
 {
 
+}
+
+QIcon SnakeListWidgetItem::CreateIcon(Snake *snake)
+{
+	QPixmap pixmap(ICON_SIZE, ICON_SIZE);
+	pixmap.fill(snake->color);
+	return pixmap;
 }
 

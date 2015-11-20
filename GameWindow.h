@@ -35,11 +35,13 @@ public:
 private:
 	Ui::GameWindow *ui;
 
-	MapGrid *mapGrid;
-	Map *map;
+	QMap<Snake*, int> snakesAiIndecies;
+	MapGrid *mapGrid = NULL;
+	Map *map = NULL;
 	Game *game;
     QString currentMapName;
 
+		void setMap(Map *map);
 
 signals:
 
@@ -56,8 +58,8 @@ public slots:
     //void onResetClicked();
 
     void onOpenMapChoserDialog();
-    void onMainSnakeSelected();
-    void onBindAIToSnake();
+		void onMainSnakeSelected(int index);
+		void onBindAIToSnake(int index);
     //void onOpenSnakeAIChoserDialog();
 		Snake* getSnakeBySnakeName(QString name);
 };
