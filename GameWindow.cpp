@@ -23,24 +23,24 @@ GameWindow::GameWindow(Game *game, QWidget *parent) :
 	connect(game, SIGNAL(mapChanged(Map*)), this, SLOT(onMapChanged(Map*)));
 
 
-		ui->stop_button->setDisabled(true);
-		ui->reset_button->setDisabled(true);
+	ui->stop_button->setDisabled(true);
+	ui->reset_button->setDisabled(true);
 
-        QMenu *File = new QMenu("Load Map");
+	QMenu *File = new QMenu("Load Map");
 
-        ui->menuBar->addMenu(File);
+	ui->menuBar->addMenu(File);
 
 
-        ui->menuBar->setVisible(false);
+	ui->menuBar->setVisible(false);
 
-				//Привязка меню
-				connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
-				connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
+	//Привязка меню
+	connect(File,SIGNAL(aboutToShow()), this, SLOT(onOpenMapChoserDialog()));
+	connect(ui->actionLoad_Map,SIGNAL(triggered(bool)), this, SLOT(onOpenMapChoserDialog()));
 
-    ui->select_snake->setVisible(false);
-    ui->snake_intelligence->setVisible(false);
-    ui->label->setVisible(false);
-    ui->label_6->setVisible(false);
+	ui->select_snake->setVisible(false);
+	ui->snake_intelligence->setVisible(false);
+	ui->label->setVisible(false);
+	ui->label_6->setVisible(false);
 }
 
 GameWindow::~GameWindow()
@@ -102,18 +102,18 @@ void GameWindow::on_stop_button_clicked()
 
 void GameWindow::on_reset_button_clicked()
 {
-        game->reset();
-        ui->stop_button->setDisabled(true);
-		ui->reset_button->setDisabled(true);
-        ui->start_button->setEnabled(true);
-        ui->map_button->setEnabled(true);
-        ui->death_speed->setEnabled(true);
-        ui->eat_index->setEnabled(true);
-        ui->object_index->setEnabled(true);
-        ui->snake_speed->setEnabled(true);
-        ui->select_snake->setEnabled(true);
-        ui->tableWidget->setEnabled(true);
-        ui->snake_intelligence->setEnabled(true);
+	game->reset();
+	ui->stop_button->setDisabled(true);
+	ui->reset_button->setDisabled(true);
+	ui->start_button->setEnabled(true);
+	ui->map_button->setEnabled(true);
+	ui->death_speed->setEnabled(true);
+	ui->eat_index->setEnabled(true);
+	ui->object_index->setEnabled(true);
+	ui->snake_speed->setEnabled(true);
+	ui->select_snake->setEnabled(true);
+	ui->tableWidget->setEnabled(true);
+	ui->snake_intelligence->setEnabled(true);
 
 }
 
@@ -159,10 +159,9 @@ void GameWindow::setMap(Map *map)
 
 	ui->select_snake->setCurrentIndex(0);
 	emit ui->select_snake->currentIndexChanged(0);
-    refreshSelectedSnakeAIGrid();
 
-    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
-
+	refreshSelectedSnakeAIGrid();
+	ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
 void GameWindow::onMapChanged(Map *map)
@@ -228,9 +227,9 @@ void GameWindow::refreshSelectedSnakeAIGrid()
                                      ));
         QComboBox *combo;
         combo = new QComboBox();
-        for (int i = 0; i < game->getAIList().size(); i++)
+				for (int j = 0; j < game->getAIList().size(); j++)
         {
-            QString aiName = game->getAIList()[i]->getName();
+						QString aiName = game->getAIList()[j]->getName();
                 combo->addItem(aiName);
             connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectDropItem()));
         }

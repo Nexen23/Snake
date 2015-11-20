@@ -374,7 +374,10 @@ Map *Game::loadMapFromFile(QString mapName)
 										snake->position.setX(in.readLine(maxLen).toInt());
 										snake->position.setY(in.readLine(maxLen).toInt());
 										snake->isDead = in.readLine(maxLen).toInt();
-                                        m->setCellAt(i, j, snake);
+
+										// Нельзя так сохранять змейку тут!
+										//m->setCellAt(i, j, snake);
+										// Ничего не делаем. Сохраним позже
 										break;
 								default:
                                         in.readLine(maxLen);
