@@ -1,4 +1,4 @@
-#include "GameWindow.h"
+﻿#include "GameWindow.h"
 #include "MapGrid.h"
 #include "SnakeListWidgetItem.h"
 #include "ui_GameWindow.h"
@@ -75,6 +75,7 @@ void GameWindow::on_start_button_clicked()
 		ui->snake_speed->setDisabled(true);
 		ui->select_snake->setDisabled(true);
 		ui->snake_intelligence->setDisabled(true);
+        ui->tableWidget->setDisabled(true);
 		game->start();
 }
 
@@ -89,6 +90,7 @@ void GameWindow::on_stop_button_clicked()
 		ui->object_index->setEnabled(true);
         ui->snake_speed->setEnabled(true);
 		ui->select_snake->setEnabled(true);
+        ui->tableWidget->setEnabled(true);
         ui->snake_intelligence->setEnabled(true);
         game->stop();
 }
@@ -105,6 +107,7 @@ void GameWindow::on_reset_button_clicked()
         ui->object_index->setEnabled(true);
         ui->snake_speed->setEnabled(true);
         ui->select_snake->setEnabled(true);
+        ui->tableWidget->setEnabled(true);
 				ui->snake_intelligence->setEnabled(true);
 }
 
@@ -150,6 +153,8 @@ void GameWindow::setMap(Map *map)
 
 	ui->select_snake->setCurrentIndex(0);
 	emit ui->select_snake->currentIndexChanged(0);
+    refreshSelectedSnakeAIGrid();
+
 }
 
 void GameWindow::onMapChanged(Map *map)
@@ -168,7 +173,7 @@ void GameWindow::onMainSnakeSelected(int index)
 	{
 		if (ui->snake_intelligence->count() == 0)
 		{
-			ui->snake_intelligence->clear();
+            ui->snake_intelligence->clear();
 			for (int i = 0; i < game->getAIList().size(); i++)
 			{
 				QString aiName = game->getAIList()[i]->getName();
@@ -180,6 +185,7 @@ void GameWindow::onMainSnakeSelected(int index)
 		ui->snake_intelligence->setCurrentIndex(snakesAiIndecies[snake]);
 		emit ui->snake_intelligence->currentIndexChanged(snakesAiIndecies[snake]);
 	}
+    refreshSelectedSnakeAIGrid();
 }
 
 void GameWindow::onBindAIToSnake(int index)
@@ -187,7 +193,7 @@ void GameWindow::onBindAIToSnake(int index)
 	int snakeIndex = ui->select_snake->currentIndex();
 	Snake *snake = map->getSnakes()[snakeIndex];
 	snakesAiIndecies[snake] = index;
-	game->setSnakeAI(snake, game->getAIList()[index]);
+    game->setSnakeAI(snake, game->getAIList()[index]);
 }
 
 
@@ -199,5 +205,55 @@ Snake* GameWindow::getSnakeBySnakeName(QString name)
 				if (map->getSnakes()[i]->getName() == name)
 						return map->getSnakes()[i];
     }
-    return NULL;
+        return NULL;
+}
+
+void GameWindow::refreshSelectedSnakeAIGrid()
+{
+    ui->tableWidget->setRowCount(map->getSnakes().count());
+    ui->tableWidget->setColumnWidth(1, ui->tableWidget->width()/2);
+
+    for(int i=0; i<ui->tableWidget->rowCount(); i++) {
+        ui->tableWidget->setItem(i,0,
+                        new QTableWidgetItem(
+                                     SnakeListWidgetItem::CreateIcon(map->getSnakes()[i]),
+                                     map->getSnakes()[i]->name
+                                     ));
+        QComboBox *combo;
+        combo = new QComboBox();
+        for (int i = 0; i < game->getAIList().size(); i++)
+        {
+            QString aiName = game->getAIList()[i]->getName();
+                combo->addItem(aiName);
+            connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectDropItem()));
+        }
+
+        ui->tableWidget->setCellWidget(i,1,combo);
+    }
+
+    ui->tableWidget->resizeColumnsToContents();
+}
+
+
+void GameWindow::selectDropItem()
+{
+    for(int i=0; i<map->getSnakes().count(); i++) {
+        int row = i;
+        if(row>=0 && row<map->getSnakes().count())
+        {
+            int snakeIndex = row;
+            Snake *snake = map->getSnakes()[snakeIndex];
+
+            QComboBox *combo = (QComboBox*)ui->tableWidget->cellWidget(row, 1);
+            if(combo == NULL) {
+                qDebug() << "bad combo";
+                return;
+            } else {
+                qDebug() << snake->name << combo->currentText();
+            }
+            int index = combo->currentIndex();
+            snakesAiIndecies[snake] = index;
+            game->setSnakeAI(snake, game->getAIList()[index]);
+        }
+    }
 }

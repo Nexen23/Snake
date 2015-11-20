@@ -62,6 +62,8 @@ public slots:
 		void onBindAIToSnake(int index);
     //void onOpenSnakeAIChoserDialog();
 		Snake* getSnakeBySnakeName(QString name);
+    void refreshSelectedSnakeAIGrid();
+    void selectDropItem();
 };
 
 #endif // GAMEWINDOW_H
