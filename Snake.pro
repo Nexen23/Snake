@@ -33,7 +33,8 @@ SOURCES += \
     OpenMapDialog.cpp \
     MapGrid.cpp \
     MapGridCell.cpp \
-    SnakeListWidgetItem.cpp
+    SnakeListWidgetItem.cpp \
+    ImmobilizedAI.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -56,7 +57,8 @@ HEADERS  += \
     OpenMapDialog.h \
     MapGrid.h \
     MapGridCelll.h \
-    SnakeListWidgetItem.h
+    SnakeListWidgetItem.h \
+    ImmobilizedAI.h
 
 FORMS    += \
     GameWindow.ui \

@@ -5,6 +5,7 @@
 #include "RandomAI.h"
 #include "SimpleAI.h"
 #include "BombItem.h"
+#include "ImmobilizedAI.h"
 
 /**
  * @author MGerasimchuk
@@ -243,6 +244,7 @@ QVector<AI*> Game::getAIList()
 
 		list.push_back(new RandomAI());
 		list.push_back(new SimpleAI());
+		list.push_back(new ImmobilizedAI());
 
 		return list;
 }
@@ -606,6 +608,10 @@ void Game::loop()
 		QMapIterator<Snake*, AI*> i(snakesAIs);
 		QMap <Snake*, QPoint> oldHead;
 		//qDebug() << "CHECK LOOP";
+
+		//ImmobilizedAI не ходит
+		QSet<Snake*> notMovingSnakes;
+
 		while (i.hasNext())
 		{
 				i.next();
@@ -626,6 +632,10 @@ void Game::loop()
 										break;
 								case DOWN: //DOWN
 										i.key()->position += QPoint(0,1);
+										break;
+								case STAND:
+										notMovingSnakes.insert(i.key());
+										break;
 						}
 				}
 				//Если змейка ушла за карту, позицию головы возвращаем назад, а змейку убиваем
@@ -829,7 +839,7 @@ void Game::loop()
 		while (i.hasNext())
 		{
 				i.next();
-				if (i.key()->isDead == false && i.key()->snakeInTheHole == false)
+				if (isSnakeDead(i.key()) && notMovingSnakes.find(i.key()) == notMovingSnakes.end())
 				{
 						if (i.key()->tail.size() > 0) //Если у змейки есть хвост
 						{

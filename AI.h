@@ -4,7 +4,8 @@
 #include "Entity.h"
 #include "Map.h"
 
-enum MoveDirection { LEFT, RIGHT, UP, DOWN };
+enum MoveDirection { LEFT, RIGHT, UP, DOWN,
+										 STAND /*extra move, used by ImmobilizedAI*/ };
 
 class AI
 {

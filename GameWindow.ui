@@ -64,7 +64,7 @@
       <item row="8" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Death speed</string>
+         <string>Dying off speed (moves before it)</string>
         </property>
        </widget>
       </item>
@@ -113,7 +113,7 @@
       <item row="5" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Objects index</string>
+         <string>Items spawn rate (multiplier)</string>
         </property>
        </widget>
       </item>
@@ -156,7 +156,7 @@
       <item row="7" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Snake speed</string>
+         <string>Game speed (moves per second)</string>
         </property>
        </widget>
       </item>
@@ -201,7 +201,7 @@
       <item row="6" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Eat index</string>
+         <string>Food spawn rate (multiplier)</string>
         </property>
        </widget>
       </item>
@@ -264,7 +264,7 @@
      <x>0</x>
      <y>0</y>
      <width>762</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
