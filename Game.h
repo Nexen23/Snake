@@ -72,6 +72,9 @@ public:
 
 		int getDefaultAiIndex() const;
 
+private:
+		bool isSnakeDead(Snake *snake);
+
 signals:
 	void mapChanged(Map *map);
 
