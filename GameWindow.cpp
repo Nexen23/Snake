@@ -138,7 +138,7 @@ void GameWindow::setMap(Map *map)
 	}
 
 	int defaultAiIndex = game->getDefaultAiIndex();
-	QVector<AI*> &ais = game->getAIList();
+	const QVector<AI*> &ais = game->getAIList();
 
 	disconnect(ui->select_snake,SIGNAL(currentIndexChanged(int)),this, SLOT(onMainSnakeSelected(int))); //Для змеек выводим их ИИ
 	disconnect(ui->snake_intelligence,SIGNAL(currentIndexChanged(int)),this,SLOT(onBindAIToSnake(int))); //Привязка при смене АИ к змее

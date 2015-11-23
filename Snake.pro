@@ -34,7 +34,8 @@ SOURCES += \
     MapGrid.cpp \
     MapGridCell.cpp \
     SnakeListWidgetItem.cpp \
-    ImmobilizedAI.cpp
+    ImmobilizedAI.cpp \
+    UserControlledAI.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -58,7 +59,8 @@ HEADERS  += \
     MapGrid.h \
     MapGridCelll.h \
     SnakeListWidgetItem.h \
-    ImmobilizedAI.h
+    ImmobilizedAI.h \
+    UserControlledAI.h
 
 FORMS    += \
     GameWindow.ui \

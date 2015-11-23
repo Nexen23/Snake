@@ -6,6 +6,7 @@
 #include "SimpleAI.h"
 #include "BombItem.h"
 #include "ImmobilizedAI.h"
+#include "UserControlledAI.h"
 
 /**
  * @author MGerasimchuk
@@ -238,13 +239,16 @@ QVector<QString> Game::getMapList()
  * @author MGerasimchuk
  * 25.10
  */
-QVector<AI*> Game::getAIList()
+const QVector<AI *> &Game::getAIList()
 {
-		QVector<AI*> list;
-
-		list.push_back(new RandomAI());
-		list.push_back(new SimpleAI());
-		list.push_back(new ImmobilizedAI());
+		static QVector<AI*> list;
+		if (list.size() == 0)
+		{
+			list.push_back(new RandomAI());
+			list.push_back(new SimpleAI());
+			list.push_back(new UserControlledAI());
+			list.push_back(new ImmobilizedAI());
+		}
 
 		return list;
 }

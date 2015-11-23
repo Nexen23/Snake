@@ -59,7 +59,7 @@ public:
     Map* loadMapFromFile(QString mapName);
     void saveMapToFile(Map *map, QString mapName);
     QVector<QString> getMapList();
-    QVector<AI*> getAIList();
+		const QVector<AI*>& getAIList();
 
 		QVector<Item*> getAllItemTypes();
 		QVector<Object*> getAllObjectTypes();
