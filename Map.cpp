@@ -290,13 +290,17 @@ void Map::clearCellAt(int x, int y)
 
 void Map::clearCellsBySnake(Snake *snake)
 {
-	clearCellAt(snake->position);
-	for (int i = 0; i < snake->tail.size(); ++i)
+
+//	for (int i = 0; i < snake->tail.size(); ++i)
+//	{
+//		QPoint &tailCell = snake->tail[i];
+//		clearCellAt(tailCell);
+//	}
+	if (snake->tail.size() > 0)
 	{
-		QPoint &tailCell = snake->tail[i];
-		clearCellAt(tailCell);
+		cutSnakeTailFrom(snake->tail.first());
 	}
-	removeEntityFromVectors(snake);
+	clearCellAt(snake->position);
 }
 
 void Map::addEntityToVectors(Entity *entity)
