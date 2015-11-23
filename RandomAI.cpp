@@ -24,7 +24,7 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     int kof[4] = {1,1,1,1};
     QPoint head = controllerSnake->position;
 
-    /*QPoint second = controllerSnake->tail.first();
+    QPoint second = controllerSnake->tail.first();
 
     if(controllerSnake->tail.size()==NULL)
 	second=head;
@@ -33,53 +33,53 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
 
 
     //учет положения первого за головой хвоста
-/*    if(buf.x()!=buf.y())
+    if(buf.x()!=buf.y())
         if(buf.x()==0)
-            if(buf.y()>0){
-                kof[DOWN]=-2;
-                kof[UP]=2;
+            if(buf.y()<0){
+                kof[DOWN]-=4;
+                kof[UP]+=1;
             }   else    {
-                kof[UP]=-2;
-                kof[DOWN]=2;
+                kof[UP]-=4;
+                kof[DOWN]+=1;
             }
         else
             if(buf.x()>0){
-                kof[RIGHT]=2;
-                kof[LEFT]=-2;
+                kof[RIGHT]+=1;
+                kof[LEFT]-=4;
             }   else    {
-                kof[LEFT]=2;
-                kof[RIGHT]=-2;
+                kof[LEFT]+=1;
+                kof[RIGHT]-=4;
             }
-						*/
+
 
    //учет стен, дырок, остального хвоста
     if((head.x()-1)<0)
-        kof[LEFT]=-1;
+        kof[LEFT]-=2;
     else
         if(map->getField()[head.x()-1][head.y()]!=NULL)
-            if((map->getField()[head.x()-1][head.y()]->getId()>=OBJECT_FIRST && map->getField()[head.x()-1][head.y()]->getId()<=SNAKE_NPC))
-                kof[LEFT]=-1;
+            if(map->getField()[head.x()-1][head.y()]->getType()==OBJECT || map->getField()[head.x()-1][head.y()]->getType()==SNAKE)
+                kof[LEFT]-=2;
 
     if((head.x()+1)>=map->getSizeX())
-        kof[RIGHT]=-1;
+        kof[RIGHT]-=2;
     else
         if(map->getField()[head.x()+1][head.y()]!=NULL)
-            if((map->getField()[head.x()+1][head.y()]->getId()>=OBJECT_FIRST && map->getField()[head.x()+1][head.y()]->getId()<=SNAKE_NPC))
-                kof[RIGHT]=-1;
+            if(map->getField()[head.x()+1][head.y()]->getType()==OBJECT || map->getField()[head.x()+1][head.y()]->getType()==SNAKE)
+                kof[RIGHT]-=2;
 
     if((head.y()+1) >= map->getSizeY())
-        kof[UP]=-1;
+        kof[DOWN]-=2;
     else
         if(map->getField()[head.x()][head.y()+1]!=NULL)
-            if((map->getField()[head.x()][head.y()+1]->getId()>=OBJECT_FIRST && map->getField()[head.x()][head.y()+1]->getId()<=SNAKE_NPC))
-                kof[UP]=-1;
+            if(map->getField()[head.x()][head.y()+1]->getType()==OBJECT || map->getField()[head.x()][head.y()+1]->getType()==SNAKE)
+                kof[DOWN]-=2;
 
     if((head.y()-1) <0)
-        kof[DOWN]=-1;
+        kof[UP]-=2;
     else
         if(map->getField()[head.x()][head.y()-1]!=NULL)
-            if((map->getField()[head.x()][head.y()-1]->getId()>=OBJECT_FIRST && map->getField()[head.x()][head.y()-1]->getId()<=SNAKE_NPC))
-            kof[DOWN]=-1;
+            if(map->getField()[head.x()][head.y()-1]->getType()==OBJECT || map->getField()[head.x()][head.y()-1]->getType()==SNAKE)
+            kof[UP]-=2;
 
 
     int ForRand=0, Rand;
@@ -90,7 +90,7 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     if(ForRand==0) //выхода нет :)
     {
         Rand=rand()%4;
-        if(kof[Rand]==-2)
+        if(kof[Rand]==-5)
             return (MoveDirection)((Rand+1)%4);
         else return (MoveDirection)Rand;
     }
