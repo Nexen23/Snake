@@ -796,10 +796,6 @@ void Game::loop()
                                 collideSnake->collide(i.key(), map);
                             }
                         }
-                        else if (collideSnake->tail.size() != 0) //Если это не одна лишь голова голова
-                        {
-                            collideSnake->collide(i.key(), map); //Убиваем змею mustDie
-                        }
                     }
                 }
             }
