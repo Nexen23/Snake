@@ -122,6 +122,11 @@ void GameWindow::on_map_button_clicked()
 	this->game->createMap();//TODO DELETE this row
 }
 
+void GameWindow::setWinner(QVector<Snake*> snakes)
+{
+
+}
+
 void GameWindow::setMap(Map *map)
 {
 	if (mapGrid == NULL)

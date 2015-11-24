@@ -52,9 +52,14 @@ const QPixmap FoodItem::getImage() const
 
 void FoodItem::collide(Snake *snake, Map *map)
 {
-	Q_UNUSED(map);
-    QPoint cell = snake->tail.last();
-    snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
+    Q_UNUSED(map);
+    if (!snake->tail.isEmpty())
+    {
+        QPoint cell = snake->tail.last();
+        snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
+    }
+    else
+        snake->tail.insert(0,snake->position); //Вставляем хвост на место головы
 }
 
 float FoodItem::getSpawnChance() const
