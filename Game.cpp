@@ -772,21 +772,24 @@ void Game::loop()
                     {
                         //Находим змею в списке
                         Snake *collideSnake = (Snake*)map->getEntityAt(x,y);
-                        if (collideSnake->tail.last() == newHead[i.key()]) //Если удар в хвост
+                        if (collideSnake->tail.size() > 0)
                         {
-                            //Коллайд сработает только если была съедена еда и хвост остался на месте
-                            //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
-                            if (!collideSnake->tail.isEmpty())
+                            if (collideSnake->tail.last() == newHead[i.key()]) //Если удар в хвост
                             {
-                                if (collideSnake->position == collideSnake->tail.last()) //Змейка без хвоста съела фрукт
+                                //Коллайд сработает только если была съедена еда и хвост остался на месте
+                                //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
+                                if (!collideSnake->tail.isEmpty())
                                 {
-                                    collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                    if (collideSnake->position == collideSnake->tail.last()) //Змейка без хвоста съела фрукт
+                                    {
+                                        collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                    }
+                                    else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+                                    {
+                                        collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                    }
+                                    //Иначе не трогаем её
                                 }
-                                else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
-                                {
-                                    collideSnake->collide(i.key(), map); //Убиваем змею mustDie
-                                }
-                                //Иначе не трогаем её
                             }
                         }
                         else if (collideSnake->tail.size() != 0) //Если это не одна лишь голова голова
