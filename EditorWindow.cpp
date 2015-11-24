@@ -342,8 +342,19 @@ void EditorWindow::onMouseRmbClicked(QPoint coords)
 		}
 		else
 		{
-			bool cuttedAtLeast1, wasFullyRemoved;
-			map->cutSnakeFrom(coords, cuttedAtLeast1, wasFullyRemoved);
+			if (map->getSnakes().size() <= 2)
+			{
+				Snake *snake = (Snake*)entity;
+				if (snake->tail.size() > 0)
+				{
+					map->cutSnakeTailFrom(snake->tail.first());
+				}
+			}
+			else
+			{
+				bool cuttedAtLeast1, wasFullyRemoved;
+				map->cutSnakeFrom(coords, cuttedAtLeast1, wasFullyRemoved);
+			}
 		}
 	}
 }

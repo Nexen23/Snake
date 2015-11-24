@@ -226,18 +226,8 @@ void Map::cutSnakeFrom(QPoint coords, bool &cuttedAtLeast1, bool &wasFullyRemove
 
 		if (snake->position == coords)
 		{
-			if (getSnakes().size() <= 2)
-			{
-				if (snake->tail.size() > 0)
-				{
-					cutSnakeTailFrom(snake->tail.first());
-				}
-			}
-			else
-			{
 				wasFullyRemoved = true;
 				clearCellsBySnake(snake);
-			}
 		}
 		else
 		{
