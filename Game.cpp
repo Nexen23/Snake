@@ -610,305 +610,308 @@ void Game::loop()
 		/////////////////////
 		//Головы змеек ходят.
 		QMapIterator<Snake*, AI*> i(snakesAIs);
-		QMap <Snake*, QPoint> oldHead;
+        QMap <Snake*, QPoint> newHead;
 		//qDebug() << "CHECK LOOP";
 
 		//ImmobilizedAI не ходит
 		QSet<Snake*> notMovingSnakes;
-
+        int counter = snakesAIs.size()-1;
+        int deaths = 0;
 		while (i.hasNext())
 		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						oldHead[i.key()] = i.key()->position; //В старую позицию головы понадобится вставить новую ячейку
-						switch (i.value()->getNextMove(i.key(), map))
-						//switch (2)
-						{
-								case LEFT:  //LEFT
-										i.key()->position += QPoint(-1,0);
-										break;
-								case RIGHT:  //RIGHT
-										i.key()->position += QPoint(1,0);
-										break;
-								case UP:  //UP
-										i.key()->position += QPoint(0,-1);
-										break;
-								case DOWN: //DOWN
-										i.key()->position += QPoint(0,1);
-										break;
-								case STAND:
-										notMovingSnakes.insert(i.key());
-										break;
-						}
-				}
-				//Если змейка ушла за карту, позицию головы возвращаем назад, а змейку убиваем
-				if (i.key()->position.x() >= map->getSizeX() || i.key()->position.x() < 0 ||
-						i.key()->position.y() >= map->getSizeY() || i.key()->position.y() < 0)
-				{
-						i.key()->mustDie = true;
-						i.key()->position.setX(oldHead[i.key()].x());
-						i.key()->position.setY(oldHead[i.key()].y());
-				}
+            i.next();
+            if (isSnakeDead(i.key()))
+            {
+                newHead[i.key()] = i.key()->position; //В новую позицию головы понадобится вставить новую ячейку
+                switch (i.value()->getNextMove(i.key(), map))
+                //switch (2)
+                {
+                case LEFT:  //LEFT
+                    newHead[i.key()] += QPoint(-1,0);
+                    break;
+                case RIGHT:  //RIGHT
+                    newHead[i.key()] += QPoint(1,0);
+                    break;
+                case UP:  //UP
+                    newHead[i.key()] += QPoint(0,-1);
+                    break;
+                case DOWN: //DOWN
+                    newHead[i.key()] += QPoint(0,1);
+                    break;
+                case STAND:
+                    notMovingSnakes.insert(i.key());
+                    break;
+                }
+            }
+            //Если змейка ушла за карту, позицию головы возвращаем назад, а змейку убиваем
+            if (newHead[i.key()] != i.key()->position)
+            {
+                if (newHead[i.key()].x() >= map->getSizeX() || newHead[i.key()].x() < 0 ||
+                        newHead[i.key()].y() >= map->getSizeY() || newHead[i.key()].y() < 0)
+                {
+                    i.key()->mustDie = true;
+                    newHead[i.key()] = i.key()->position; //После заявления о смерти, оставляем место для новой головы на старом месте
+                }
+            }
+            if (i.key()->isDead == true)
+            {
+                deaths++;
+            }
+            //if (i.key()->isDead == true && (Snake*)map->getEntityAt(i.key()->position.x(),i.key()->position.y()) == i.key() )
+            //{
+            //    bool cuted, dead;
+            //    map->cutSnakeFrom(i.key()->position,cuted,dead);
+            //}
 		}
-
+        if ( deaths >= counter )
+        {
+            QVector <Snake*> winnerSnakes;
+            for (int q = 0; q < map->getSnakes().size(); q++)
+            {
+                if (map->getSnakes()[q]->isDead == false)
+                {
+                    winnerSnakes.append(map->getSnakes()[q]);
+                }
+            }
+            gameWindow->setWinner(winnerSnakes);
+            gameWindow->on_stop_button_clicked();
+            return;
+        }
 		//Обрабатываем коллайды на еду
 		i.toFront();
-		int x = -1, y = -1; //x и y новые координаты головы проверяем на collide
+        int x = -1, y = -1; //x и y новые координаты новой головы проверяем на collide
 		while (i.hasNext())
-		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
-						{
-								if (map->getField()[x][y]->getId()==FOOD_ITEM) //Совпадают с координатами еды на карте
-								{
-										map->getField()[x][y]->collide(i.key(), map); //Добавляем змейке в хвост ячейку
-										//Меняем FoodItem на карте на Snake, а в списке объектов по координатам убираем FoodItem
-
-										map->setCellAt(x, y, i.key());
-//										bool FoodExists = true;
-//										int iter = 0;
-//										while (FoodExists)
-//										{
-//												//qDebug() << "X:" << map->getItems()[iter]->position.x() << " Y:" << map->getItems()[iter]->position.y();
-//												if (map->getItems()[iter]->position == i.key()->position)
-//												{
-//														//map->getItems().removeAt(iter);
-//														map->setCellAt(x, y, i.key());
-//														FoodExists = false;
-//												}
-//												iter++;
-//										}
-								}
-						}
-				}
+        {
+            i.next();
+            if (isSnakeDead(i.key()))
+            {
+                x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты старой головы змейки
+                if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
+                {
+                    if (map->getField()[x][y]->getId()==FOOD_ITEM) //Совпадают с координатами еды на карте
+                    {
+                        map->getField()[x][y]->collide(i.key(), map); //Добавляем змейке в хвост ячейку
+                        //Меняем FoodItem на карте на Snake, а в списке объектов по координатам убираем FoodItem
+                        map->clearCellAt(x,y);
+                    }
+                }
+            }
 		}
 		//Встречи со стенками
 		i.toFront();
 		x = -1, y = -1;
 		while (i.hasNext())
 		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
-						{
-								if (map->getField()[x][y]->getId()==WALL_OBJECT) //Совпадают с координатами стенки на карте
-								{
-										map->getField()[x][y]->collide(i.key(), map); //Убиваем змейку, на карте она еще остается, в неё могут врезаться
-										i.key()->position.setX(oldHead[i.key()].x());
-										i.key()->position.setY(oldHead[i.key()].y());
-								}
-						}
-				}
+            i.next();
+            if (isSnakeDead(i.key()))
+            {
+                x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты головы змейки
+                if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
+                {
+                    if (map->getField()[x][y]->getId()==WALL_OBJECT) //Совпадают с координатами стенки на карте
+                    {
+                        map->getField()[x][y]->collide(i.key(), map); //Убиваем змейку, на карте она еще остается, в неё могут врезаться
+                        newHead[i.key()] = i.key()->position;
+                    }
+                }
+            }
 		}
 		//Встречи с бомбами
 		i.toFront();
 		x = -1, y = -1;
 		while (i.hasNext())
 		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
-						{
-								if (map->getField()[x][y]->getId()==BOMB_ITEM) //Совпадают с координатами бомбы на карте
-								{
-										map->getField()[x][y]->collide(i.key(), map); //Детанируем бомбу и убираем её с карты
-								}
-						}
-				}
+            i.next();
+            x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты головы змейки
+            if (isSnakeDead(i.key()) && !map->isCellEmpty(newHead[i.key()]))
+            {
+                if (map->getField()[x][y]->getId()==BOMB_ITEM) //Совпадают с координатами бомбы на карте
+                {
+                    map->getField()[x][y]->collide(i.key(), map); //Детанируем бомбу и убираем её с карты
+                }
+            }
 		}
 		//Суицидальная пара-тройка-четверка змеек врезается друг в друга лбами
 		QMapIterator<Snake*, AI*> j(snakesAIs);
-		i.toFront();
-		x = -1, y = -1;
-		while (i.hasNext()) //Здесь обработаются все возможные пары змеек ( с повторами )
-		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						j.toFront();
-						while (j.hasNext())
-						{
-								j.next();
-								if (i.key()->position == j.key()->position && i.key()!=j.key()) //Сравниваем всех змеек с нашей
-								{
-										i.key()->collide(j.key(),map); //Обработка врезания змейки в другую змейку (mustDie)
-								}
-						}
-				}
-		}
+        i.toFront();
+        while (i.hasNext()) //Здесь обработаются все возможные пары змеек ( с повторами )
+        {
+            i.next();
+            if (isSnakeDead(i.key()))
+            {
+                j.toFront();
+                while (j.hasNext())
+                {
+                    j.next();
+                    if (isSnakeDead(j.key()))
+                    {
+                        if (newHead[i.key()] == newHead[j.key()] && i.key()!=j.key()) //Сравниваем всех змеек с нашей
+                        {
+                            i.key()->collide(j.key(),map); //Обработка врезания змейки в другую змейку (mustDie)
+                        }
+                    }
+                }
+            }
+        }
 
 		//BodySlam змеек и чужих голов, отличается от предыдущего тем, что змея, в которую врезались - не умирает.
 		i.toFront();
 		x = -1, y = -1;
 		while (i.hasNext())
-		{
-				i.next();
-				if (isSnakeDead(i.key()))
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
-						{
-								if (map->getField()[x][y]->getId()==SNAKE_NPC &&
-										map->getField()[x][y]->position != QPoint(x,y)) //Совпадают с координатами змейки на карте но это не наша голова
-								{
-										//Находим змею в списке
-										Snake *collideSnake = NULL;
-										for (int k = 0; k < map->getSnakes().size(); k++)
-										{
-												if (map->getSnakes()[k]->tail.size() > 0)
-												{
-														for (int j = 0; j < map->getSnakes()[k]->tail.size(); j++)
-														{
-																if (map->getSnakes()[k]->tail[j] == QPoint(x,y))
-																{
-																		collideSnake = map->getSnakes()[k];
-																		j = map->getSnakes()[k]->tail.size();
-																}
-														}
-														if (collideSnake != NULL)
-														{
-																k = map->getSnakes().size();
-														}
-												}
-										}
-										if (collideSnake->tail.last() == i.key()->position) //Если удар в хвост
-										{
-												//Коллайд сработает только если была съедена еда и хвост остался на месте
-												//Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
-
-												if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) )
-												{
-														collideSnake->collide(i.key(), map); //Убиваем змею mustDie
-												}
-										}
-										else //Удар произошёл в тело - убиваем без раздумий
-										{
-												map->getField()[x][y]->collide(i.key(), map); //Убиваем змею mustDie
-										}
-								}
-						}
-				}
-		}
+        {
+            i.next();
+            if (isSnakeDead(i.key()))
+            {
+                x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты головы змейки
+                if (!map->isCellEmpty(QPoint(x,y))) //Если есть объект в клетке - взаимодействуем с ним
+                {
+                    if (map->getField()[x][y]->getId()==SNAKE_NPC && newHead[i.key()] != i.key()->position) //Совпадают с координатами змейки на карте
+                    {
+                        //Находим змею в списке
+                        Snake *collideSnake = (Snake*)map->getEntityAt(x,y);
+                        if (collideSnake->tail.last() == newHead[i.key()]) //Если удар в хвост
+                        {
+                            //Коллайд сработает только если была съедена еда и хвост остался на месте
+                            //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
+                            if (!collideSnake->tail.isEmpty())
+                            {
+                                if (collideSnake->position == collideSnake->tail.last()) //Змейка без хвоста съела фрукт
+                                {
+                                    collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                }
+                                else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+                                {
+                                    collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                }
+                                //Иначе не трогаем её
+                            }
+                        }
+                        else //Удар произошёл в тело - убиваем без раздумий
+                        {
+                            collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                        }
+                    }
+                }
+            }
+        }
 		//Встречи с snakeHoles
 		i.toFront();
 		x = -1, y = -1;
-		while (i.hasNext())
-		{
-				i.next();
-				if (i.key()->isDead == false)
-				{
-						x = i.key()->position.x(), y = i.key()->position.y(); //Координаты головы змейки
-						if (map->getField()[x][y] != NULL) //Если есть объект в клетке - взаимодействуем с ним
-						{
-								if (map->getField()[x][y]->getId()==HOLE_OBJECT && i.key()->snakeInTheHole == false) //Совпадают с координатами дырки на карте
-								{
-										map->getField()[x][y]->collide(i.key(), map); //Засасываем змею в дыру
-										if (i.key()->tail.size() > 0) //Делаем один ход
-										{
-												map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
-												map->setCellAt(oldHead[i.key()].x(), oldHead[i.key()].y(), i.key()); //Вставляем перёд на место старой головы
-												i.key()->tail.removeLast(); //Удаляем с конца хвоста
-												i.key()->tail.insert(0,oldHead[i.key()]); //Вставляем в начало хвоста
-												i.key()->position.setX(oldHead[i.key()].x());
-												i.key()->position.setY(oldHead[i.key()].y());
-										}
-								}
-						}
-				}
-				if (i.key()->snakeInTheHole == true && i.key()->isDead == false) //Змейка в дырке, но не умерла
-				{
-						if (i.key()->tail.size() > 0)
-						{
-								map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем ячейку хвоста с карты
-								i.key()->tail.removeLast(); //Засасываем одну ячейку под землю русскую.
-								if (i.key()->tail.size() == 0) //Наконец убиваем нашу змею
-										i.key()->mustDie = true;
-						}
-						else //Если змея и так была без хвоста
-								i.key()->mustDie = true;
-				}
-		}
+        while (i.hasNext())
+        {
+            i.next();
+            if (i.key()->isDead == false)
+            {
+                x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты головы змейки
+                if (!map->isCellEmpty(newHead[i.key()])) //Если есть объект в клетке - взаимодействуем с ним
+                {
+                    if (map->getField()[x][y]->getId()==HOLE_OBJECT && i.key()->snakeInTheHole == false) //Совпадают с координатами дырки на карте
+                    {
+                        map->getField()[x][y]->collide(i.key(), map); //Засасываем змею в дыру
+                        if (i.key()->tail.size() > 0) //Делаем один ход
+                        {
+                            QPoint oldHead = i.key()->position;
+                            i.key()->position = QPoint(newHead[i.key()]);
+                            map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                            map->setCellAt(oldHead.x(), oldHead.y(), i.key()); //Вставляем перёд на место старой головы
+                            i.key()->tail.removeLast(); //Удаляем с конца хвоста
+                            i.key()->tail.insert(0,oldHead); //Вставляем в начало хвоста
+                        }
+                    }
+                }
+            }
+            if (i.key()->snakeInTheHole == true && i.key()->isDead == false) //Змейка в дырке, но не умерла
+            {
+                if (i.key()->tail.size() > 0)
+                {
+                    map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем ячейку хвоста с карты
+                    i.key()->tail.removeLast(); //Засасываем одну ячейку под землю русскую.
+                    if (i.key()->tail.size() == 0) //Наконец убиваем нашу змею
+                        i.key()->mustDie = true;
+                }
+                else //Если змея и так была без хвоста
+                    i.key()->mustDie = true;
+            }
+        }
 		//Сдвиг тел
 		//qDebug() << "MOVE BODY";
 		i.toFront();
-		while (i.hasNext())
-		{
-				i.next();
-				if (isSnakeDead(i.key()) && notMovingSnakes.find(i.key()) == notMovingSnakes.end())
-				{
-						if (i.key()->tail.size() > 0) //Если у змейки есть хвост
-						{
-								if (i.key()->tail.size() > 1) //Если змея ела, то у нее больше одного хвоста
-										if (i.key()->tail.last() != i.key()->tail[i.key()->tail.size()-2]) // Если змея поела
-												map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
-								map->setCellAt(oldHead[i.key()].x(), oldHead[i.key()].y(), i.key()); //Вставляем перёд на место старой головы
-								i.key()->tail.removeLast(); //Удаляем с конца хвоста
-								i.key()->tail.insert(0,oldHead[i.key()]); //Вставляем в начало хвоста
-								map->setCellAt(i.key()->position.x(), i.key()->position.y(), i.key()); //Вставляем голову на новое место
-						}
-						else //У змеи нет хвоста
-						{
-								map->setCellAt(oldHead[i.key()].x(), oldHead[i.key()].y(), NULL); //Удаляем старое отображение головы
-								map->setCellAt(i.key()->position.x(), i.key()->position.y(), i.key()); //Вставляем голову на новое место
-						}
-				}
-		}
+        while (i.hasNext())
+        {
+            i.next();
+            if (isSnakeDead(i.key()) && newHead[i.key()] != i.key()->position && i.key()->mustDie == false)
+            {
+                if (i.key()->tail.size() > 0) //Если у змейки есть хвост
+                {
+                    //Проверка на еду
+                    if (i.key()->tail.size() > 1)
+                    {
+                        if ( !(i.key()->tail.last() == (i.key()->tail[i.key()->tail.size()-2])) )
+                        {
+                            map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                        }
+                    }
+                    else if ( !(i.key()->position == i.key()->tail.last()) )
+                    {   //Если змея не ела, отрубаем конец
+                        map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                    }
+                    QPoint oldHead = i.key()->position;
+                    i.key()->position = newHead[i.key()];
+                    i.key()->tail.removeLast(); //Удаляем с конца хвоста
+                    i.key()->tail.insert(0,oldHead); //Вставляем в начало хвоста
+                    map->setCellAt(newHead[i.key()].x(), newHead[i.key()].y(), i.key()); //Вставляем голову на место новой головы
+                    map->setCellAt(oldHead.x(), oldHead.y(), i.key()); //Вставляем тело на место головы
+                }
+                else
+                {
+                    map->setCellAt(i.key()->position.x(), i.key()->position.y(), NULL); //Удаляем старое отображение головы
+                    i.key()->position = newHead[i.key()];
+                    map->setCellAt(newHead[i.key()].x(), newHead[i.key()].y(), i.key()); //Вставляем голову на новое место
+                }
+            }
+        }
 		//Реализуем все отмирания ячеек с ходами
-		if (SnakeMovesBeforeTailCellDeath != 0)
-		{
-				CurrentMove--;
-				if (CurrentMove<=0)
-				{
-						i.toFront();
-						while (i.hasNext())
-						{
-								i.next();
-								if (i.key()->isDead == false && i.key()->tail.size() > 0)
-								{
-										map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Отваливается одна ячейка
-										i.key()->tail.removeLast();
-										if (i.key()->tail.size() == 0)
-										{
-												i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
-										}
-								}
-								else
-								{
-										i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
-								}
-						}
-						CurrentMove = SnakeMovesBeforeTailCellDeath;
-				}
-		}
+        if (SnakeMovesBeforeTailCellDeath != 0)
+        {
+            CurrentMove--;
+            if (CurrentMove<=0)
+            {
+                i.toFront();
+                while (i.hasNext())
+                {
+                    i.next();
+                    if (i.key()->isDead == false && i.key()->tail.size() > 0)
+                    {
+                        map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Отваливается одна ячейка
+                        i.key()->tail.removeLast();
+                        if (i.key()->tail.size() == 0)
+                        {
+                            i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
+                        }
+                    }
+                    else
+                    {
+                        i.key()->mustDie = true; //Ничего не осталось от змейки, она умирает
+                    }
+                }
+                CurrentMove = SnakeMovesBeforeTailCellDeath;
+            }
+        }
 		//Реализуем все mustDie
 
 		i.toFront();
-		while (i.hasNext())
-		{
-				i.next();
-				if (i.key()->mustDie == true && i.key()->isDead == false)
-				{
-						//!Убить змею, убрать с карты. (В списке по идее оставить)
-						int size = i.key()->tail.size()-1;
-						for (int x = size; x >= 0; x--)
-						{
-								map->setCellAt(i.key()->tail[x].x(), i.key()->tail[x].y(), NULL); //Убираем хвост на карте
-						}
-						//if (map->getField()[i.key()->position.x()][i.key()->position.y()]->getId() == SNAKE) //Если есть голова на карте (не потеряла при других обстоятельствах), голову отрубаем
-						map->setCellAt(i.key()->position.x(), i.key()->position.y(), NULL); //Отрубаем голову (в карте)
-						i.key()->isDead = true; //Убиваем змею
-						i.key()->tail.clear(); //Удаляем всё с хвоста
-				}
-		}
+        while (i.hasNext())
+        {
+            i.next();
+            if (i.key()->mustDie == true && i.key()->isDead == false)
+            {
+                bool cuted, dead;
+                //!Убить змею, убрать с карты. (В списке по идее оставить)
+                map->cutSnakeFrom(i.key()->position,cuted,dead);
+                i.key()->isDead = true; //Убиваем змею
+                i.key()->tail.clear(); //Удаляем всё с хвоста
+            }
+        }
 		//Генерация вещей из списка доступных
 		//rand() для числа
 		//float randomNum = ((float)(qrand()%100))/100;
@@ -916,48 +919,48 @@ void Game::loop()
 
 		QVector<QPoint> empty;
 
-		for (int imap = 0; imap < map->getSizeX(); imap++)
-		{
-				for (int jmap = 0; jmap < map->getSizeY(); jmap++)
-				{
-						if (map->getField()[imap][jmap] == NULL)
-								empty << QPoint(imap,jmap);
-				}
-		}
+        for (int imap = 0; imap < map->getSizeX(); imap++)
+        {
+            for (int jmap = 0; jmap < map->getSizeY(); jmap++)
+            {
+                if (map->getField()[imap][jmap] == NULL)
+                    empty << QPoint(imap,jmap);
+            }
+        }
 		//Генерируем еду
 		FoodItem *for_generation = new FoodItem(); //! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
-		if (for_generation->getSpawnChance()*FoodSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0) //!for_generation <=> map->getItemsTypesForGeneration()[0]
-		{
-				//Генерируем в пустое место
-				int num = qrand()%empty.size();
-				for_generation->position.setX(empty[num].x());
-				for_generation->position.setY(empty[num].y());
-				map->setCellAt(empty[num].x(), empty[num].y(), for_generation);//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
+        if (for_generation->getSpawnChance()*FoodSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0) //!for_generation <=> map->getItemsTypesForGeneration()[0]
+        {
+            //Генерируем в пустое место
+            int num = qrand()%empty.size();
+            for_generation->position.setX(empty[num].x());
+            for_generation->position.setY(empty[num].y());
+            map->setCellAt(empty[num].x(), empty[num].y(), for_generation);//! Нужно заполнить калсс FoodItem, чтобы не ругался. И расскомментить
 
-				//Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
-				empty.removeAt(num);
-				//map->getItems().append(for_generation);
-		}
-		//Выбираем каждый элемент из map->getItemsTypesForGeneration()
+            //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
+            empty.removeAt(num);
+            //map->getItems().append(for_generation);
+        }
+        //Выбираем каждый элемент из map->getItemsTypesForGeneration()
 		for (int loop = 0; loop < map->getItemsTypesForGeneration().size(); loop++)
-		{
-				if (map->getItemsTypesForGeneration()[loop]->getSpawnChance()*ItemSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0)
-				{
-						//Генерируем в пустое место
-						int num = qrand()%empty.size();
-						if (map->getItemsTypesForGeneration()[loop]->getId() == BOMB_ITEM) //Проверка ID
-						{
-								BombItem *Bomb = new BombItem();
-								Bomb->position.setX(empty[num].x());
-								Bomb->position.setY(empty[num].y());
-								map->setCellAt(empty[num].x(), empty[num].y(), Bomb);
-								//map->getItems().append(Bomb);
-						}
-						//else if (map->getItemsTypesForGeneration()[loop]->getId() == OTHER_ITEM) //Если появятся другие предметы, нужно будет добавить сюда код
-						//Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
-						empty.removeAt(num);
-				}
-		}
+        {
+            if (map->getItemsTypesForGeneration()[loop]->getSpawnChance()*ItemSpawnCoef >= (((float)(qrand()%100))/100) && empty.size() > 0)
+            {
+                //Генерируем в пустое место
+                int num = qrand()%empty.size();
+                if (map->getItemsTypesForGeneration()[loop]->getId() == BOMB_ITEM) //Проверка ID
+                {
+                    BombItem *Bomb = new BombItem();
+                    Bomb->position.setX(empty[num].x());
+                    Bomb->position.setY(empty[num].y());
+                    map->setCellAt(empty[num].x(), empty[num].y(), Bomb);
+                    //map->getItems().append(Bomb);
+                }
+                //else if (map->getItemsTypesForGeneration()[loop]->getId() == OTHER_ITEM) //Если появятся другие предметы, нужно будет добавить сюда код
+                //Обновляем вектор пустых точек (удаляя старый из него по номеру в векторе)
+                empty.removeAt(num);
+            }
+        }
 		//Если пустого места нет - вектор сайз равен нулю, то скипаем генерацию объекта
 
 		//Генерим до конца все объекты на карту

@@ -52,12 +52,11 @@ const QPixmap BombItem::getImage() const
 void BombItem::collide(Snake *snake, Map *map)
 {
     QVector <QPoint> ourSnake;
-		ourSnake.append(snake->position);
+    ourSnake.append(snake->position);
     for (int i = 0; i < snake->tail.size(); i++)
         ourSnake.append(snake->tail[i]);
-    ourSnake.append(QPoint( (ourSnake[0].x()+ourSnake[1].x())/2 , (ourSnake[0].y()+ourSnake[1].y())/2) );
-		map->clearCellAt(snake->position.x(),snake->position.y());
-		//qDebug() << "POS X:" << snake->position.x() << " POS Y:" << snake->position.y();
+    //map->clearCellAt(snake->position.x(),snake->position.y());
+    //qDebug() << "POS X:" << snake->position.x() << " POS Y:" << snake->position.y();
     //Взрыв всех вещей в радиусе damageRadius
     //Взрыв змеек, голов и их частей
     int x = 0, y = 0;
@@ -65,19 +64,33 @@ void BombItem::collide(Snake *snake, Map *map)
     {
         for (int j = 0; j < i*2+1; j++)
         {
-						x = position.x()-i+j;
+            x = position.x()-i+j;
             if (x<0)
                 x=0;
-						else if (x>=map->getSizeX())
-								x=map->getSizeX()-1;
-						y = position.y()+i-damageRadius;
+            else if (x>=map->getSizeX())
+                x=map->getSizeX()-1;
+            y = position.y()+i-damageRadius;
             if (y<0)
                 y=0;
-						else if (y>=map->getSizeY())
-								y=map->getSizeY()-1;
-            if (!ourSnake.contains(QPoint(x,y)))
+            else if (y>=map->getSizeY())
+                y=map->getSizeY()-1;
+            if (!ourSnake.contains(QPoint(x,y)) && !map->isCellEmpty(QPoint(x,y)))
             {
-								map->clearCellAt(x,y);
+                if ((map->getField()[x][y]->getId() == SNAKE_NPC))
+                {
+                    bool cuted, isDead = false;
+                    Snake *snake = (Snake*)map->getEntityAt(QPoint(x,y));
+                    map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
+                    if (isDead)
+                    {
+                        snake->isDead = true;
+                        snake->tail.clear(); //Удаляем всё с хвоста
+                    }
+                }
+                else
+                {
+                    map->clearCellAt(x,y);
+                }
             }
         }
     }
@@ -85,23 +98,36 @@ void BombItem::collide(Snake *snake, Map *map)
     {
         for (int j = 0; j < i*2+1; j++)
         {
-						x = position.x()-i+j;
+            x = position.x()-i+j;
             if (x<0)
                 x=0;
-						else if (x>=map->getSizeX())
-								x=map->getSizeX()-1;
-						y = position.y()-i+damageRadius;
+            else if (x>=map->getSizeX())
+                x=map->getSizeX()-1;
+            y = position.y()-i+damageRadius;
             if (y<0)
                 y=0;
-						else if (y>=map->getSizeY())
-								y=map->getSizeY()-1;
-            if (!ourSnake.contains(QPoint(x,y)))
+            else if (y>=map->getSizeY())
+                y=map->getSizeY()-1;
+            if (!ourSnake.contains(QPoint(x,y)) && !map->isCellEmpty(QPoint(x,y)))
             {
-								map->clearCellAt(x,y);
+                if ((map->getField()[x][y]->getId() == SNAKE_NPC))
+                {
+                    bool cuted, isDead = false;
+                    Snake *snake = (Snake*)map->getEntityAt(QPoint(x,y));
+                    map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
+                    if (isDead)
+                    {
+                        snake->isDead = true;
+                        snake->tail.clear(); //Удаляем всё с хвоста
+                    }
+                }
+                else
+                {
+                    map->clearCellAt(x,y);
+                }
             }
         }
     }
-
 }
 
 float BombItem::getSpawnChance() const
