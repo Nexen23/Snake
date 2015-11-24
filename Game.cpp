@@ -649,8 +649,11 @@ void Game::loop()
                 if (newHead[i.key()].x() >= map->getSizeX() || newHead[i.key()].x() < 0 ||
                         newHead[i.key()].y() >= map->getSizeY() || newHead[i.key()].y() < 0)
                 {
-                    i.key()->mustDie = true;
-                    newHead[i.key()] = i.key()->position; //После заявления о смерти, оставляем место для новой головы на старом месте
+                    bool cuted, dead;
+                    //!Убить змею, убрать с карты. (В списке по идее оставить)
+                    map->cutSnakeFrom(i.key()->position,cuted,dead);
+                    i.key()->isDead = true; //Убиваем змею
+                    i.key()->tail.clear(); //Удаляем всё с хвоста
                 }
             }
             if (i.key()->isDead == true)
@@ -786,7 +789,7 @@ void Game::loop()
                                 //Иначе не трогаем её
                             }
                         }
-                        else //Удар произошёл в тело - убиваем без раздумий
+                        else if (collideSnake->tail.size() != 0) //Если это не одна лишь голова голова
                         {
                             collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                         }
