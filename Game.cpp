@@ -870,7 +870,8 @@ void Game::loop()
                 }
                 else
                 {
-                    map->setCellAt(i.key()->position.x(), i.key()->position.y(), NULL); //Удаляем старое отображение головы
+                    if (((Snake*)map->getEntityAt(i.key()->position.x(), i.key()->position.y()))==i.key())
+                        map->setCellAt(i.key()->position.x(), i.key()->position.y(), NULL); //Удаляем старое отображение головы
                     i.key()->position = newHead[i.key()];
                     map->setCellAt(newHead[i.key()].x(), newHead[i.key()].y(), i.key()); //Вставляем голову на новое место
                 }
