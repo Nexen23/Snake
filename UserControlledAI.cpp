@@ -8,7 +8,7 @@ UserControlledAI::UserControlledAI()
 {
 	keyListener = new KeyPressListener();
 	QCoreApplication::instance()->installEventFilter(keyListener);
-	//qDebug() << "UserControlledAI installed KeyFilter";
+	qDebug() << "UserControlledAI installed KeyFilter";
 }
 
 UserControlledAI::~UserControlledAI()
@@ -20,10 +20,23 @@ UserControlledAI::~UserControlledAI()
 
 MoveDirection UserControlledAI::getNextMove(Snake *controllerSnake, Map *map)
 {
-	Q_UNUSED(controllerSnake);
 	Q_UNUSED(map);
 
-	return keyListener->getMoveDirection();
+	MoveDirection newMove = keyListener->getChosenMoveDirection(),
+			oldMove;
+	if (snakesPrevMoves.find(controllerSnake) == snakesPrevMoves.end())
+	{
+		snakesPrevMoves[controllerSnake] = newMove;
+	}
+	oldMove = snakesPrevMoves[controllerSnake];
+
+	if (isNewMoveInvalid(oldMove, newMove))
+	{
+		newMove = oldMove;
+	}
+
+	snakesPrevMoves[controllerSnake] = newMove;
+	return newMove;
 }
 
 QString UserControlledAI::getName() const
@@ -34,14 +47,14 @@ QString UserControlledAI::getName() const
 
 
 KeyPressListener::KeyPressListener(){
-	moveDirection = UP;
+	chosenMoveDirection = UP;
 }
 
 KeyPressListener::~KeyPressListener(){}
 
-MoveDirection KeyPressListener::getMoveDirection()
+MoveDirection KeyPressListener::getChosenMoveDirection()
 {
-	return moveDirection;
+	return chosenMoveDirection;
 }
 
 bool KeyPressListener::eventFilter(QObject *object, QEvent *event)
@@ -54,41 +67,25 @@ bool KeyPressListener::eventFilter(QObject *object, QEvent *event)
 		switch(keyEvent->key())
 		{
 		case Qt::Key_S:
-			if (moveDirection != UP)
-			{
-				moveDirection = DOWN;
-				qDebug() << "Down";
-			}
+			chosenMoveDirection = DOWN;
+			qDebug() << "Down";
 		break;
 
 		case Qt::Key_D:
-			if (moveDirection != LEFT)
-			{
-				moveDirection = RIGHT;
-				qDebug() << "Right";
-			}
+			chosenMoveDirection = RIGHT;
+			qDebug() << "Right";
 		break;
 
 		case Qt::Key_W:
-			if (moveDirection != DOWN)
-			{
-				moveDirection = UP;
-				qDebug() << "Up";
-			}
+			chosenMoveDirection = UP;
+			qDebug() << "Up";
 		break;
 
 		case Qt::Key_A:
-			if (moveDirection != RIGHT)
-			{
-				moveDirection = LEFT;
-				qDebug() << "Left";
-			}
+			chosenMoveDirection = LEFT;
+			qDebug() << "Left";
 		break;
-
-		//default:
-			//keyFound = false;
 		}
-		//return keyFound;
 	}
-	return false;
+	return false; // не забираем эвент
 }

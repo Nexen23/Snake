@@ -10,13 +10,13 @@ class KeyPressListener : public QObject
 {
 	Q_OBJECT
 
-	MoveDirection moveDirection;
+	MoveDirection chosenMoveDirection;
 
 public:
 	explicit KeyPressListener();
 	~KeyPressListener();
 
-	MoveDirection getMoveDirection();
+	MoveDirection getChosenMoveDirection();
 
 protected:
 	bool eventFilter(QObject *object, QEvent *event);
