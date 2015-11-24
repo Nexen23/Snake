@@ -791,6 +791,10 @@ void Game::loop()
                                     //Иначе не трогаем её
                                 }
                             }
+                            else
+                            {
+                                collideSnake->collide(i.key(), map);
+                            }
                         }
                         else if (collideSnake->tail.size() != 0) //Если это не одна лишь голова голова
                         {
