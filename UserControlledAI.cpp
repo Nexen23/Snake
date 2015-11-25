@@ -4,6 +4,8 @@
 #include <QKeyEvent>
 #include <QDebug>
 
+#include "Snake.h"
+
 UserControlledAI::UserControlledAI()
 {
 	keyListener = new KeyPressListener();
@@ -30,7 +32,7 @@ MoveDirection UserControlledAI::getNextMove(Snake *controllerSnake, Map *map)
 	}
 	oldMove = snakesPrevMoves[controllerSnake];
 
-	if (isNewMoveInvalid(oldMove, newMove))
+	if (isNewMoveInvalid(oldMove, newMove) && !controllerSnake->tail.isEmpty())
 	{
 		newMove = oldMove;
 	}
