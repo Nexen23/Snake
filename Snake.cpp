@@ -20,7 +20,7 @@ Snake::Snake(QString name)
  */
 Snake::~Snake()
 {
-    delete currentScores;
+		delete currentScore;
     tail.clear();
     return;
 }
@@ -74,7 +74,17 @@ Entity *Snake::clone() const
 	return snake;
 }
 
-void Snake::addPointsToTheScore(int value)
+void Snake::setScoreAmount(int value)
 {
-    currentScores->addPoints(value);
+	currentScore->amount = value;
+}
+
+void Snake::addScoreAmount(int value)
+{
+	currentScore->amount += value;
+}
+
+int Snake::getScoreAmount()
+{
+	return currentScore->amount;
 }

@@ -17,6 +17,7 @@ public:
 
 		virtual float getSpawnChance() const;
 		virtual int getBaseScore() const;
+		virtual void setBaseScore(int amount);
 };
 
 #endif // ITEM_H

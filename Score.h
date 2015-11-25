@@ -8,8 +8,7 @@ class Score
 public:
     explicit Score();
     Score(int amount);
-    ~Score();
-    int addPoints(int value);
+		~Score();
 
 	int amount = 0;
 };

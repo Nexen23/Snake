@@ -126,7 +126,7 @@ void GameWindow::setWinner(QVector<Snake*> winnersSnakes)
 {
 	auto lessThan = [](Snake *a, Snake *b)
 	{
-		if (a->currentScores->amount < b->currentScores->amount)
+		if (a->getScoreAmount() >= b->getScoreAmount())
 			return true;
 		return false;
 	};
@@ -135,8 +135,6 @@ void GameWindow::setWinner(QVector<Snake*> winnersSnakes)
 
 	QString innerMessage;
 	QTextStream message(&innerMessage);
-	message.setFieldWidth(8);
-	message.setFieldAlignment(QTextStream::AlignCenter);
 	if (!winnersSnakes.isEmpty())
 	{
 		message << "Winners:" << endl;
@@ -144,7 +142,7 @@ void GameWindow::setWinner(QVector<Snake*> winnersSnakes)
 		{
 			Snake *snake = winnersSnakes[i];
 			losersSnakes.removeOne(snake);
-			message << snake->currentScores->amount << snake->getName() << endl;
+			message << snake->getScoreAmount() << "\t" << snake->getName() << endl;
 		}
 		message << endl;
 	}
@@ -154,7 +152,7 @@ void GameWindow::setWinner(QVector<Snake*> winnersSnakes)
 	for (int i = 0; i < losersSnakes.size(); ++i)
 	{
 		Snake *snake = losersSnakes[i];
-		message << snake->currentScores->amount << snake->getName() << endl;
+		message << snake->getScoreAmount() << "\t"  << snake->getName() << endl;
 	}
 
 

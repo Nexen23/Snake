@@ -8,7 +8,7 @@
  */
 BombItem::BombItem()
 {
-	scoresForPicker = new Score(5);
+	setBaseScore(5);
 }
 
 /**
@@ -51,7 +51,8 @@ const QPixmap BombItem::getImage() const
 
 void BombItem::collide(Snake *snake, Map *map)
 {
-    snake->addPointsToTheScore(getBaseScore());
+		double localScore = getBaseScore();
+
     QVector <QPoint> ourSnake;
     ourSnake.append(snake->position);
     for (int i = 0; i < snake->tail.size(); i++)
@@ -84,14 +85,14 @@ void BombItem::collide(Snake *snake, Map *map)
                     map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
                     if (isDead)
                     {
-                        snake->addPointsToTheScore(1.5);
+												localScore += 1.5f;
                         snake->isDead = true;
                         snake->tail.clear(); //Удаляем всё с хвоста
                     }
                 }
                 else
                 {
-                    snake->addPointsToTheScore(1);
+										localScore += 1;
                     map->clearCellAt(x,y);
                 }
             }
@@ -120,19 +121,21 @@ void BombItem::collide(Snake *snake, Map *map)
                     map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
                     if (isDead)
                     {
-                        snake->addPointsToTheScore(1.5);
+												localScore += 1.5f;
                         snake->isDead = true;
                         snake->tail.clear(); //Удаляем всё с хвоста
                     }
                 }
                 else
                 {
-                    snake->addPointsToTheScore(1);
+										localScore += 1;
                     map->clearCellAt(x,y);
                 }
             }
         }
     }
+
+		snake->addScoreAmount(qRound(localScore));
 }
 
 float BombItem::getSpawnChance() const

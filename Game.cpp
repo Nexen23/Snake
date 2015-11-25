@@ -134,7 +134,7 @@ void Game::saveMapToFile(Map *map, QString mapName)
 		out << map->getItems().size() << endl;
 		for(int i=0; i<map->getItems().size(); i++) {
 				out << map->getItems()[i]->getId() << endl;
-				out << map->getItems()[i]->scoresForPicker->amount << endl;
+				out << map->getItems()[i]->getBaseScore() << endl;
 				out << map->getItems()[i]->position.x() << endl;
 				out << map->getItems()[i]->position.y() << endl;
 		}
@@ -165,7 +165,7 @@ void Game::saveMapToFile(Map *map, QString mapName)
 
 
 				out << map->getSnakes()[i]->name << endl;
-				out << map->getSnakes()[i]->currentScores->amount << endl;
+				out << map->getSnakes()[i]->getScoreAmount() << endl;
 				out << map->getSnakes()[i]->mustDie << endl;
 				out << map->getSnakes()[i]->snakeInTheHole << endl;
 
@@ -180,7 +180,7 @@ void Game::saveMapToFile(Map *map, QString mapName)
 		out << map->getItemsTypesForGeneration().size() << endl;
 		for(int i=0; i<map->getItemsTypesForGeneration().size(); i++) {
 				out << map->getItemsTypesForGeneration()[i]->getId() << endl;
-				out << map->getItemsTypesForGeneration()[i]->scoresForPicker->amount << endl;
+				out << map->getItemsTypesForGeneration()[i]->getBaseScore() << endl;
 				out << map->getItemsTypesForGeneration()[i]->position.x() << endl;
 				out << map->getItemsTypesForGeneration()[i]->position.y() << endl;
 		}
@@ -424,7 +424,7 @@ Map *Game::loadMapFromFile(QString mapName)
 						in.readLine(maxLen).toInt();
 						in.readLine(maxLen).toInt();
 				} else {
-						newItem->scoresForPicker->amount = in.readLine(maxLen).toInt();
+						newItem->setBaseScore( in.readLine(maxLen).toInt() );
 						int x = in.readLine(maxLen).toInt(),
 								y = in.readLine(maxLen).toInt();
 						newItem->position.setX(x);
@@ -493,8 +493,8 @@ Map *Game::loadMapFromFile(QString mapName)
 				snakeTheHole = in.readLine(maxLen).toInt();
 				length = in.readLine(maxLen).toInt();
 				Snake *snake = new Snake(name);
-                snake->color = color;
-                snake->currentScores->amount = currentScore;
+				snake->color = color;
+				snake->setScoreAmount(currentScore);
 				snake->mustDie = mustDie;
 				snake->snakeInTheHole = snakeTheHole;
 
@@ -542,7 +542,7 @@ Map *Game::loadMapFromFile(QString mapName)
 						in.readLine(maxLen).toInt();
 						in.readLine(maxLen).toInt();
 				} else {
-                        item->scoresForPicker->amount = in.readLine(maxLen).toInt();
+												item->setBaseScore( in.readLine(maxLen).toInt() );
                         item->position.setX(in.readLine(maxLen).toInt());
                         item->position.setY(in.readLine(maxLen).toInt());
 						m->addItemTypeForGeneration(item);

@@ -8,7 +8,7 @@
  */
 FoodItem::FoodItem()
 {
-	scoresForPicker = new Score(1);
+	setBaseScore(1);
 }
 
 /**
@@ -53,9 +53,10 @@ const QPixmap FoodItem::getImage() const
 void FoodItem::collide(Snake *snake, Map *map)
 {
     Q_UNUSED(map);
-    snake->addPointsToTheScore(getBaseScore());
+		snake->addScoreAmount(getBaseScore());
     if (!snake->tail.isEmpty())
     {
+			snake->addScoreAmount(qRound(snake->tail.size() * 1.5));
         QPoint cell = snake->tail.last();
         snake->tail.push_back(cell); //Добавляем в конец хвоста тот же хвост
     }

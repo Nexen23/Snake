@@ -17,8 +17,3 @@ Score::~Score()
 {
 
 }
-
-int Score::addPoints(int value)
-{
-    amount += value;
-}

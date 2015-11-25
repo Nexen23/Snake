@@ -27,3 +27,8 @@ int Item::getBaseScore() const
 {
 	return scoresForPicker->amount;
 }
+
+void Item::setBaseScore(int amount)
+{
+	scoresForPicker->amount = amount;
+}

@@ -9,12 +9,15 @@
 
 class Snake : public Entity
 {
+protected:
+	Score *currentScore = new Score();
+
 public:
     bool mustDie = false;
     bool snakeInTheHole = false;
     QString name;
     QVector<QPoint> tail;
-    Score *currentScores = new Score();
+
 
 		QColor color;
 
@@ -31,7 +34,9 @@ public:
 
 		virtual Entity* clone() const;
 
-        void addPointsToTheScore(int value);
+		void setScoreAmount(int value);
+		void addScoreAmount(int value);
+		int getScoreAmount();
 };
 
 #endif // SNAKE_H
