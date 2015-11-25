@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "Snake.h"
 #include "Game.h"
-#include "SnakeListWidgetItem.h"
+#include "EntityListWidgetItem.h"
 
 #include <QColorDialog>
 
@@ -22,13 +22,15 @@ EditorWindow::EditorWindow(Game *game, QWidget *parent) :
 	objectTypes = game->getAllObjectTypes();
 	for (int i = 0; i < objectTypes.size(); ++i)
 	{
-		ui->ObjectList->addItem(objectTypes[i]->getName());
+		EntityListWidgetItem *item = new EntityListWidgetItem(objectTypes[i]);
+		ui->ObjectList->addItem(item);
 	}
 
 	itemTypes = game->getAllItemTypes();
 	for (int i = 0; i < itemTypes.size(); ++i)
 	{
-		ui->ItemList->addItem(itemTypes[i]->getName());
+		EntityListWidgetItem *item = new EntityListWidgetItem(itemTypes[i]);
+		ui->ItemList->addItem(item);
 	}
 
 		map = new Map(0,0);
@@ -392,7 +394,7 @@ Map* EditorWindow::getDefaultMap(){
 void EditorWindow::addSnake(Snake *snake)
 {
 	snakes.append(snake);
-	ui->SnakeList->addItem(new SnakeListWidgetItem(snake));
+	ui->SnakeList->addItem(new EntityListWidgetItem(snake));
 }
 
 void EditorWindow::loadSnakesFromMap(Map *map)

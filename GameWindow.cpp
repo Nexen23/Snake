@@ -1,6 +1,6 @@
 ﻿#include "GameWindow.h"
 #include "MapGrid.h"
-#include "SnakeListWidgetItem.h"
+#include "EntityListWidgetItem.h"
 #include "ui_GameWindow.h"
 
 GameWindow::GameWindow(Game *game, QWidget *parent) :
@@ -154,7 +154,7 @@ void GameWindow::setMap(Map *map)
 	{
 		Snake *snake = map->getSnakes()[i];
 			ui->select_snake->addItem(
-						SnakeListWidgetItem::CreateIcon(snake), snake->getName());
+						EntityListWidgetItem::CreateIcon(snake), snake->getName());
 			snakesAiIndecies[snake] = defaultAiIndex;
 			game->setSnakeAI(snake, ais[0]);
 	}
@@ -227,7 +227,7 @@ void GameWindow::refreshSelectedSnakeAIGrid()
     for(int i=0; i<ui->tableWidget->rowCount(); i++) {
         ui->tableWidget->setItem(i,0,
                         new QTableWidgetItem(
-                                     SnakeListWidgetItem::CreateIcon(map->getSnakes()[i]),
+                                     EntityListWidgetItem::CreateIcon(map->getSnakes()[i]),
                                      map->getSnakes()[i]->name
                                      ));
         QComboBox *combo;

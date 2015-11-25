@@ -33,9 +33,9 @@ SOURCES += \
     OpenMapDialog.cpp \
     MapGrid.cpp \
     MapGridCell.cpp \
-    SnakeListWidgetItem.cpp \
     ImmobilizedAI.cpp \
-    UserControlledAI.cpp
+    UserControlledAI.cpp \
+    EntityListWidgetItem.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -58,9 +58,9 @@ HEADERS  += \
     OpenMapDialog.h \
     MapGrid.h \
     MapGridCelll.h \
-    SnakeListWidgetItem.h \
     ImmobilizedAI.h \
-    UserControlledAI.h
+    UserControlledAI.h \
+    EntityListWidgetItem.h
 
 FORMS    += \
     GameWindow.ui \
