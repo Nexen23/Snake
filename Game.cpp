@@ -790,9 +790,12 @@ void Game::loop()
                                     {
                                         collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                                     }
-                                    else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+                                    else if (collideSnake->tail.size() != 1)
                                     {
-                                        collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                        if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+                                        {
+                                            collideSnake->collide(i.key(), map); //Убиваем змею mustDie
+                                        }
                                     }
                                     //Иначе не трогаем её
                                 }
@@ -860,12 +863,15 @@ void Game::loop()
                     {
                         if ( !(i.key()->tail.last() == (i.key()->tail[i.key()->tail.size()-2])) )
                         {
-                            map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                            if (((Snake*)map->getEntityAt(i.key()->tail.last().x(), i.key()->tail.last().y()))==i.key())
+                                map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                            //При условии что при отрисовке там действительно свой хвост
                         }
                     }
                     else if ( !(i.key()->position == i.key()->tail.last()) )
-                    {   //Если змея не ела, отрубаем конец
-                        map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
+                    {   //Для однохвостовой покушавшей змеи
+                        if (((Snake*)map->getEntityAt(i.key()->tail.last().x(), i.key()->tail.last().y()))==i.key()) //Если есть хвост
+                            map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем конец хвоста с карты
                     }
                     QPoint oldHead = i.key()->position;
                     i.key()->position = newHead[i.key()];
@@ -878,6 +884,7 @@ void Game::loop()
                 {
                     if (((Snake*)map->getEntityAt(i.key()->position.x(), i.key()->position.y()))==i.key())
                         map->setCellAt(i.key()->position.x(), i.key()->position.y(), NULL); //Удаляем старое отображение головы
+                    //зы, оно слетает, если его съедает другая змея (наступает при отрисовке)
                     i.key()->position = newHead[i.key()];
                     map->setCellAt(newHead[i.key()].x(), newHead[i.key()].y(), i.key()); //Вставляем голову на новое место
                 }
