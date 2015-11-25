@@ -70,22 +70,22 @@ bool KeyPressListener::eventFilter(QObject *object, QEvent *event)
 		{
 		case Qt::Key_S:
 			chosenMoveDirection = DOWN;
-			qDebug() << "Down";
+			//qDebug() << "Down";
 		break;
 
 		case Qt::Key_D:
 			chosenMoveDirection = RIGHT;
-			qDebug() << "Right";
+			//qDebug() << "Right";
 		break;
 
 		case Qt::Key_W:
 			chosenMoveDirection = UP;
-			qDebug() << "Up";
+			//qDebug() << "Up";
 		break;
 
 		case Qt::Key_A:
 			chosenMoveDirection = LEFT;
-			qDebug() << "Left";
+			//qDebug() << "Left";
 		break;
 		}
 	}
