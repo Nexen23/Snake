@@ -21,7 +21,7 @@ RandomAI::~RandomAI()
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
-    int kof[4] = {1,1,1,1};
+		int kof[4] = {1,1,1,1};
     QPoint head = controllerSnake->position;
 
     QPoint second = controllerSnake->tail.first();

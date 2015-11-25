@@ -26,7 +26,7 @@ public:
 
     void animateCollision(Snake *snake, Entity *entity, float durationSeconds);
     void update();
-    void setWinner(QVector<Snake*> snakes);
+		void setWinner(QVector<Snake*> winnersSnakes);
 
 		QString getMapName() const;
 

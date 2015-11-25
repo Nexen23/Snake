@@ -122,9 +122,43 @@ void GameWindow::on_map_button_clicked()
 	this->game->createMap();//TODO DELETE this row
 }
 
-void GameWindow::setWinner(QVector<Snake*> snakes)
+void GameWindow::setWinner(QVector<Snake*> winnersSnakes)
 {
+	auto lessThan = [](Snake *a, Snake *b)
+	{
+		if (a->currentScores->amount < b->currentScores->amount)
+			return true;
+		return false;
+	};
 
+	QVector<Snake*> losersSnakes(game->getInitialSnakes());
+
+	QString innerMessage;
+	QTextStream message(&innerMessage);
+	message.setFieldWidth(8);
+	message.setFieldAlignment(QTextStream::AlignCenter);
+	if (!winnersSnakes.isEmpty())
+	{
+		message << "Winners:" << endl;
+		for (int i = 0; i < winnersSnakes.size(); ++i)
+		{
+			Snake *snake = winnersSnakes[i];
+			losersSnakes.removeOne(snake);
+			message << snake->currentScores->amount << snake->getName() << endl;
+		}
+		message << endl;
+	}
+
+	qSort(losersSnakes.begin(), losersSnakes.end(), lessThan);
+	message << "Losers:" << endl;
+	for (int i = 0; i < losersSnakes.size(); ++i)
+	{
+		Snake *snake = losersSnakes[i];
+		message << snake->currentScores->amount << snake->getName() << endl;
+	}
+
+
+	QMessageBox::information(this, "Results", message.readAll());
 }
 
 void GameWindow::setMap(Map *map)

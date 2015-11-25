@@ -34,6 +34,7 @@ class Game : public QObject
     EditorWindow *editorWindow;
 	Map *map;
 	QMap<Snake*, AI*> snakesAIs;
+	QVector<Snake*> initialSnakesOnMap;
     //QThread GameThread;
     float ItemSpawnCoef;
     float FoodSpawnCoef;
@@ -59,6 +60,7 @@ public:
     Map* loadMapFromFile(QString mapName);
     void saveMapToFile(Map *map, QString mapName);
     QVector<QString> getMapList();
+		const QVector<Snake*> &getInitialSnakes();
 		const QVector<AI*>& getAIList();
 
 		QVector<Item*> getAllItemTypes();

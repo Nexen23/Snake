@@ -77,6 +77,7 @@ void Game::setMap(Map *map)
 {
 	snakesAIs.clear();
 		this->map = map;
+	initialSnakesOnMap = map->getSnakes();
 	const QVector<Snake*> &snakes = map->getSnakes();
 	for (int i = 0; i < snakes.size(); ++i)
 	{
@@ -233,6 +234,11 @@ QVector<QString> Game::getMapList()
 
 		inFile->close();
 		return names;
+}
+
+const QVector<Snake *> &Game::getInitialSnakes()
+{
+	return initialSnakesOnMap;
 }
 
 /**
@@ -784,7 +790,7 @@ void Game::loop()
                                     {
                                         collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                                     }
-                                    else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+																		else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
                                     {
                                         collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                                     }
