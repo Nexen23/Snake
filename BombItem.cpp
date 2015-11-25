@@ -51,6 +51,7 @@ const QPixmap BombItem::getImage() const
 
 void BombItem::collide(Snake *snake, Map *map)
 {
+    snake->addPointsToTheScore(getBaseScore());
     QVector <QPoint> ourSnake;
     ourSnake.append(snake->position);
     for (int i = 0; i < snake->tail.size(); i++)
@@ -83,12 +84,14 @@ void BombItem::collide(Snake *snake, Map *map)
                     map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
                     if (isDead)
                     {
+                        snake->addPointsToTheScore(1.5);
                         snake->isDead = true;
                         snake->tail.clear(); //Удаляем всё с хвоста
                     }
                 }
                 else
                 {
+                    snake->addPointsToTheScore(1);
                     map->clearCellAt(x,y);
                 }
             }
@@ -117,12 +120,14 @@ void BombItem::collide(Snake *snake, Map *map)
                     map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
                     if (isDead)
                     {
+                        snake->addPointsToTheScore(1.5);
                         snake->isDead = true;
                         snake->tail.clear(); //Удаляем всё с хвоста
                     }
                 }
                 else
                 {
+                    snake->addPointsToTheScore(1);
                     map->clearCellAt(x,y);
                 }
             }

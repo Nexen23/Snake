@@ -6,7 +6,7 @@
  */
 Score::Score()
 {
-		amount = 0;
+    amount = 0;
 }
 
 /**
@@ -18,3 +18,7 @@ Score::~Score()
 
 }
 
+int Score::addPoints(int value)
+{
+    amount += value;
+}

@@ -780,8 +780,8 @@ void Game::loop()
                         Snake *collideSnake = (Snake*)map->getEntityAt(x,y);
                         if (collideSnake->tail.size() > 0)
                         {
-                            if (collideSnake->tail.last() == newHead[i.key()]) //Если удар в хвост
-                            {
+                            if ( (collideSnake->tail.last() == newHead[i.key()]) && (collideSnake->position != newHead[collideSnake]) )
+                            { //Если удар в хвост и змейка не стоит на месте
                                 //Коллайд сработает только если была съедена еда и хвост остался на месте
                                 //Если в хвосте есть две ячейки с одинкаовыми координатами - значит змейка - покушала, и должна будет еще вырасти.
                                 if (!collideSnake->tail.isEmpty())
@@ -790,7 +790,7 @@ void Game::loop()
                                     {
                                         collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                                     }
-																		else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
+                                    else if (collideSnake->tail.last() == (collideSnake->tail[collideSnake->tail.size()-2]) ) //Змея поела
                                     {
                                         collideSnake->collide(i.key(), map); //Убиваем змею mustDie
                                     }

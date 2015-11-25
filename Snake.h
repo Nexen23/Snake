@@ -30,6 +30,8 @@ public:
 		virtual void collide(Snake *snake, Map *map);
 
 		virtual Entity* clone() const;
+
+        void addPointsToTheScore(int value);
 };
 
 #endif // SNAKE_H

@@ -53,6 +53,7 @@ const QPixmap FoodItem::getImage() const
 void FoodItem::collide(Snake *snake, Map *map)
 {
     Q_UNUSED(map);
+    snake->addPointsToTheScore(getBaseScore());
     if (!snake->tail.isEmpty())
     {
         QPoint cell = snake->tail.last();

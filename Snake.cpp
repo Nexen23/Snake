@@ -73,3 +73,8 @@ Entity *Snake::clone() const
 	snake->position = position;
 	return snake;
 }
+
+void Snake::addPointsToTheScore(int value)
+{
+    currentScores->addPoints(value);
+}

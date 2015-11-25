@@ -9,6 +9,7 @@ public:
     explicit Score();
     Score(int amount);
     ~Score();
+    int addPoints(int value);
 
 	int amount = 0;
 };
