@@ -8,7 +8,7 @@
  */
 BombItem::BombItem()
 {
-    return;
+	scoresForPicker = new Score(5);
 }
 
 /**

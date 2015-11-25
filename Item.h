@@ -6,13 +6,17 @@
 
 class Item : public Entity
 {
+protected:
+	Score *scoresForPicker;
+
 public:
 		Item();
 		~Item();
 
-	Score *scoresForPicker;
+
 
 		virtual float getSpawnChance() const;
+		virtual int getBaseScore() const;
 };
 
 #endif // ITEM_H

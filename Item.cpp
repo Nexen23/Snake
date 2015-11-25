@@ -22,3 +22,8 @@ float Item::getSpawnChance() const
 {
 	return (qrand()%10)/10;
 }
+
+int Item::getBaseScore() const
+{
+	return scoresForPicker->amount;
+}

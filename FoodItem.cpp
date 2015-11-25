@@ -8,7 +8,7 @@
  */
 FoodItem::FoodItem()
 {
-
+	scoresForPicker = new Score(1);
 }
 
 /**
