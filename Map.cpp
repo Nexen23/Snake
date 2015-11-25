@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Snake.h"
 #include "Entity.h"
+#include "Effect.h"
 
 /**
  * @author MGerasimchuk
@@ -267,9 +268,15 @@ bool Map::cutSnakeTailFrom(QPoint coords)
 	return wasCutted;
 }
 
+void Map::clearCellAndApplyEffect(Effect *effect)
+{
+	clearCellAt(effect->getPosition());
+	applyEffect(effect);
+}
+
 void Map::clearCellAt(QPoint coords)
 {
-	clearCellAt(coords.x(), coords.y());
+	setCellAt(coords.x(), coords.y(), NULL);
 }
 
 
@@ -291,6 +298,34 @@ void Map::clearCellsBySnake(Snake *snake)
 		cutSnakeTailFrom(snake->tail.first());
 	}
 	clearCellAt(snake->position);
+}
+
+void Map::applyEffect(Effect *effect)
+{
+	effects.append(effect);
+	emit effectApplied(effect);
+}
+
+void Map::updateEffectsTimes()
+{
+	QVector<Effect*> finishedEffects;
+	for (int i = 0; i < effects.size(); ++i)
+	{
+		effects[i]->tick();
+		if (effects[i]->isFinished())
+		{
+			finishedEffects.append(effects[i]);
+		}
+	}
+
+	for (int i = 0; i < finishedEffects.size(); ++i)
+	{
+		effects.removeOne(finishedEffects[i]);
+		if (isCellEmpty(finishedEffects[i]->getPosition()))
+		{
+			emit effectCleared(finishedEffects[i]);
+		}
+	}
 }
 
 void Map::addEntityToVectors(Entity *entity)

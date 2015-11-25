@@ -35,7 +35,9 @@ SOURCES += \
     MapGridCell.cpp \
     ImmobilizedAI.cpp \
     UserControlledAI.cpp \
-    EntityListWidgetItem.cpp
+    EntityListWidgetItem.cpp \
+    Effect.cpp \
+    BombItemEffect.cpp
 
 HEADERS  += \
     GameWindow.h \
@@ -60,7 +62,9 @@ HEADERS  += \
     MapGridCelll.h \
     ImmobilizedAI.h \
     UserControlledAI.h \
-    EntityListWidgetItem.h
+    EntityListWidgetItem.h \
+    Effect.h \
+    BombItemEffect.h
 
 FORMS    += \
     GameWindow.ui \

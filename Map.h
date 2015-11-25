@@ -11,6 +11,7 @@ class Entity;
 class Item;
 class Object;
 class Snake;
+class Effect;
 
 class Map : public QObject
 {
@@ -25,6 +26,9 @@ class Map : public QObject
 	QVector<Object*> objects;
 	QVector<Snake*> snakes;
 	QSet<Snake*> snakesUniqueConstraint;
+
+	QVector<Effect*> effects;
+	Effect* cuttingEffect;
 
 	QMap<int, Item*> itemsTypesForGeneration;
 
@@ -61,9 +65,15 @@ public:
 
 	void cutSnakeFrom(QPoint coords, bool& cuttedAtLeast1, bool& wasFullyRemoved);
 	bool cutSnakeTailFrom(QPoint coords);
+
 	void clearCellAt(QPoint coords);
 	void clearCellAt(int x, int y);
 	void clearCellsBySnake(Snake *snake);
+
+	void applyEffect(Effect *effect);
+	void clearCellAndApplyEffect(Effect *effect);
+	const QVector<Effect*>& getEffects();
+	void updateEffectsTimes();
 
 private:
 	void removeEntityFromVectors(Entity *entity);
@@ -74,6 +84,9 @@ private:
 signals:
 	void sizeChanged(int newSizeX, int newSizeY);
 	void cellChangedAt(int x, int y, Entity *oldEntity, Entity *newEntity);
+
+	void effectApplied(Effect *effect);
+	void effectCleared(Effect *effect);
 };
 
 #endif // MAP_H

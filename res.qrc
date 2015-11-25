@@ -14,5 +14,6 @@
         <file>img/menu/load.png</file>
         <file>img/menu/save.png</file>
         <file>img/menu/set.png</file>
+        <file>img/BombItem_Explosion.png</file>
     </qresource>
 </RCC>

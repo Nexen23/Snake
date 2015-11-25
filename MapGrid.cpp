@@ -37,6 +37,12 @@ void MapGrid::setMap(Map *map)
 	connect(map, SIGNAL(sizeChanged(int,int)),
 					this, SLOT(onSizeChanged(int,int)));
 
+	connect(map, SIGNAL(effectApplied(Effect*)),
+					this, SLOT(onEffectApplied(Effect*)));
+
+	connect(map, SIGNAL(effectCleared(Effect*)),
+					this, SLOT(onEffectCleared(Effect*)));
+
 	int standardWindowWidth = 980,
 			standardWindowHeight = 520;
 	int cellSizeMin = qMin(standardWindowHeight / map->getSizeX(),
@@ -64,6 +70,12 @@ void MapGrid::setCellAt(int x, int y, Entity *entity)
 	addWidget(widget, y, x, 1, 1);
 }
 
+void MapGrid::setCellAt(int x, int y, Effect *effect)
+{
+	QWidget *widget = new MapGridCell(this, QPoint(x, y), cellSize, effect);
+	addWidget(widget, y, x, 1, 1);
+}
+
 void MapGrid::clearPrevMap()
 {
 	if (map != NULL)
@@ -73,6 +85,12 @@ void MapGrid::clearPrevMap()
 
 		disconnect(map, SIGNAL(sizeChanged(int,int)),
 						this, SLOT(onSizeChanged(int,int)));
+
+		disconnect(map, SIGNAL(effectApplied(Effect*)),
+						this, SLOT(onEffectApplied(Effect*)));
+
+		disconnect(map, SIGNAL(effectCleared(Effect*)),
+						this, SLOT(onEffectCleared(Effect*)));
 
 		clearLayout(this);
 
@@ -137,5 +155,15 @@ void MapGrid::onSizeChanged(int newSizeX, int newSizeY)
 	Q_UNUSED(newSizeX);
 	Q_UNUSED(newSizeY);
 	setMap(map);
+}
+
+void MapGrid::onEffectApplied(Effect *effect)
+{
+	setCellAt(effect->getPosition().x(), effect->getPosition().y(), effect);
+}
+
+void MapGrid::onEffectCleared(Effect *effect)
+{
+	setCellAt(effect->getPosition().x(), effect->getPosition().y(), (Effect*)NULL);
 }
 

@@ -1,6 +1,8 @@
 #ifndef MAPGRID_H
 #define MAPGRID_H
 
+#include "Effect.h"
+
 #include <QGridLayout>
 #include <QWidget>
 #include <QLabel>
@@ -29,6 +31,7 @@ public:
 
 	void setMap(Map *map);
 	void setCellAt(int x, int y, Entity *entity);
+	void setCellAt(int x, int y, Effect *effect);
 
 private:
 	void clearPrevMap();
@@ -47,6 +50,8 @@ signals:
 public slots:
 	void onCellChangedAt(int x, int y, Entity* oldEntity, Entity *newEntity);
 	void onSizeChanged(int newSizeX, int newSizeY);
+	void onEffectApplied(Effect *effect);
+	void onEffectCleared(Effect *effect);
 };
 
 #endif // MAPGRID_H

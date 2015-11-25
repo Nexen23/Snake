@@ -615,6 +615,9 @@ void Game::loop()
 		//7. Отрисовка происходящего на карте
 		/////////////////////
 		//Головы змеек ходят.
+
+	map->updateEffectsTimes();
+
 		QMapIterator<Snake*, AI*> i(snakesAIs);
         QMap <Snake*, QPoint> newHead;
 		//qDebug() << "CHECK LOOP";

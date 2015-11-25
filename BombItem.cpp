@@ -1,6 +1,8 @@
 #include "BombItem.h"
 #include "Snake.h"
 #include "Map.h"
+#include "Effect.h"
+#include "BombItemEffect.h"
 
 /**
  * @author MGerasimchuk
@@ -62,42 +64,65 @@ void BombItem::collide(Snake *snake, Map *map)
     //Взрыв всех вещей в радиусе damageRadius
     //Взрыв змеек, голов и их частей
     int x = 0, y = 0;
-    for (int i = 0; i < damageRadius; i++)
-    {
-        for (int j = 0; j < i*2+1; j++)
-        {
-            x = position.x()-i+j;
-            if (x<0)
-                x=0;
-            else if (x>=map->getSizeX())
-                x=map->getSizeX()-1;
-            y = position.y()+i-damageRadius;
-            if (y<0)
-                y=0;
-            else if (y>=map->getSizeY())
-                y=map->getSizeY()-1;
-            if (!ourSnake.contains(QPoint(x,y)) && !map->isCellEmpty(QPoint(x,y)))
-            {
-                if ((map->getField()[x][y]->getId() == SNAKE_NPC))
-                {
-                    bool cuted, isDead = false;
-                    Snake *snake = (Snake*)map->getEntityAt(QPoint(x,y));
-                    map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
-                    if (isDead)
-                    {
+
+		for (int i = 0; i < damageRadius; i++)
+		{
+				for (int j = 0; j < i*2+1; j++)
+				{
+						x = position.x()-i+j;
+						if (x<0)
+								x=0;
+						else if (x>=map->getSizeX())
+								x=map->getSizeX()-1;
+						y = position.y()+i-damageRadius;
+						if (y<0)
+								y=0;
+						else if (y>=map->getSizeY())
+								y=map->getSizeY()-1;
+						if (!ourSnake.contains(QPoint(x,y)))
+						{
+							if (!map->isCellEmpty(QPoint(x,y)))
+							{
+								if ((map->getField()[x][y]->getId() == SNAKE_NPC))
+								{
+										bool cuted, isDead = false;
+										Snake *snake = (Snake*)map->getEntityAt(QPoint(x,y));
+
+										QVector<QPoint> fullSnake = snake->tail; // для эффекта взрыва
+										fullSnake.append(snake->position);
+
+										map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
+										if (isDead)
+										{
 												localScore += 1.5f;
-                        snake->isDead = true;
-                        snake->tail.clear(); //Удаляем всё с хвоста
-                    }
-                }
-                else
-                {
-										localScore += 1;
-                    map->clearCellAt(x,y);
-                }
-            }
-        }
-    }
+												snake->isDead = true;
+												snake->tail.clear(); //Удаляем всё с хвоста
+										}
+
+										for (int i = 0; i < fullSnake.size(); ++i) // для эффекта взрыва
+										{
+											if (map->isCellEmpty(fullSnake[i]))
+											{
+												Effect *effect = new BombItemEffect(fullSnake[i]);
+												map->applyEffect(effect);
+											}
+										}
+								}
+								else
+								{
+									//map->clearCellAt(x,y);
+									Effect *effect = new BombItemEffect(QPoint(x,y));
+									map->clearCellAndApplyEffect(effect);
+								}
+						}
+							else
+							{
+								Effect *effect = new BombItemEffect(QPoint(x,y));
+								map->applyEffect(effect);
+							}
+						}
+				}
+		}
     for (int i = 0; i <= damageRadius; i++)
     {
         for (int j = 0; j < i*2+1; j++)
@@ -112,12 +137,18 @@ void BombItem::collide(Snake *snake, Map *map)
                 y=0;
             else if (y>=map->getSizeY())
                 y=map->getSizeY()-1;
-            if (!ourSnake.contains(QPoint(x,y)) && !map->isCellEmpty(QPoint(x,y)))
+						if (!ourSnake.contains(QPoint(x,y)))
             {
+							if (!map->isCellEmpty(QPoint(x,y)))
+							{
                 if ((map->getField()[x][y]->getId() == SNAKE_NPC))
                 {
-                    bool cuted, isDead = false;
+										bool cuted, isDead = false;
                     Snake *snake = (Snake*)map->getEntityAt(QPoint(x,y));
+
+										QVector<QPoint> fullSnake = snake->tail; // для эффекта взрыва
+										fullSnake.append(snake->position);
+
                     map->cutSnakeFrom(QPoint(x,y),cuted,isDead);
                     if (isDead)
                     {
@@ -125,13 +156,31 @@ void BombItem::collide(Snake *snake, Map *map)
                         snake->isDead = true;
                         snake->tail.clear(); //Удаляем всё с хвоста
                     }
+
+										for (int i = 0; i < fullSnake.size(); ++i) // для эффекта взрыва
+										{
+											if (map->isCellEmpty(fullSnake[i]))
+											{
+												Effect *effect = new BombItemEffect(fullSnake[i]);
+												map->applyEffect(effect);
+											}
+										}
                 }
                 else
                 {
 										localScore += 1;
-                    map->clearCellAt(x,y);
+
+										//map->clearCellAt(x,y);
+										Effect *effect = new BombItemEffect(QPoint(x,y));
+										map->clearCellAndApplyEffect(effect);
                 }
             }
+							else
+							{
+								Effect *effect = new BombItemEffect(QPoint(x,y));
+								map->applyEffect(effect);
+							}
+						}
         }
     }
 
