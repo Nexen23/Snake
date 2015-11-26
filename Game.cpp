@@ -818,6 +818,18 @@ void Game::loop()
         while (i.hasNext())
         {
             i.next();
+            if (i.key()->snakeInTheHole == true && i.key()->isDead == false) //Змейка в дырке, но не умерла
+            {
+                if (i.key()->tail.size() > 0)
+                {
+                    map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем ячейку хвоста с карты
+                    i.key()->tail.removeLast(); //Засасываем одну ячейку под землю русскую.
+                    if (i.key()->tail.size() == 0) //Наконец убиваем нашу змею
+                        i.key()->mustDie = true;
+                }
+                else //Если змея и так была без хвоста
+                    i.key()->mustDie = true;
+            }
             if (i.key()->isDead == false)
             {
                 x = newHead[i.key()].x(), y = newHead[i.key()].y(); //Координаты головы змейки
@@ -835,20 +847,12 @@ void Game::loop()
                             i.key()->tail.removeLast(); //Удаляем с конца хвоста
                             i.key()->tail.insert(0,oldHead); //Вставляем в начало хвоста
                         }
+                        else
+                        {
+                            i.key()->mustDie = true;
+                        }
                     }
                 }
-            }
-            if (i.key()->snakeInTheHole == true && i.key()->isDead == false) //Змейка в дырке, но не умерла
-            {
-                if (i.key()->tail.size() > 0)
-                {
-                    map->setCellAt(i.key()->tail.last().x(), i.key()->tail.last().y(), NULL); //Удаляем ячейку хвоста с карты
-                    i.key()->tail.removeLast(); //Засасываем одну ячейку под землю русскую.
-                    if (i.key()->tail.size() == 0) //Наконец убиваем нашу змею
-                        i.key()->mustDie = true;
-                }
-                else //Если змея и так была без хвоста
-                    i.key()->mustDie = true;
             }
         }
 		//Сдвиг тел
