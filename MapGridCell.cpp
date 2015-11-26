@@ -5,8 +5,8 @@
 
 #include <QPaintEngine>
 
-MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *entity)
-: coords(coords), mapGrid(mapGrid), size(size)
+MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Entity *entity)
+: coords(_coords), mapGrid(_mapGrid), size(_size)
 {
 	if (entity != NULL)
 	{
@@ -32,8 +32,8 @@ MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *en
 	//setMouseTracking(true);
 }
 
-MapGridCell::MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Effect *effect)
-	: coords(coords), mapGrid(mapGrid), size(size)
+MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect *effect)
+	: coords(_coords), mapGrid(_mapGrid), size(_size)
 {
 	if (effect != NULL)
 	{
@@ -87,7 +87,7 @@ const QPixmap MapGridCell::getDefaultBackground() const
 	static QColor color(clr, clr, clr);
 	static QPixmap image = getColoredBackground(color);
 
-	return image;
+	return image.scaled(size);
 }
 
 const QPixmap MapGridCell::getColoredBackground(QColor color) const

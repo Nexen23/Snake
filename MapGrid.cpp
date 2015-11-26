@@ -55,6 +55,7 @@ void MapGrid::setMap(Map *map)
 		for (int y = 0; y < map->getSizeY(); ++y) {
 			Entity *entity = map->getField()[x][y];
 			setCellAt(x, y, entity);
+			QThread::msleep(10);
 
 			++widgetsCreated;
 			emit elementsLoaded(widgetsCreated);
