@@ -116,6 +116,8 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
             //kof[forKof[buf1]]+=1;
             continue;
         }
+        if(head.x()==j && head.y()==i)
+            continue;
         buf1=getDirection(head,j,i);
         if(map->getField()[j][i]==NULL)
             kof[forKof[buf1]]+=1;
@@ -123,8 +125,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
         {
             if(map->getField()[j][i]->getType()==OBJECT || map->getField()[j][i]->getType()==SNAKE)
             {
-                if(head.x()==j && head.y()==i)
-                    continue;
+
                 kof[forKof[buf1]]-=(abs(kof[forKof[buf1]])/(abs(head.x()-j)+abs(head.y()-i))+5);
                 if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
                     kof[forKof[buf1]]-=400;
@@ -136,6 +137,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
                     kof[forKof[buf1]]+=(kof[forKof[buf1]]/(abs(head.x()-j)+abs(head.y()-i))+5);
                     if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
                         kof[forKof[buf1]]+=800;
+
                 }
             }
         }
