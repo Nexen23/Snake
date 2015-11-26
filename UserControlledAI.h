@@ -24,6 +24,7 @@ protected:
 
 class UserControlledAI : public AI
 {
+	QMap<const Snake*, MoveDirection> snakesPrevMoves;
 	KeyPressListener *keyListener;
 
 public:
