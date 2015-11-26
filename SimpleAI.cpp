@@ -63,7 +63,7 @@ MoveDirection SimpleAI::getNextMove(const Snake *controllerSnake, const Map *map
 
 
     QPoint buf = head - second;
-    int kof[4] = {10,10,10,10};
+    int kof[4] = {1500,1500,1500,1500};
     //for(int i=0;i<4;i++){   kof[i] =100;  }
 
     //учет положения первого за головой хвоста
@@ -71,30 +71,30 @@ MoveDirection SimpleAI::getNextMove(const Snake *controllerSnake, const Map *map
         if(buf.x()==0)
             if(buf.y()<0){
                 kof[forKof[DOWN]]-=45200;
-                kof[forKof[UP]]+=20;
+                kof[forKof[UP]]+=200;
             }   else    {
                 kof[forKof[UP]]-=45200;
-                kof[forKof[DOWN]]+=20;
+                kof[forKof[DOWN]]+=200;
             }
         else
             if(buf.x()>0){
-                kof[forKof[RIGHT]]+=20;
+                kof[forKof[RIGHT]]+=200;
                 kof[forKof[LEFT]]-=45200;
             }   else    {
-                kof[forKof[LEFT]]+=20;
+                kof[forKof[LEFT]]+=200;
                 kof[forKof[RIGHT]]-=45200;
             }
 
 
 int /*x=0,y=0, */sizeX = map->getSizeX()-1, sizeY = map->getSizeY()-1;
     if(head.x()-2<0)
-        kof[forKof[LEFT]]-=50;
+        kof[forKof[LEFT]]-=150;
     if(head.x()+2>sizeX)
-        kof[forKof[RIGHT]]-=50;
+        kof[forKof[RIGHT]]-=150;
     if(head.y()-2<0)
-        kof[forKof[UP]]-=50;
+        kof[forKof[UP]]-=150;
     if(head.y()+2>sizeY)
-        kof[forKof[DOWN]]-=50;
+        kof[forKof[DOWN]]-=150;
     if(head.x()-1<0)
         kof[forKof[LEFT]]-=10050;
     if(head.x()+1>sizeX)
@@ -128,7 +128,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
 
                 kof[forKof[buf1]]-=(abs(kof[forKof[buf1]])/(abs(head.x()-j)+abs(head.y()-i))+5);
                 if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
-                    kof[forKof[buf1]]-=400;
+                    kof[forKof[buf1]]-=6400;
             }
             else
             {
@@ -136,7 +136,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
                 {
                     kof[forKof[buf1]]+=(kof[forKof[buf1]]/(abs(head.x()-j)+abs(head.y()-i))+5);
                     if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
-                        kof[forKof[buf1]]+=800;
+                        kof[forKof[buf1]]+=3800;
 
                 }
             }
