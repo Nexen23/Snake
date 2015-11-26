@@ -96,13 +96,13 @@ int /*x=0,y=0, */sizeX = map->getSizeX()-1, sizeY = map->getSizeY()-1;
     if(head.y()+2>sizeY)
         kof[forKof[DOWN]]-=150;
     if(head.x()-1<0)
-        kof[forKof[LEFT]]-=10050;
+        kof[forKof[LEFT]]-=15050;
     if(head.x()+1>sizeX)
-        kof[forKof[RIGHT]]-=10050;
+        kof[forKof[RIGHT]]-=15050;
     if(head.y()-1<0)
-        kof[forKof[UP]]-=10050;
+        kof[forKof[UP]]-=15050;
     if(head.y()+1>sizeY)
-        kof[forKof[DOWN]]-=10050;
+        kof[forKof[DOWN]]-=15050;
 MoveDirection buf1;
 for(int i=(head.y()-5);i<(head.y()+5);i++)
     for(int j=(head.x()-5);j<(head.x()+5);j++)
@@ -128,7 +128,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
 
                 kof[forKof[buf1]]-=(abs(kof[forKof[buf1]])/(abs(head.x()-j)+abs(head.y()-i))+5);
                 if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
-                    kof[forKof[buf1]]-=6400;
+                    kof[forKof[buf1]]-=8400;
             }
             else
             {
@@ -164,7 +164,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
     if(ForRand==0) //выхода нет :)
     {
         Rand=rand()%4;
-        if(kof[Rand]<=-20000)
+        if(kof[Rand]<=-25000)
             return bufK[((Rand+1)%4)];
         else return bufK[Rand];
     }
