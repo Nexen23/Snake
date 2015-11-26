@@ -21,13 +21,20 @@ RandomAI::~RandomAI()
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
 MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
-		int kof[4] = {1,1,1,1};
+    QMap<MoveDirection, int> forKof;
+    forKof[LEFT]=0;
+    forKof[RIGHT]=1;
+    forKof[UP]=2;
+    forKof[DOWN]=3;
+    int kof[4] = {1,1,1,1};
+    QPoint second;
     QPoint head = controllerSnake->position;
-
-    QPoint second = controllerSnake->tail.first();
-
     if(controllerSnake->tail.size()==NULL)
-	second=head;
+        second=head;
+    else
+        second = controllerSnake->tail.first();
+
+
 
     QPoint buf = head - second;
 
@@ -36,50 +43,50 @@ MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
     if(buf.x()!=buf.y())
         if(buf.x()==0)
             if(buf.y()<0){
-                kof[DOWN]-=4;
-                kof[UP]+=1;
+                kof[forKof[DOWN]]-=4;
+                kof[forKof[UP]]+=1;
             }   else    {
-                kof[UP]-=4;
-                kof[DOWN]+=1;
+                kof[forKof[UP]]-=4;
+                kof[forKof[DOWN]]+=1;
             }
         else
             if(buf.x()>0){
-                kof[RIGHT]+=1;
-                kof[LEFT]-=4;
+                kof[forKof[RIGHT]]+=1;
+                kof[forKof[LEFT]]-=4;
             }   else    {
-                kof[LEFT]+=1;
-                kof[RIGHT]-=4;
+                kof[forKof[LEFT]]+=1;
+                kof[forKof[RIGHT]]-=4;
             }
 
 
    //учет стен, дырок, остального хвоста
     if((head.x()-1)<0)
-        kof[LEFT]-=2;
+        kof[forKof[LEFT]]-=2;
     else
         if(map->getField()[head.x()-1][head.y()]!=NULL)
             if(map->getField()[head.x()-1][head.y()]->getType()==OBJECT || map->getField()[head.x()-1][head.y()]->getType()==SNAKE)
-                kof[LEFT]-=2;
+                kof[forKof[LEFT]]-=2;
 
     if((head.x()+1)>=map->getSizeX())
-        kof[RIGHT]-=2;
+        kof[forKof[RIGHT]]-=2;
     else
         if(map->getField()[head.x()+1][head.y()]!=NULL)
             if(map->getField()[head.x()+1][head.y()]->getType()==OBJECT || map->getField()[head.x()+1][head.y()]->getType()==SNAKE)
-                kof[RIGHT]-=2;
+                kof[forKof[RIGHT]]-=2;
 
     if((head.y()+1) >= map->getSizeY())
-        kof[DOWN]-=2;
+        kof[forKof[DOWN]]-=2;
     else
         if(map->getField()[head.x()][head.y()+1]!=NULL)
             if(map->getField()[head.x()][head.y()+1]->getType()==OBJECT || map->getField()[head.x()][head.y()+1]->getType()==SNAKE)
-                kof[DOWN]-=2;
+                kof[forKof[DOWN]]-=2;
 
     if((head.y()-1) <0)
-        kof[UP]-=2;
+        kof[forKof[UP]]-=2;
     else
         if(map->getField()[head.x()][head.y()-1]!=NULL)
             if(map->getField()[head.x()][head.y()-1]->getType()==OBJECT || map->getField()[head.x()][head.y()-1]->getType()==SNAKE)
-            kof[UP]-=2;
+            kof[forKof[UP]]-=2;
 
 
     int ForRand=0, Rand;

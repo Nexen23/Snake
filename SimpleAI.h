@@ -7,7 +7,7 @@ class SimpleAI : public AI
 {
 
 private:
-		int getCostsOfDirection(QPoint,MoveDirection,int*,Map*);
+        MoveDirection getDirection(QPoint,int,int);
 public:
     SimpleAI();
     ~SimpleAI();
