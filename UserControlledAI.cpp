@@ -20,7 +20,7 @@ UserControlledAI::~UserControlledAI()
 	delete keyListener;
 }
 
-MoveDirection UserControlledAI::getNextMove(Snake *controllerSnake, Map *map)
+MoveDirection UserControlledAI::getNextMove(const Snake *controllerSnake, const Map *map)
 {
 	Q_UNUSED(map);
 

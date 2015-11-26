@@ -36,21 +36,21 @@ public:
 	explicit Map(int sizeX, int sizeY);
 	~Map();
 
-	const QString getName();
-	const QString getId();
+	const QString getName() const;
+	const QString getId() const;
 
-	const int getSizeX();
-	const int getSizeY();
+	const int getSizeX() const;
+	const int getSizeY() const;
 
-	const QVector<QVector<Entity*> >& getField();
-	const Entity* getEntityAt(const QPoint &point);
-	const Entity* getEntityAt(int x, int y);
+	const QVector<QVector<Entity*> >& getField() const;
+	const Entity* getEntityAt(const QPoint &point) const;
+	const Entity* getEntityAt(int x, int y) const;
 
-	const QVector<Item*>& getItems();
-	const QVector<Object*>& getObjects();
-	const QVector<Snake*>& getSnakes();
+	const QVector<Item*>& getItems() const;
+	const QVector<Object*>& getObjects() const;
+	const QVector<Snake*>& getSnakes() const;
 
-	const QVector<Item*>& getItemsTypesForGeneration();
+	const QVector<Item*>& getItemsTypesForGeneration() const;
 	void addItemTypeForGeneration(Item *item);
 	void removeItemTypeForGeneration(Item *item);
 
@@ -60,8 +60,8 @@ public:
 	void setCellsBySnake(Snake *snake);
 	bool addSnakeTailAt(Snake *snake, QPoint coords);
 
-	bool isSnakeExist(Snake* snake);
-	bool isCellEmpty(QPoint coords);
+	bool isSnakeExist(Snake* snake) const;
+	bool isCellEmpty(QPoint coords) const;
 
 	void cutSnakeFrom(QPoint coords, bool& cuttedAtLeast1, bool& wasFullyRemoved);
 	bool cutSnakeTailFrom(QPoint coords);
@@ -72,7 +72,7 @@ public:
 
 	void applyEffect(Effect *effect);
 	void clearCellAndApplyEffect(Effect *effect);
-	const QVector<Effect*>& getEffects();
+	const QVector<Effect*>& getEffects() const;
 	void updateEffectsTimes();
 
 private:
