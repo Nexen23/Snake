@@ -10,8 +10,7 @@ MapGrid::MapGrid(Map *map, QWidget *parent)
 {
 	Q_UNUSED(parent);
 	progressDialog = new QProgressDialog(widget());
-	connect(this, SIGNAL(elementsCountChanged(int)), progressDialog, SLOT(setMaximum(int)));
-	connect(this, SIGNAL(elementsLoaded(int)), progressDialog, SLOT(setValue(int)));
+	connect(this, SIGNAL(elementsLoaded(int)), progressDialog, SLOT(setValue(int)), Qt::DirectConnection);
 	setSpacing(0);
 	setMap(map);
 }
@@ -25,8 +24,7 @@ void MapGrid::setMap(Map *map)
 {
 	int widgetsCount = map->getSizeX() * map->getSizeY(),
 			widgetsCreated = 0;
-	emit elementsCountChanged(widgetsCount);
-	showWaitingDialog();
+	showWaitingDialog(widgetsCount);
 
 	clearPrevMap();
 
@@ -56,8 +54,8 @@ void MapGrid::setMap(Map *map)
 			Entity *entity = map->getField()[x][y];
 			setCellAt(x, y, entity);
 
-			++widgetsCreated;
-			emit elementsLoaded(widgetsCreated);
+			emit elementsLoaded(++widgetsCreated);
+			QApplication::processEvents( QEventLoop::ExcludeUserInputEvents);
 		}
 	}
 
@@ -113,7 +111,7 @@ void MapGrid::clearLayout(QLayout* layout, bool deleteWidgets)
 		}
 }
 
-void MapGrid::showWaitingDialog()
+void MapGrid::showWaitingDialog(int max)
 {
 	if (progressDialog != NULL)
 	{
@@ -128,6 +126,9 @@ void MapGrid::showWaitingDialog()
 		//progressDialog->exec();
 		progressDialog->setWindowModality(Qt::WindowModal);
 		progressDialog->setAutoClose(true);
+
+		progressDialog->setMaximum(max);
+		progressDialog->setValue(0);
 		progressDialog->show();
 	}
 }

@@ -36,7 +36,7 @@ public:
 private:
 	void clearPrevMap();
 	void clearLayout(QLayout* layout, bool deleteWidgets = true);
-	void showWaitingDialog();
+	void showWaitingDialog(int max);
 	void cancelWaitingDialog();
 
 signals:

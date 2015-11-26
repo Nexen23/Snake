@@ -20,8 +20,8 @@ class MapGridCell : public QLabel
 	QPoint coords;
 
 public:
-	MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Entity *entity);
-	MapGridCell(MapGrid *mapGrid, QPoint coords, QSize size, Effect *effect);
+	MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Entity *entity);
+	MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect *effect);
 	~MapGridCell();
 
 protected:
