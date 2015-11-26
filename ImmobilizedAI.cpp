@@ -12,7 +12,7 @@ ImmobilizedAI::~ImmobilizedAI()
 
 }
 
-MoveDirection ImmobilizedAI::getNextMove(Snake *controllerSnake, Map *map)
+MoveDirection ImmobilizedAI::getNextMove(const Snake *controllerSnake, const Map *map)
 {
 	Q_UNUSED(controllerSnake);
 	Q_UNUSED(map);

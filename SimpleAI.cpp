@@ -30,7 +30,7 @@ HOLE_OBJECT,
 
 SNAKE*/
 
-int SimpleAI::getCostsOfDirection(QPoint head,MoveDirection moveDirection, int*kof, Map* map) //moveDirection направление движения в текущий момент
+int SimpleAI::getCostsOfDirection(QPoint head, MoveDirection moveDirection, int*kof, const Map *map) //moveDirection направление движения в текущий момент
 {
 
     QVector<QVector<Entity*> > buf_field;
@@ -377,7 +377,7 @@ case LEFT:
     return 1;
 } //не забыть про поворот коэффициентов
 
-MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
+MoveDirection SimpleAI::getNextMove(const Snake *controllerSnake, const Map *map)
 {
     //qDebug() << "CHECK6:";
 		QPoint head = controllerSnake->position;

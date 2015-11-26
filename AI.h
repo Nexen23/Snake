@@ -16,10 +16,10 @@ enum MoveDirection { LEFT = -2,
 class AI
 {
 protected:
-	QMap<Snake*, MoveDirection> snakesPrevMoves;
+	QMap<const Snake*, MoveDirection> snakesPrevMoves;
 
 public:
-	virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map) = 0;
+	virtual MoveDirection getNextMove(const Snake *controllerSnake, const Map *map) = 0;
 	virtual QString getName() const = 0;
 
 	bool isNewMoveInvalid(MoveDirection oldMove, MoveDirection newMove);

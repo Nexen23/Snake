@@ -29,47 +29,47 @@ Map::~Map()
 		snakes.clear();
 }
 
-const int Map::getSizeX()
+const int Map::getSizeX() const
 {
 	return sizeX;
 }
 
-const int Map::getSizeY()
+const int Map::getSizeY() const
 {
 	return sizeY;
 }
 
-const Entity* Map::getEntityAt(const QPoint &point)
+const Entity* Map::getEntityAt(const QPoint &point) const
 {
 	return field[point.x()][point.y()];
 }
 
-const Entity* Map::getEntityAt(int x, int y)
+const Entity* Map::getEntityAt(int x, int y) const
 {
 	return field[x][y];
 }
 
-const QVector<QVector<Entity *> >& Map::getField()
+const QVector<QVector<Entity *> >& Map::getField() const
 {
 	return field;
 }
 
-const QVector<Item *>& Map::getItems()
+const QVector<Item *>& Map::getItems() const
 {
 	return items;
 }
 
-const QVector<Object *>& Map::getObjects()
+const QVector<Object *>& Map::getObjects() const
 {
 	return objects;
 }
 
-const QVector<Snake *>& Map::getSnakes()
+const QVector<Snake *>& Map::getSnakes() const
 {
 	return snakes;
 }
 
-const QVector<Item *>& Map::getItemsTypesForGeneration()
+const QVector<Item *>& Map::getItemsTypesForGeneration() const
 {
 	return *(new QVector<Item *>(itemsTypesForGeneration.values().toVector()));
 }
@@ -201,14 +201,14 @@ bool Map::addSnakeTailAt(Snake *snake, QPoint coords)
 	return wasTailCellAdded;
 }
 
-bool Map::isSnakeExist(Snake *snake)
+bool Map::isSnakeExist(Snake *snake) const
 {
 	if (snakesUniqueConstraint.find(snake) != snakesUniqueConstraint.end())
 		return true;
 	return false;
 }
 
-bool Map::isCellEmpty(QPoint coords)
+bool Map::isCellEmpty(QPoint coords) const
 {
 	if (field[coords.x()][coords.y()] == NULL)
 		return true;
@@ -389,76 +389,3 @@ void Map::removeEntityFromVector(QVector<T> &vector, Entity *entity)
 		}
 	}
 }
-
-
-
-//void Map::removeEntityFullyAt(int x, int y)
-//{
-//    if (field[x][y] != NULL)
-//    {
-//				if (field[x][y]->getId() == SNAKE_NPC)
-//        {
-//            if (*field[x][y]->position == QPoint(x,y))//Ищется голова змеи
-//            {
-//                ((Snake*)field[x][y])->mustDie = true; //Убиваем всю змейку в цикле mustDie, голова умерла от взрыва
-//            }
-//            //Тело
-//            else if (((Snake*)field[x][y])->mustDie != true) //Рубим тело, только если змея не обречена еще на смерть
-//            {
-//                int since = 1; //Начинаем рубить змею с конца
-//                Snake* thisSnake = (Snake*)field[x][y];
-//                if (thisSnake->tail.size() != 0) //Если хвоста нет, то видимо нужно убить голову
-//                {
-//                    while (since)
-//                    {
-//                        if (thisSnake->tail.last().x()==x &&
-//                            thisSnake->tail.last().y()==y) //Отрубаем последнюю часть
-//                        {
-//                            since = 0;
-//                        }
-//                        if (since != 0) //Удаляя последнюю часть, первый код не подходит из-за уничтожения объекта в x,y
-//                        {
-//                            field[thisSnake->tail.last().x()][thisSnake->tail.last().y()] = NULL;//Удаляем с карты
-//                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
-//                        }
-//                        else
-//                        {
-//                            thisSnake->tail.removeLast();//Удаляем в хвосте змеи её часть
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                    thisSnake->mustDie = true;
-//                }
-//            }
-//        }
-//        else if (field[x][y]->getId() == HOLE_OBJECT ||
-//                 field[x][y]->getId() == WALL_OBJECT)
-//        {
-//            int size = objects.size();
-//            for (int i = 0; i < size; i++)
-//            {
-//                if (*objects[i]->position == QPoint(x,y))
-//                {
-//                    objects.removeAt(i);
-//                    i = size;
-//                }
-//            }
-//        }
-//        else if (field[x][y]->getId() == BOMB_ITEM ||
-//                 field[x][y]->getId() == FOOD_ITEM)
-//        {
-//            int size = items.size();
-//            for (int i = 0; i < size; i++)
-//            {
-//                if (*items[i]->position == QPoint(x,y))
-//                {
-//                    items.removeAt(i);
-//                    i = size;
-//                }
-//            }
-//        }
-//        field[x][y] = NULL;
-//    }
-//}

@@ -7,12 +7,12 @@ class SimpleAI : public AI
 {
 
 private:
-		int getCostsOfDirection(QPoint,MoveDirection,int*,Map*);
+		int getCostsOfDirection(QPoint,MoveDirection,int*,const Map*);
 public:
     SimpleAI();
     ~SimpleAI();
 
-		virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map);
+		virtual MoveDirection getNextMove(const Snake *controllerSnake, const Map *map);
 		virtual QString getName() const;
 };
 

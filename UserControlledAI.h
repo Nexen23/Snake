@@ -30,7 +30,7 @@ public:
 	UserControlledAI();
 	~UserControlledAI();
 
-	virtual MoveDirection getNextMove(Snake *controllerSnake, Map *map);
+	virtual MoveDirection getNextMove(const Snake *controllerSnake, const Map *map);
 	virtual QString getName() const;
 };
 
