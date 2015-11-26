@@ -149,12 +149,20 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
         if(kof[i]>0)
             ForRand+=kof[i];
 
+    QMap<int,MoveDirection > bufK;
+    bufK[0]=LEFT;
+    bufK[1]=RIGHT;
+    bufK[2]=UP;
+    bufK[3]=DOWN;
+
+
+
     if(ForRand==0) //выхода нет :)
     {
         Rand=rand()%4;
         if(kof[Rand]<=-20000)
-            return (MoveDirection)((Rand+1)%4);
-        else return (MoveDirection)Rand;
+            return bufK[((Rand+1)%4)];
+        else return bufK[Rand];
     }
 
     Rand=rand()%ForRand+1;
@@ -163,7 +171,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
     for(int i=0;i<4;i++)
         if(kof[i]>0){
             if(Rand>=t && Rand <=t+kof[i])
-                return (MoveDirection)i;
+                return bufK[i];
             t+=kof[i];
         }
 
