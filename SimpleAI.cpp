@@ -42,9 +42,11 @@ MoveDirection SimpleAI::getDirection(QPoint buf,int x1,int y1)
     if(y+x<=0 && x-y<0)//(y-x>0 && y+x<=0)
         return LEFT;
 
-};
+		qFatal("Impossible condition reach!");
+		return UP;
+}
 
-MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
+MoveDirection SimpleAI::getNextMove(const Snake *controllerSnake, const Map *map)
 {
     QMap<MoveDirection, int> forKof;
     forKof[LEFT]=0;
@@ -84,7 +86,7 @@ MoveDirection SimpleAI::getNextMove(Snake *controllerSnake, Map *map)
             }
 
 
-int x=0,y=0, sizeX = map->getSizeX()-1, sizeY = map->getSizeY()-1;
+int /*x=0,y=0, */sizeX = map->getSizeX()-1, sizeY = map->getSizeY()-1;
     if(head.x()-2<0)
         kof[forKof[LEFT]]-=50;
     if(head.x()+2>sizeX)

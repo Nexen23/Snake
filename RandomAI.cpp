@@ -20,7 +20,7 @@ RandomAI::~RandomAI()
 }
 //0-Left; 1-Right; 2-up; 3-down;
 // LEFT, RIGHT, UP, DOWN
-MoveDirection RandomAI::getNextMove(Snake *controllerSnake, Map *map){
+MoveDirection RandomAI::getNextMove(const Snake *controllerSnake, const Map *map){
     QMap<MoveDirection, int> forKof;
     forKof[LEFT]=0;
     forKof[RIGHT]=1;
