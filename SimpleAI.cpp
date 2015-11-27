@@ -63,46 +63,46 @@ MoveDirection SimpleAI::getNextMove(const Snake *controllerSnake, const Map *map
 
 
     QPoint buf = head - second;
-    int kof[4] = {1500,1500,1500,1500};
+    int kof[4] = {5,5,5,5};
     //for(int i=0;i<4;i++){   kof[i] =100;  }
 
     //учет положения первого за головой хвоста
     if(buf.x()!=buf.y())
         if(buf.x()==0)
             if(buf.y()<0){
-                kof[forKof[DOWN]]-=45200;
-                kof[forKof[UP]]+=200;
+                kof[forKof[DOWN]]-=10000;
+                kof[forKof[UP]]+=10;
             }   else    {
-                kof[forKof[UP]]-=45200;
-                kof[forKof[DOWN]]+=200;
+                kof[forKof[UP]]-=10000;
+                kof[forKof[DOWN]]+=10;
             }
         else
             if(buf.x()>0){
-                kof[forKof[RIGHT]]+=200;
-                kof[forKof[LEFT]]-=45200;
+                kof[forKof[RIGHT]]+=10;
+                kof[forKof[LEFT]]-=10000;
             }   else    {
-                kof[forKof[LEFT]]+=200;
-                kof[forKof[RIGHT]]-=45200;
+                kof[forKof[LEFT]]+=10;
+                kof[forKof[RIGHT]]-=10000;
             }
 
 
 int /*x=0,y=0, */sizeX = map->getSizeX()-1, sizeY = map->getSizeY()-1;
     if(head.x()-2<0)
-        kof[forKof[LEFT]]-=150;
+        kof[forKof[LEFT]]-=1;
     if(head.x()+2>sizeX)
-        kof[forKof[RIGHT]]-=150;
+        kof[forKof[RIGHT]]-=1;
     if(head.y()-2<0)
-        kof[forKof[UP]]-=150;
+        kof[forKof[UP]]-=1;
     if(head.y()+2>sizeY)
-        kof[forKof[DOWN]]-=150;
+        kof[forKof[DOWN]]-=1;
     if(head.x()-1<0)
-        kof[forKof[LEFT]]-=15050;
+        kof[forKof[LEFT]]-=1000;
     if(head.x()+1>sizeX)
-        kof[forKof[RIGHT]]-=15050;
+        kof[forKof[RIGHT]]-=1000;
     if(head.y()-1<0)
-        kof[forKof[UP]]-=15050;
+        kof[forKof[UP]]-=1000;
     if(head.y()+1>sizeY)
-        kof[forKof[DOWN]]-=15050;
+        kof[forKof[DOWN]]-=1000;
 MoveDirection buf1;
 for(int i=(head.y()-5);i<(head.y()+5);i++)
     for(int j=(head.x()-5);j<(head.x()+5);j++)
@@ -120,23 +120,39 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
             continue;
         buf1=getDirection(head,j,i);
         if(map->getField()[j][i]==NULL)
-            kof[forKof[buf1]]+=1;
+            kof[forKof[buf1]]+=3;
         else
         {
             if(map->getField()[j][i]->getType()==OBJECT || map->getField()[j][i]->getType()==SNAKE)
             {
+                //kof[forKof[buf1]]
+                //kof[forKof[buf1]]-=(abs(kof[forKof[buf1]])/(abs(head.x()-j)+abs(head.y()-i))+5);
+                if((head.x()-j)==0 && (head.y()-i)==1)
+                    kof[forKof[UP]]-=1000;
+                if((head.x()-j)==0 && (head.y()-i)==-1)
+                    kof[forKof[DOWN]]-=1000;
+                if((head.x()-j)==1 && (head.y()-i)==0)
+                    kof[forKof[LEFT]]-=1000;
+                if((head.x()-j)==-1 && (head.y()-i)==0)
+                    kof[forKof[RIGHT]]-=1000;
 
-                kof[forKof[buf1]]-=(abs(kof[forKof[buf1]])/(abs(head.x()-j)+abs(head.y()-i))+5);
-                if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
-                    kof[forKof[buf1]]-=8400;
             }
             else
             {
                 if(map->getField()[j][i]->getType()==ITEM)
                 {
-                    kof[forKof[buf1]]+=(kof[forKof[buf1]]/(abs(head.x()-j)+abs(head.y()-i))+5);
+                    kof[forKof[buf1]]+=50;
+                    //kof[forKof[buf1]]+=(kof[forKof[buf1]]/(abs(head.x()-j)+abs(head.y()-i))+5);
+                    if((head.x()-j)==0 && (head.y()-i)==1)
+                        kof[forKof[UP]]+=1000;
+                    if((head.x()-j)==0 && (head.y()-i)==-1)
+                        kof[forKof[DOWN]]+=1000;
+                    if((head.x()-j)==1 && (head.y()-i)==0)
+                        kof[forKof[LEFT]]+=1000;
+                    if((head.x()-j)==-1 && (head.y()-i)==0)
+                        kof[forKof[RIGHT]]+=1000;
                     if(abs(head.x()-j)<=1 && abs(head.y()-i)<=1)
-                        kof[forKof[buf1]]+=3800;
+                        kof[forKof[buf1]]+=80;
 
                 }
             }
@@ -164,7 +180,7 @@ for(int i=(head.y()-5);i<(head.y()+5);i++)
     if(ForRand==0) //выхода нет :)
     {
         Rand=rand()%4;
-        if(kof[Rand]<=-25000)
+        if(kof[Rand]<=-8000)
             return bufK[((Rand+1)%4)];
         else return bufK[Rand];
     }
