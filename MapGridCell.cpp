@@ -8,6 +8,24 @@
 MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Entity *entity)
 : coords(_coords), mapGrid(_mapGrid), size(_size)
 {
+	init(entity);
+
+	//setMouseTracking(true);
+}
+
+MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect *effect)
+	: coords(_coords), mapGrid(_mapGrid), size(_size)
+{
+	init(effect);
+}
+
+MapGridCell::~MapGridCell()
+{
+
+}
+
+void MapGridCell::init(Entity *entity)
+{
 	if (entity != NULL)
 	{
 		Snake *snake = (Snake*)entity;
@@ -28,12 +46,9 @@ MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Entity 
 	{
 		init(getDefaultBackground());
 	}
-
-	//setMouseTracking(true);
 }
 
-MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect *effect)
-	: coords(_coords), mapGrid(_mapGrid), size(_size)
+void MapGridCell::init(Effect *effect)
 {
 	if (effect != NULL)
 	{
@@ -43,11 +58,6 @@ MapGridCell::MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect 
 	{
 		init(getDefaultBackground());
 	}
-}
-
-MapGridCell::~MapGridCell()
-{
-
 }
 
 void MapGridCell::init(const QPixmap &background)

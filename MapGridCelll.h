@@ -24,6 +24,9 @@ public:
 	MapGridCell(MapGrid *_mapGrid, QPoint _coords, QSize _size, Effect *effect);
 	~MapGridCell();
 
+	void init(Entity *entity);
+	void init(Effect *effect);
+
 protected:
 	void init(const QPixmap &background);
 	void init(const QPixmap &background, const QPixmap &image);

@@ -64,14 +64,36 @@ void MapGrid::setMap(Map *map)
 
 void MapGrid::setCellAt(int x, int y, Entity *entity)
 {
-	QWidget *widget = new MapGridCell(this, QPoint(x, y), cellSize, entity);
-	addWidget(widget, y, x, 1, 1);
+	QLayoutItem *item = itemAtPosition(y, x);
+	QWidget *widget;
+	if (item != NULL)
+	{
+		widget = item->widget();
+		MapGridCell *cell = (MapGridCell*)widget;
+		cell->init(entity);
+	}
+	else
+	{
+		widget = new MapGridCell(this, QPoint(x, y), cellSize, entity);
+		addWidget(widget, y, x, 1, 1);
+	}
 }
 
 void MapGrid::setCellAt(int x, int y, Effect *effect)
 {
-	QWidget *widget = new MapGridCell(this, QPoint(x, y), cellSize, effect);
-	addWidget(widget, y, x, 1, 1);
+	QLayoutItem *item = itemAtPosition(y, x);
+	QWidget *widget;
+	if (item != NULL)
+	{
+		widget = item->widget();
+		MapGridCell *cell = (MapGridCell*)widget;
+		cell->init(effect);
+	}
+	else
+	{
+		widget = new MapGridCell(this, QPoint(x, y), cellSize, effect);
+		addWidget(widget, y, x, 1, 1);
+	}
 }
 
 void MapGrid::clearPrevMap()
